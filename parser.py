@@ -39,11 +39,23 @@ class Parser():
 	def normals(self, elts, **props):
 		print("Normals")
 
-	def texturecoord(self, elts, **props):
+	def textureCoords(self, elts, **props):
 		print("Texture coodinates")
 
 	def faces(self, elts, **props):
 		print("Faces")
+
+	def materialBDD(self, elts, **props):
+		print("MaterialBDD")
+
+	def shapeBDD(self, elts, **props):
+		print("shapeBDD")
+
+	def attributeBDD(self, elts, **props):
+		print("attributeBDD")
+
+	def topology(self, elts, **props):
+		print("topology")
 
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
