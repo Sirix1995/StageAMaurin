@@ -76,6 +76,20 @@ class Parser():
 
 	def geometry(self, elts, **props):
 		print("Geometry")
+		for elt in elts:
+            		self.dispatch(elt)
+
+	def shapeIndex(self, elts, **props):
+		print("shapeIndex")
+
+	def mat(self, elts, **props):
+		print("mat")
+
+	def dUp(self, elts, **props):
+		print("dUp")
+
+	def dDwn(self, elts, **props):
+		print("dDwn")
 
 	def Orthotropy(self, elts, **props):
 		print("Orthotropy")
@@ -83,7 +97,7 @@ class Parser():
 	def InternodeRank(self, elts, **props):
 		print("InternodeRank")
 
-	def Branch(self, elts, **props):
+	def branch(self, elts, **props):
 		print("Branch")
 
 	def decomp(self, elts, **props):
@@ -103,8 +117,16 @@ class Parser():
 	def Width(self, elts, **props):
 		print("Width")
 
+	def Toplength(self, elts, **props):
+		print("Topength")
+
+	def Topwidth(self, elts, **props):
+		print("Topwidth")
+
 	def follow(self, elts, **props):
 		print("Follow")
+		for elt in elts:
+            		self.dispatch(elt)
 
 	def Name(self, elts, **props):
 		print("Name")
