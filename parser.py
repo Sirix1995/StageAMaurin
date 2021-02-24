@@ -13,7 +13,7 @@ class Parser():
 
 	def dispatch(self, elt):
 		try:
-			return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib)
+			return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib, )
 		except Exception as e:
 			print(e)
 			raise Exception("Unvalid element %s" % elt.tag)
@@ -47,15 +47,68 @@ class Parser():
 
 	def materialBDD(self, elts, **props):
 		print("MaterialBDD")
+		for elt in elts:
+            		self.dispatch(elt)
+
+	def material(self, elts, **props):
+		print("Material")
 
 	def shapeBDD(self, elts, **props):
-		print("shapeBDD")
+		print("ShapeBDD")
+		for elt in elts:
+            		self.dispatch(elt)
+
+	def shape(self, elts, **props):
+		print("Shape")
 
 	def attributeBDD(self, elts, **props):
-		print("attributeBDD")
+		print("AttributeBDD")
+		for elt in elts:
+            		self.dispatch(elt)
+
+	def attribute(self, elts, **props):
+		print("Attribute")
 
 	def topology(self, elts, **props):
-		print("topology")
+		print("Topology")
+		for elt in elts:
+            		self.dispatch(elt)
+
+	def geometry(self, elts, **props):
+		print("Geometry")
+
+	def Orthotropy(self, elts, **props):
+		print("Orthotropy")
+
+	def InternodeRank(self, elts, **props):
+		print("InternodeRank")
+
+	def Branch(self, elts, **props):
+		print("Branch")
+
+	def decomp(self, elts, **props):
+		print("Decomp")
+		for elt in elts:
+            		self.dispatch(elt)
+
+	def XEuler(self, elts, **props):
+		print("XEuler")
+
+	def YEuler(self, elts, **props):
+		print("YEuler")
+
+	def Length(self, elts, **props):
+		print("Length")
+
+	def Width(self, elts, **props):
+		print("Width")
+
+	def follow(self, elts, **props):
+		print("Follow")
+
+	def Name(self, elts, **props):
+		print("Name")
+
 
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
