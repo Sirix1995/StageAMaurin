@@ -12,31 +12,31 @@ class Parser():
 	
 
 	def dispatch(self, elt):
-        	try:
-            		return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib)
-        	except Exception as e:
-            		print(e)
-            		raise Exception("Unvalid element %s" % elt.tag)
+		try:
+			return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib)
+		except Exception as e:
+			print(e)
+			raise Exception("Unvalid element %s" % elt.tag)
 	
-	def opf():
+	def opf(self, elts, **props):
 		print("Opf")	
 
-	def meshBDD():
+	def meshBDD(self, elts, **props):
 		print("MeshBDD")
 
-	def mesh():
+	def mesh(self, elts, **props):
 		print("Mesh")
 
-	def points():
+	def points(self, elts, **props):
 		print("Points")
 
-	def normals():
+	def normals(self, elts, **props):
 		print("Normals")
 
-	def texturecoord():
+	def texturecoord(self, elts, **props):
 		print("Texture coodinates")
 
-	def faces():
+	def faces(self, elts, **props):
 		print("Faces")
 
 
