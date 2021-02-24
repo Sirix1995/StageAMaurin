@@ -19,13 +19,19 @@ class Parser():
 			raise Exception("Unvalid element %s" % elt.tag)
 	
 	def opf(self, elts, **props):
-		print("Opf")	
+		print("Opf")
+		for elt in elts:
+            		self.dispatch(elt)	
 
 	def meshBDD(self, elts, **props):
 		print("MeshBDD")
+		for elt in elts:
+            		self.dispatch(elt)
 
 	def mesh(self, elts, **props):
 		print("Mesh")
+		for elt in elts:
+            		self.dispatch(elt)
 
 	def points(self, elts, **props):
 		print("Points")
@@ -38,7 +44,6 @@ class Parser():
 
 	def faces(self, elts, **props):
 		print("Faces")
-
 
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
