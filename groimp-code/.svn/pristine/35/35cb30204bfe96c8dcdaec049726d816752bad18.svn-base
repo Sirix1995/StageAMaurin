@@ -1,0 +1,45 @@
+<project name="RGG" default="compile">
+
+  <description>
+    Ant build file for the RGG plugin of GroIMP
+  </description>
+
+  <property name="src2jar" value="**/*.rgg"/>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="XL-Compiler"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="IMP-3D"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="GPUFlux"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="Numeric"/>
+    </antcall>
+	
+  </target>
+
+  <target name="src">
+    <copy file="../XL-Compiler/src/de/grogra/xl/compiler/CompilerTokenTypes.txt"
+      todir="src/de/grogra/grogra" preservelastmodified="true"/>
+    <antlr2 dir="src/de/grogra/grogra" target="LSY.g"/>
+  	<delete file="src/de/grogra/grogra/LSYParser.smap" failonerror="false"/>
+
+    <vtl inplace="true" templatePath="src" controlTemplate="de/grogra/grogra/LSYTokenizer.java" outputDirectory="src" outputFile="../.vtl.tmp"/>
+
+    <antcall target="-src-vtl"/>
+    <antcall target="-src-enhance"/>
+  </target>
+
+  <target name="doc">
+  	<antcall target="-doc">
+  	  <param name="input" value="src/doc/manual.xml"/>
+  	</antcall>
+  </target>
+
+</project>

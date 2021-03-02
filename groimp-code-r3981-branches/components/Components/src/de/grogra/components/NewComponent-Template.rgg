@@ -1,0 +1,118 @@
+/**
+ * This component template...
+ * 
+ * @date <YYYY-MM-DD>
+ * @author <name>
+ * @version v0.01
+ */
+
+import de.grogra.imp2d.graphs.GroIMPComponent;
+
+module MyComponent extends GroIMPComponent {
+
+	//** model parameters *******************************************/
+	// default relation between radius one and two
+	float relation = 0.63f;
+
+	//** RANGES *******************************************/
+	// input values
+	// smalest possible input value for calculation of this component 
+	private const double MIN_INPUT_VALUE_I = 0;
+	// largest possible input value for calculation of this component
+	private const double MAX_INPUT_VALUE_I = 10;
+	// output values
+	// smalest possible output value for calculation of this component 
+	private const double MIN_OUTPUT_VALUE_O = 2;
+	// largest possible OUTput value for calculation of this component
+	private const double MAX_OUTPUT_VALUE_O = 5;
+	
+	double inputValue = 0;
+	double outputValue = 0;
+	
+	// Constructor
+	{
+		//println("Result of selfe test :" +selfTest());
+	}
+
+	
+	/**
+	 * Declaration of all needed and provided slots.
+	 * Usually encapsulates a list of addInputSlot() and addOutputSlot() calls. 
+	 */
+	public void setSlots() {
+		// name of a variable
+		addInputSlot("inputValue");
+
+		// name of a function
+		addOutputSlot("evaluate");
+	}
+	
+	/**
+	 * Default function to reset all neede parameters back to their dafault values. 
+	 * Has to be overwritten by the component developer.
+	 *
+	 */
+	protected void resetParameters() {
+		relation = 0.66f;
+	}
+
+	/**
+	 * Implementation of the provided functionality.
+	 *
+	 * @return 
+	 */
+	public double evaluate() {
+		// check ranges of input values
+		checkPreconditions();
+		//calculate output
+		outputValue = relation*inputValue;
+		// check output
+		checkPostconditions();
+		// return the result  
+		return outputValue;
+	}
+	
+	/**
+	 * Check it all input values (model parameters and variables) are in an acceptable ranges and of the right type.
+	 * By default false until the component developer has implemented this needed function.
+	 *
+	 * @return status of pre condition test 
+	 */
+	protected boolean checkPreconditions() {
+		boolean b = true;
+		b &= checkRange(inputValue, MIN_INPUT_VALUE_I, MAX_INPUT_VALUE_I);
+		return b;
+	}
+
+	/**
+	 * Check it all output values are in an acceptable range.
+	 * By default false until the component developer has implemented this needed function.
+	 * TRUE iff it is in rage, otherwise FALSE.
+	 *
+	 * @return status of post condition test
+	 */
+	protected boolean checkPostconditions() {
+		boolean b = true;
+		b &= checkRange(outputValue, MIN_OUTPUT_VALUE_O, MAX_OUTPUT_VALUE_O);
+		return b;
+	}
+
+	/**
+	 * Returns a list of key words which identifies and/or charaterises this component
+	 * 
+	 * @return list of key words
+	 */
+	protected String getKeyWords() {
+		return "defaul component template";
+	}
+
+	/**
+	 * Returns a short Description which identifies and/or charaterises this component
+	 * 
+	 * @return String, short description of this component
+	 */
+	protected String getShortDescription() {
+		return "This is the defaul component template.";
+	}
+	
+}

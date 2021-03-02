@@ -1,0 +1,31 @@
+<project name="Lignum" default="compile">
+
+  <description>
+    The "Lignum" plugin provides functionality to use the GroIMP implementation of Lignum.
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+	
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="Vecmath"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="Raytracer"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="IMP-3D"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="RGG"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="3D-CS"/>
+    </antcall>        
+  </target>
+	
+  <target name="src">
+    <antcall target="-src-enhance"/>  		
+  </target>
+	
+</project>

@@ -1,0 +1,103 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+id="de.grogra.components"
+version="1.5"
+xmlns="http://grogra.de/registry">
+
+<import plugin="de.grogra.pf"/>
+<import plugin="de.grogra.rgg"/>
+<import plugin="de.grogra.imp"/>
+<import plugin="de.grogra.pf.ui.swing"/>
+
+<library file="Components.jar" prefixes="{de.grogra.components}"/>
+
+<registry>
+ 
+	<ref name="io">
+		<ref name="filetypes">
+			<ext name="component-zip" extensions="{.zip}" mimeType="application/x-grogra-component+zip"/>
+		</ref>
+		<ref name="mimetypes">
+			<mimetype name="application/x-grogra-component+zip">
+			<filter input="is" create="de.grogra.components.ComponentReader"/>
+			<link name="layout" source="/ui/layouts/componentdesign"/>
+			</mimetype>
+			
+			<ref name="application/x-java-jvm-local-objectref">
+				<filter name="zip"
+					inputClass="de.grogra.pf.registry.Registry"
+					create="de.grogra.components.ComponentWriter">
+				</filter>
+			</ref>
+		</ref>
+	</ref>
+	
+	
+	<ref name="ui">
+		<ref name="layouts">
+			<layout name="componentdesign">
+			<exists name=".available" ref="/project"/>
+			<main>
+				<split orientation="horizontal">
+				<split orientation="vertical" location="0.8">
+					<split orientation="vertical">
+					<link source="/ui/panels/2d/componentview"/>
+					</split>
+					<split orientation="vertical">
+					<split orientation="horizontal">
+						<link source="/ui/panels/attributeeditor"/>
+						<link source="/ui/panels/componentdescription"/>
+					</split>
+					<link source="/ui/panels/statusbar"/>
+					</split>
+				</split>
+				<split orientation="vertical">
+					<link source="/ui/panels/texteditor"/>
+					<split orientation="horizontal" location="0.4">
+					<tab>
+						<link source="/ui/panels/rgg/console"/>
+						<link source="/ui/panels/log"/> <!-- Messages -->
+					</tab>
+					</split>
+				</split>
+				</split>
+			</main>
+			</layout>
+		</ref>
+
+		<ref name="panels">
+			<panel name="componentdescription">
+			<exists name=".available" ref="/project"/>
+			<object expr="de.grogra.components.ComponentDescriptionManager.createPanel">
+				<var name="context"/>
+				<vars/>
+			</object>
+			</panel>
+		</ref>
+		<ref name="panels">
+			<ref name="objects">
+			<panel name="components">
+				<exists name=".available" ref="/project" />
+				<object expr="de.grogra.components.ComponentInspectorManager.createHierarchicalComponentInspector">
+				<var name="context" />
+				<vars />
+				</object>
+			</panel> 
+			</ref>
+		</ref>
+	</ref>
+
+	<!-- manue entry for new components -->
+	<ref name="hooks">
+		<ref name="configure">
+			<ref name="main">
+			<insert target="/workbench/menu/src/file/openclose/new" resolveLinks="false">
+				<command name="newcomponent" class="de.grogra.components.NewComponentObject"/>
+			</insert>
+			</ref>
+		</ref>
+	</ref>
+	
+	
+</registry>
+</plugin>

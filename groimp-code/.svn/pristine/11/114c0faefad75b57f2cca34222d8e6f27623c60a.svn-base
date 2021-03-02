@@ -1,0 +1,155 @@
+== 1.6 ==
+ * added library of textures
+ * added Video-Export-Plugin
+ * added OpenAlea interface
+ * added "tic/toc functions" to measure performance
+ * added color maps
+ * added PLY export
+ * added LaTeX/TikZ export
+ * added bidirectional BwinPro interface
+ * added Rchart plugin
+ * added 2/3D NURBS editor
+ * added SphereSegment, GPP, and GWedge 3D objects
+ * added "render as wireframe" flag of objects in OpenGL views
+ * general bug fixes
+
+== 1.5 ==
+ * added export to file function to Dataset and DatasetRef (Example: Technics -> ChartsDemo2.gsz)
+ * added leaf3d, getMesh, triangulate and getAreaOfTriangulation functions (Show Examples -> leaf3dDemo)
+ * added snapshot function to 2d graph view
+ * added changes tab to help panel (program history)
+ * added check for updates button / auto check at program start
+ * added list and help command to the console
+ * added Panel -> Graph -> Textual overview
+ * added Help -> Function Browser
+ * added Help -> System Info
+ * added Command History to XL Console
+ * added getSurfaceArea, getVolume functions to all primitives (nodes extends ShadedNull class)
+ * added getSurfaceArea, getVolume functions to the library class to calculate the values for a subgraph
+ * added functions to control view3d repaint
+ * added Library functions to calculate and visualize the convex hull (Show Examples -> convexHull)
+ * added Library functions to calculate the XY-projection (Show Examples -> projection)
+ * added references for spectra and light distributions (Show Examples -> LampDemo)
+ * added functions to visualize the physical light distribution
+ * added concepts for multi-scaled modelling and level-of-detail visualization
+ * added STL export
+ * added copy protection for models
+ * added light visualization for CPU LM
+ * added standard CIE norms (spectral power distributions)
+ * added LIGNUM reimplementation
+ * added 3-d Voronoi framework
+ * added WebGL export
+ * added 3-d TextBlock and Legend primitives
+ * added support for infinite canopies
+ * enabled AreaLight for FluxLightModel
+ * updated jEdit
+ * extended CPU LM to collect also received, reflected and transmitted power
+ * extended "Show Examples" gallery
+ * general bug fixes
+
+== 1.4.2 ==
+ * added undo (derivation) step button (also as function for XL in Library; Example: Technics->undoStep.gsz)
+ * peped up and extended "Show Examples" gallery
+ * reactivated and changed splash screen (now: exchangeable foreground images)
+ * added possibility of coloured print and println statement to the XL-console (Example: Technics->colouredPrintlns.gsz)
+ * added new functions: getGraphSize(), getSceneGraphSize(), getTimeForRepaint(), getTimeForTraversingGraph() (Example: Technics->measureModelData.gsz)
+ * enhanced make snapshot / rendered image function (Example: Technics->MovieDemo.gsz)
+ * added export3DSzene function (Example: Technics->export3DScene.gsz)
+ * added background colour switcher for 3D-View 
+ * updated / extended Chinese translation
+
+== 1.4.1 ==
+ * fixed display problems with SMB objects 
+ * fixed problem with reset-button in the GreenLab model
+
+== 1.4 ==
+ * added GreenLab/XL
+ * added MTG support (import and export)
+ * added import and export of subgraphs via XML documents
+ * fixed bug for unimplemented methods from interfaces
+ * fixed bug of missing text labels when render window was resized
+ * fixed bug of missing textures when render window was resized
+ * fixed bug of VRML export
+
+== 1.3 ==
+ * added GPUFlux - GPU-Raytracer + spectral rendering
+ * extended DTD project loader + support for editing DTD-files directly via JEdit 
+ * extended set of chart types
+ * Linux installer for Debian and Ubuntu
+ * win32 and win64 installer support
+ * added JNA wrapper for CVODE (part of SUNDIALS)
+ * added MTG import
+ * added Chinese translation
+ * added GreenLab/XL (experimental)
+ * added SMB (3D file format) import
+
+== 1.2.1 == (not official)
+ * added DTD project loader 
+
+== 1.2.0 ==
+ * added GroPhysics
+ * added new layout algorithm for 2D view
+ * added point clouds as primitive
+ * added virtual laser-scanner
+ * added implicit volumes to raytracer
+ * added supershape primitive
+ * fixed bug when using multiple screens
+
+== 1.1.0 ==
+ * new 3D view using GLSL
+ * new GroIMP icon
+ * fixed bug in Carpenter texture generator
+ * improved ODE support
+ * modified synchronization to allow updating of 3D view while integrating
+
+== 1.0.0 ==
+ * added GPU-Raytracer Sunshine for PT, BPT, and spectral rendering (experimental)
+ * added support for ODEs
+ * added OpenAlea plugin
+ * improved X3D plugin (now uses XMLBeans to generate XML parser)
+ * added Object Inspector (hierarchical and flat)
+
+== 0.9.8 ==
+ * added X3D import/export
+ * added Billboard generator
+ * extracted VMX (virtual machine extension) into its own plugin
+ * improved GUI
+ * node folding in 2D view
+
+== 0.9.7 ==
+ *  DXF/OBJ import for 3D objects
+ * parallel version of the radiation model which makes use of multiple processors
+ * new examples shapes, Ludo, Sierpinski3D
+
+== 0.9.6 ==
+ * changed licence from GPLv2 to GPLv3
+ * added 3D-CS (an XFrog clone)
+
+== 0.9.5 ==
+ * LightModel
+ * HDR mode for Twilight renderer
+ * OpenEXR Writer
+ * SunSkyLight shader based on Sunflow
+ * Renaming of objects is possible within GUI
+ * Enhancements in Library class
+ * New module syntax
+ * Classes and modules declared in *.rgg-files are members of main RGG class
+ * Update to Retroweaver 2.0, ASM 3.0
+
+== 0.9.4 ==
+ * DXF-Exporter
+ * Multiscale-Features (diploma thesis Soeren Schneider),
+   enabling partial import/export from/to VRML and X3D
+ * HTTP server
+ * built-in raytracer improved, named "Twilight"
+ * uses retroweaver to allow developers to use Java 1.5, while retaining
+   JRE 1.4 compatibility for end users
+ * MeshNode, graph rotation systems
+
+== 0.9.3.2 ==
+ * built-in raytracer & stochastical pathtracer
+ * Box usable as turtle command (transforms similar to Cylinder)
+ * XL compiler compiler supports the declaration and usage of variable arity methods
+ * Projects may contain several RGG, XL and Java files. In addition, JAR files can be included.
+ * Work on an RGG tutorial started
+ * Tropism commands RD RP RN

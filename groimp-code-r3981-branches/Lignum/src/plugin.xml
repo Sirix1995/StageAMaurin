@@ -1,0 +1,15 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.lignum"
+  version="0.0.1"
+  xmlns="http://grogra.de/registry">
+
+  <import plugin="de.grogra.vecmath"/>
+  <import plugin="de.grogra.ray"/>
+  <import plugin="de.grogra.imp3d"/>
+  <import plugin="de.grogra.rgg"/>
+  <import plugin="de.grogra.blocks"/>
+
+  <library file="Lignum.jar" prefixes="{de.grogra.lignum}"/>
+
+</plugin>

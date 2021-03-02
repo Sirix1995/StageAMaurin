@@ -1,0 +1,182 @@
+<project name="common" default="app">
+  <description>
+    Common Ant buildfile
+  </description>
+
+  <!-- Customize this for your system -->
+
+  <!-- path to htmlhelp-stylesheets for docbook -->
+
+  <!-- path to htmlhelp.xsl, needed to build help pages -->
+  <!--<property name="stylesheet" value="/usr/share/sgml/docbook/xsl-stylesheets/htmlhelp/htmlhelp.xsl"/>-->
+  <!--<property name="stylesheet" value="/usr/local/Cellar/docbook-xsl/1.79.1/docbook-xsl/htmlhelp/htmlhelp.xsl"/>-->
+  <property name="stylesheet" value="/usr/share/xml/docbook/stylesheet/docbook-xsl/htmlhelp/htmlhelp.xsl"/>
+
+  <!-- path to xsltproc executable (if this is on the PATH, the following setting is sufficient) -->
+  <property name="xsltproc" value="xsltproc"/>
+
+  <!-- End of settings which have to be customized -->
+
+  <property name="distlib" value="${ant.project.name}.jar"/>
+  <property name="distdir" value="../app/plugins/${ant.project.name}"/>
+  <property name="src2dist" value=""/>
+  <property name="src2jar" value=""/>
+  <property name="build2dist" value=""/>
+
+  <path id="build.libs">
+  	<pathelement location="../Build/lib/ant-antlr.jar"/>
+  	<pathelement location="../Build/lib/antlr.jar"/>
+  	<pathelement location="../Build/lib/velocity-dep.jar"/>
+  	<pathelement location="../Build/build/"/>
+  </path>
+
+  <taskdef name="vtl" classname="de.grogra.tools.VTLPreprocessor">
+  	<classpath refid="build.libs"/>
+  </taskdef>
+
+  <taskdef name="enhance" classname="de.grogra.tools.Enhance">
+  	<classpath refid="build.libs"/>
+  </taskdef>
+
+  <taskdef name="antlr2" classname="de.grogra.tools.ANTLR">
+  	<classpath refid="build.libs"/>
+  </taskdef>
+	
+  <target name="-appenddeps">
+  	<echo message="${ant.project.name}"/>
+    <echo file="../Build/.projects.tmp" append="true" message=",${ant.project.name}"/>
+    <antcall target="-addjavadoc"/>
+    <echo file="../Build/.dependencies.tmp" append="true"
+      message="  &lt;target name=&quot;${ant.project.name}&quot; depends=&quot;dummy"/>
+    <antcall target="-projects"/>
+    <echo file="../Build/.dependencies.tmp" append="true"
+      message="&quot;&gt;${line.separator}
+   &lt;ant dir=&quot;${ant.project.name}&quot; target=&quot;$${target}&quot;/&gt;${line.separator}
+ &lt;/target&gt;${line.separator}"/>
+  </target>
+
+  <target name="-addjavadoc">
+    <echo file="../Build/.javadocpath" append="true" message="${ant.project.name}/src:"/>
+  </target>
+
+  <target name="compile_nosrc">
+    <echo file=".libs" message=" "/>
+    <antcall target="-libs"/>
+    <antcall target="-projects"/>
+    <loadfile property="libs" srcFile=".libs"/>
+    <mkdir dir="build"/>
+    <javac srcdir="src" destdir="build" source="7" target="7" includeantruntime="false" classpath="${libs}:${jogl.jar.path}"/>
+<!-- <javac srcdir="src" destdir="build" source="1.5" target="1.5" includeantruntime="false" classpath="${libs}:${jogl.jar.path}"/>  -->
+    <copy todir="build">
+      <fileset dir="src" includes="plugin.xml **/*.properties **/*.h **/*.cl **/*.rgg META-INF/ files/ ${src2dist} ${src2jar}"/>
+    </copy>
+  </target>
+
+  <target name="src"/>
+
+  <target name="compile" depends="src">
+    <antcall target="compile_nosrc"/>
+  </target>
+ 
+  <target name="-libs"/>
+
+  <target name="-projects"/>
+
+  <target name="-src-vtl">
+    <vtl inplace="true" stamp=".vtljava.stamp" outputDirectory="src" outputFile="../.vtl.tmp">
+      <fileset dir="src" includes="**/*.java">
+        <contains text="!!*/"/>
+      </fileset>
+    </vtl>
+    <vtl stamp=".vm.stamp" outputDirectory="src" outputFile="../.vtl.tmp">
+      <fileset dir="src" includes="**/*.vm"/>
+    </vtl>
+  	<delete file=".vtl.tmp" failonerror="false"/>
+  	<delete file="velocity.log" failonerror="false"/>
+  </target>
+
+  <target name="-src-vm">
+    <vtl stamp=".vm.stamp" outputDirectory="src" outputFile="../.vtl.tmp">
+      <fileset dir="src" includes="**/*.vm"/>
+    </vtl>
+  	<delete file=".vtl.tmp" failonerror="false"/>
+  	<delete file="velocity.log" failonerror="false"/>
+  </target>
+
+  <target name="-src-enhance">
+    <enhance stamp=".enhance.stamp" tmp=".enhance.tmp">
+      <fileset dir="src" includes="**/*.java">
+        <contains text="enh:"/>
+      	<!-- containsregexp expression="^\s*\/\/\s*enh:"/ -->
+      </fileset>
+      <fileset dir="src" includes="**/*.sco"/>
+    </enhance>
+  	<delete file=".enhance.tmp" failonerror="false"/>
+  </target>
+
+  <target name="-addlib">
+    <echo file=".libs" append="true" message="../${ant.project.name}/${lib}:"/>
+  </target>
+
+  <target name="-addproject">
+    <loadfile property="x" srcFile="../${proj}/.libs" failonerror="false"/>
+    <echo file=".libs" append="true" message="../${proj}/build:${x}"/>
+  	<echo file="../Build/.dependencies.tmp" append="true" message=",${proj}"/>
+  </target>
+
+  <target name="-app">
+    <mkdir dir="${distdir}"/>
+    <jar destfile="${distdir}/${distlib}"
+      basedir="build"
+      excludes="plugin.xml plugin*.properties files/ ${src2dist} ${build2dist}"
+      compress="false"/>
+    <copy todir="${distdir}">
+      <fileset dir="build" includes="plugin.xml plugin*.properties files/ ${src2dist} ${build2dist}"/>
+    </copy>
+    <copy todir="${distdir}" flatten="true">
+      <fileset dir="." includes="lib/*"/>
+    </copy>
+    <copy todir="${distdir}" failonerror="false" quiet="true">
+      <fileset dir="lib" includes="*/*"/>
+    </copy>
+  </target>
+
+  <target name="app" depends="compile_nosrc,doc">
+    <antcall target="-app"/>
+  </target>
+
+  <target name="app_nodoc" depends="compile_nosrc">
+    <antcall target="-app"/>
+  </target>
+
+  <target name="doc"/>
+
+  <target name="-doc">
+    <mkdir dir="build/doc"/>
+    <property name="output" value="build/doc/index.html"/>
+    <exec executable="${xsltproc}">
+<!--      <env key="XML_CATALOG_FILES" value="/usr/share/xml/docbook/stylesheet/docbook-xsl/catalog"/> -->
+      <arg value="--catalogs"/>
+      <arg value="--output"/>
+      <arg file="${output}"/>
+      <arg value="--stringparam"/>
+      <arg value="section.autolabel"/>
+      <arg value="1"/>
+      <arg value="--stringparam"/>
+      <arg value="section.label.includes.component.label"/>
+      <arg value="1"/>
+      <arg value="--stringparam"/>
+      <arg value="suppress.navigation"/>
+      <arg value="0"/>
+      <arg file="${stylesheet}"/>
+      <arg file="${input}"/>
+    </exec>
+    <copy todir="build/doc/res" failonerror="false">
+      <fileset dir="src/doc/res"/>
+    </copy>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+</project>

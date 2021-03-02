@@ -1,0 +1,25 @@
+<project name="IMP-2D" default="compile">
+
+  <description>
+    Ant build file for the 2D plugin of GroIMP
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="IMP"/>
+    </antcall>
+  </target>
+
+  <target name="src">
+    <antcall target="-src-enhance"/>
+  </target>
+
+	<target name="doc">
+		<antcall target="-doc">
+		  <param name="input" value="src/doc/doc.xml"/>
+		</antcall>
+	  </target>
+	
+</project>

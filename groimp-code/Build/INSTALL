@@ -1,0 +1,294 @@
+GroIMP 1.6
+
+
+Growth-Grammar-Related Interactive Modelling Platform -- Source distribution
+----------------------------------------------------------------------------
+
+Since you are reading this file, you have already downloaded and unpacked the
+GroIMP source distribution. Your installation directory includes a number
+of subdirectories, each of which contains a single Java project. Some
+projects depend on other projects, some do not. All projects collectively
+comprise a basic GroIMP installation including support for, e.g.,
+3D-modelling and rule-based modelling with XL / Relational Growth Grammars.
+
+
+Requirements
+------------
+
+GroIMP has been tested on Unix and Windows platforms. As a Java application,
+it should follow Java's WORA-principle (Write Once, Run Anywhere) and, thus,
+should run on every Java-capable platform (at least in theory).
+
+GroIMP 1.6 requires a Java installation of version 1.6 or later. To
+compile the sources, you need at least a Java compiler -- javac or jikes
+will do. This source code is prepared for building with Ant which you
+should install for an easy build process (http://ant.apache.org/). Some
+IDE distributions (e.g. Eclipse, Netbeans) already include Ant in their
+environment.
+
+
+Building GroIMP using Ant
+-------------------------
+
+* First of all verify that Ant (version 1.6 or later) is installed correctly
+  and works properly. Ant needs access to a Java compiler capable of
+  compiling source code of Java version 1.5.
+
+* On your command line, change to the "Build" directory of GroIMP's source
+  distribution (which includes the Ant buildfile build.xml).
+
+* Invoke Ant by the command "ant". This produces a binary distribution
+  of GroIMP in the directory "app". You are done.
+
+* Now GroIMP can be invoked by the command "java -jar app/core.jar".
+  If you want to invoke GroIMP from another directory, ensure that the
+  file after the "-jar" option points to the jar-file "core.jar" in
+  the "app"-directory.
+
+
+Building GroIMP using Eclipse
+-----------------------------
+
+Another possibility is to build GroIMP using Eclipse, a Java-based open-source
+integrated development environment. Especially if you want to make your own
+changes or extensions to the source code, this is a good option. Eclipse
+is available at http://www.eclipse.org/. Make sure that the JDT plugin
+(Java Development Tools) is included in your Eclipse installation.
+
+- The source distribution of GroIMP includes Eclipse project files
+  (.project and .classpath) in the project directories. Add all projects
+  of GroIMP's source distribution to your workspace. This is
+  done by clicking "File/Import...", selecting "Existing Project" in the
+  wizard and choosing the project directory on the last wizard page.
+  This has to be done for every project of the distribution (Utilities,
+  Graph, Platform-Core, ...). If there are compilation errors, check that your
+  compiler options are correctly set. They can be set up in the "Preferences"-
+  dialog ("Window/Preferences") in the section "Java/Compiler". Ensure
+  a source compatibility of 1.5 in the tab "Compliance and Classfiles".
+	
+- If all projects are included and compiled without error, GroIMP is ready
+  to be started from within Eclipse. Click "Run/Run..." to open the
+  "Run"-dialog and create a new "Java Application"-configuration. Choose
+  "Platform-Core" as project and de.grogra.pf.boot.Main as main class.
+  Now go to the "Arguments"-tab and specify "--project-tree" as program
+  argument. By clicking on "Run", GroIMP should be started.
+
+- For the purpose of debugging, you should add all GroIMP-related projects
+  of your workspace to the "Source Lookup Path" in the "Source"-tab of the
+  run-configuraton. To be able to do so, deactivate "Use default source lookup
+  path".
+
+
+Building GroIMP using other tools
+---------------------------------
+
+GroIMP can be built using other tools, e.g., using only javac. Make sure
+that the classpath for the compilation of a project is correctly
+set to include all the paths to projects on which the project depends directly
+or indirectly. Which (direct) dependencies exist can be seen in the
+build.xml-files for Ant or the .project-files for Eclipse which are included
+in the source distribution.
+
+To be able to run GroIMP, it is mandatory to follow one of the two
+directory layouts for binary files described in the following section.
+
+
+Creating a release
+------------------
+
+For the creation of a release it is best to use a Linux system. You have to install
+a Java Development Kit, xsltproc, wine, docbook and docbook-xsl. Within wine
+you have to install NSIS (http://nsis.sourceforge.net) by running
+"wine nsis-xyz-setup.exe". NSIS is needed to create the Windows installers.
+Then you may have to adapt some paths in build.xml and buildproject.xml, namely
+for makensis, javadoc6, the docbook-htmlhelp stylesheet and xsltproc.
+
+Afterwards, you have to execute the "release" target of the Ant buildfile build.xml in
+the "Build" project. You can do this on the command line, or within Eclipse by
+selecting the command "Run As/Ant Build..." in the context menu of build.xml.
+If everything is installed correctly, this should produce the release files in
+the top-level directory of GroIMP within some minutes.
+
+
+Extending and/or modifying source code
+--------------------------------------
+
+Your are allowed to extend and/or modify GroIMP's source code according to the
+rules of the GNU General Public License (see the file LICENSE).
+
+To facilitate rebuilding of GroIMP or its projects after source code
+modification, this source distribution provides Ant buildfiles (build.xml)
+for the whole GroIMP and each project. Just run the command "ant <target>" in
+the directory of the buildfile, where <target> is one of the following:
+
+
+For the buildfiles of projects:
+
+* clean
+  This removes all compiled and copied files in the build-directory.
+
+* compile_nosrc
+  This compiles the java-files in the src-directory to class-files in the
+  build-directory. In addition, resource files are copied from src to
+  build.
+
+* src
+  This target preprocesses some source files (.java, .g, .vm) to java-files
+  using the preprocessing tools available at http://www.grogra.de/. For
+  installation, see the requirements above. If modifications have been made
+  to files which need preprocessing, the target src has to be run.
+
+* compile
+  This first runs the target src and then compile_nosrc. This ensures that any
+  modificitation of source code, even of source code which needs
+  preprocessing, is reflected in the compiled binary files.
+
+* doc
+  This is empty by default, but may be overriden in order to process
+  documentation from its sources to the output format.
+
+* app
+  This first runs the target compile_nosrc and then produces the files for a
+  binary distribution (jar-files, resource files) in the app/plugins-directory
+  of the GroIMP installation.
+
+
+For GroIMP's main buildfile:
+
+* clean
+  This invokes the clean-target for every project and, in addition, removes
+  the "Platform"-directory which contains the built binary distribution.
+
+* compile_nosrc, src, compile, doc, weave
+  These targets simply invoke themselves for every project.
+
+* app
+  This compiles all projects (including documentation) and builds a binary
+  distribution in the directory "app".
+
+* zip
+  This creates a zip-file of previously created binary distribution.
+
+Directory layouts for compiled files
+------------------------------------
+
+At runtime, GroIMP expects a distinct directory layout to run correctly.
+Without the "--project-tree"-option given, it looks as follows:
+
+root-directory
+|-- core.jar
+|-- <additional files copied from Platform-Core/src (licenses, splash, ...)>
+`-- plugins
+    |-- Plugin 1
+    |   |-- plugin.xml
+    |   |-- plugin.properties
+    |   |-- <jar-file of plugin>
+    |   `-- <additional files copied from the src- and lib-directories>
+    |-- Plugin 2
+    |   ...
+    ...
+
+"core.jar" includes all class- and resource-files of non-plugin-projects
+(Utilities, Graph, Platform-Core). The "plugins"-directory contains one
+subdirectory for every plugin-project (those with a plugin.xml-file in their
+src-directory).
+
+Having this layout, you can start GroIMP with the command
+"java -jar path/to/core.jar" or, when your system is set up suitably, just by
+clicking on the jar-file.
+
+If you build GroIMP using Ant as described above, this layout is produced
+in the "app"-directory of the source distribution.
+
+
+During development, having to rebuild the jars after each source code
+modification would be very inconvenient. For this purpose, the
+"--project-tree"-option can be specified when invoking GroIMP. In this case,
+the expected layout looks like:
+
+root-directory
+|-- Project 1
+|   |-- src
+|   |   `-- <source files, not needed at runtime>
+|   |-- build
+|   |   |-- plugin.xml (only for plugin-projects)
+|   |   |-- plugin.properties (only for plugin-projects)
+|   |   |-- de
+|   |   |   `-- grogra
+|   |   |       `-- <subdirectories containing class-files>
+|   |   `-- <additional files copied from the src-directory>
+|   `-- lib
+|       `-- <needed jar-files>
+|-- Project 2
+|   ...
+...
+
+This is the source distribution's layout, after the build-directories
+have been added including the compiled binaries. If you build GroIMP
+using Eclipse, you get this layout. Ant produces it if you specify "compile"
+as target, and in one of its intermediate steps of the default target
+"app".
+
+In this layout, the build-directories of the non-plugin-projects
+XL-Core, Utilities, Graph and Platform-Core have to be present in
+Java's classpath in order to be able to run GroIMP. If your current directory
+is the distributions' root-directory, you would specify this together with the
+"--project-tree"-option and the main class of GroIMP, de.grogra.pf.boot.Main,
+in the command line (all in one line!)
+
+java -classpath XL-Core/build:Utilities/build:Graph/build:Platform-Core/build
+    de.grogra.pf.boot.Main --project-tree
+
+On Windows systems, the colons have to be replaced by semicolons:
+
+java -classpath XL-Core/build;Utilities/build;Graph/build;Platform-Core/build
+    de.grogra.pf.boot.Main --project-tree
+
+
+Java options for running GroIMP
+-------------------------------
+
+Possibly, the specification of Java options may enhance the runtime
+behaviour. See the documentation of your Java installation and/or your
+development environment for possible options. E.g., for the Java runtime
+environment of Sun, the option -Xmx specifies the maximum amount of heap
+memory size that should be allocated. The default value of this option
+may be much smaller than your installed main memory size, in this case
+GroIMP cannot benefit from your memory until you specify the -Xmx option
+as in
+
+java -Xmx400m -jar app/core.jar
+
+which allows a maximum heap memory allocation of 400 MB.
+
+
+Restrictions on distribution
+----------------------------
+
+This release of the GroIMP distribution is covered by the GNU General Public
+License as described by the following copyright notice.
+
+GroIMP Extensible, Interactive Modelling Platform
+Copyright (C) 2002-2008 Lehrstuhl Grafische Systeme, BTU Cottbus
+Copyright (C) 2008-2018 GroIMP Developer Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 3
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+A copy of the GNU General Public License can be found in the file
+LICENSE, included in this distribution.
+
+
+Third party content
+-------------------
+
+Some plugins contain products of third parties. See the
+"Help/About GroIMP"-dialog of GroIMP and license-files in the
+source-distribution.

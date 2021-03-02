@@ -1,0 +1,158 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin id="de.grogra.ext.sunshine" version="1.2"
+  class="de.grogra.ext.sunshine.SunshinePlugin" xmlns="http://grogra.de/registry">
+
+  <library file="Sunshine.jar" prefixes="{de.grogra.ext.sunshine}" />
+
+  <import plugin="de.grogra.imp3d" />
+
+  <registry>
+    <ref name="renderers">
+
+      <ref name="3d">
+
+        <object name="Sunshine" expr="de.grogra.ext.sunshine.Sunshine">
+          <var name="item" />
+          <option name="grid" type="java.lang.Integer" value="2" />
+
+          <option name="rec_deep" type="java.lang.Integer" value="3" />
+
+          <option name="rel_brightness" type="java.lang.Float"
+            value="1.0" />
+
+          <option name="accelerator" type="java.lang.Boolean"
+            value="false" />
+
+          <option name="rayprocessor"
+            type="de.grogra.ext.sunshine.Sunshine.RAYPROCESSOR" value="de.grogra.ext.sunshine.SunshinePathtracer" />
+
+          <optiongroup name="Additional_options">
+            <option name="tile_size" type="java.lang.Integer"
+              value="256" />
+            <option name="refresh" type="java.lang.Integer"
+              value="30" />
+            <option name="loopSteps" type="java.lang.Integer"
+              value="1000" />
+          </optiongroup>
+
+          <optiongroup name="SpecialOptions">
+            <option name="sepSecRaySpawn" type="java.lang.Boolean"
+              value="false" />
+            <option name="sepUVMapping" type="java.lang.Boolean"
+              value="false" />
+            <option name="texSizeOffset" type="java.lang.Integer"
+              value="0" />
+          </optiongroup>
+
+          <optiongroup name="BidirectionalPathTracer">
+            <option name="eyeDepth" type="java.lang.Integer"
+              value="10" />
+            <option name="lightDepth" type="java.lang.Integer"
+              value="10" />
+            <option name="heuristicExp" type="java.lang.Integer"
+              value="2" />
+          </optiongroup>
+
+          <optiongroup name="SpectralPathTracer">
+            <option name="lambdaMin" type="java.lang.Integer"
+              value="360" />
+            <option name="lambdaMax" type="java.lang.Integer"
+              value="830" />
+            <option name="lambdaStep" type="java.lang.Integer"
+              value="1" />
+          </optiongroup>
+        </object>
+
+      </ref>
+
+    </ref>
+
+    <ref name="objects">
+      <ref name="3d">
+        <ref name="shaders">
+          <directory name="sunshineSpectral">
+            <factory name="lambertShader"
+              class="de.grogra.ext.sunshine.spectral.shader.LambertShader" />
+            <factory name="cookTorranceShader"
+              class="de.grogra.ext.sunshine.spectral.shader.CookTorranceShader" />
+            <factory name="microfacetShader"
+              class="de.grogra.ext.sunshine.spectral.shader.MicrofacetShader" />
+            <factory name="glassShader"
+              class="de.grogra.ext.sunshine.spectral.shader.GlassShader" />
+            <factory name="metalShader"
+              class="de.grogra.ext.sunshine.spectral.shader.MetalShader" />
+            <factory name="wardShader"
+              class="de.grogra.ext.sunshine.spectral.shader.WardShader" />
+          </directory>
+        </ref>
+        <ref name="arealights">
+          <factory name="spectral"
+            class="de.grogra.ext.sunshine.spectral.lights.SpectralAreaLight" />
+        </ref>
+        <resdir name="sunshineChannels">
+          <factory name="sunshineFloatChannel"
+            class="de.grogra.ext.sunshine.spectral.shader.SunshineFloatChannel" />
+          <factory name="sunshineIDChannel"
+            class="de.grogra.ext.sunshine.spectral.shader.SunshineIDChannel" />
+          <factory name="sunshineRGBAChannel"
+            class="de.grogra.ext.sunshine.spectral.shader.SunshineRGBAChannel" />
+          <factory name="sunshineImageChannel"
+            class="de.grogra.ext.sunshine.spectral.shader.SunshineImageChannel" />
+          <factory name="sunshineSPDChannel"
+            class="de.grogra.ext.sunshine.spectral.shader.SunshineSPDChannel" />
+          <factory name="sunshineBlackBodySpectrumChannel"
+            class="de.grogra.ext.sunshine.spectral.shader.SunshineBlackBodySpectrumChannel" />
+          <factory name="nullChannel"
+            class="de.grogra.ext.sunshine.spectral.shader.NullChannel" />
+        </resdir>
+      </ref>
+    </ref>
+    <ref name="ui">
+      <ref name="editors">
+        <ref name="3d">
+          <composite name="lambertShader"
+            type="de.grogra.ext.sunshine.spectral.shader.LambertShader.$TYPE"
+            fields="{channel}" />
+          <composite name="cookTorranceShader"
+            type="de.grogra.ext.sunshine.spectral.shader.CookTorranceShader.$TYPE"
+            fields="{diffuse,specular,roughness,ior}" />
+          <composite name="microfacetShader"
+            type="de.grogra.ext.sunshine.spectral.shader.MicrofacetShader.$TYPE"
+            fields="{diffuse,specular,roughness,cauchy,ior}" />
+          <composite name="glassShader"
+            type="de.grogra.ext.sunshine.spectral.shader.GlassShader.$TYPE"
+            fields="{diffuse,specular,cauchy,ior}" />
+          <composite name="metalShader"
+            type="de.grogra.ext.sunshine.spectral.shader.MetalShader.$TYPE"
+            fields="{uRoughness,vRoughness,ior,absorption}" />
+          <composite name="wardShader"
+            type="de.grogra.ext.sunshine.spectral.shader.WardShader.$TYPE"
+            fields="{diffuse,specular,alphaX,alphaY}" />
+          <poly name="sunshineChannels"
+            type="de.grogra.ext.sunshine.spectral.shader.SunshineChannel"
+            directory="/objects/3d/sunshineChannels" />
+          <composite name="sunshineFloatChannel"
+            type="de.grogra.ext.sunshine.spectral.shader.SunshineFloatChannel.$TYPE"
+            fields="{value}" />
+          <composite name="sunshineIDChannel"
+            type="de.grogra.ext.sunshine.spectral.shader.SunshineIDChannel.$TYPE"
+            fields="{id}" />
+          <composite name="sunshineSPDChannel"
+            type="de.grogra.ext.sunshine.spectral.shader.SunshineSPDChannel.$TYPE"
+            fields="{wavelengths,intensities}" />
+          <composite name="sunshineBlackBodySpectrumChannel"
+            type="de.grogra.ext.sunshine.spectral.shader.SunshineBlackBodySpectrumChannel.$TYPE"
+            fields="{temperature}" />
+          <composite name="nullChannel"
+            type="de.grogra.ext.sunshine.spectral.shader.NullChannel.$TYPE" />
+
+          <composite name="salight"
+            type="de.grogra.ext.sunshine.spectral.lights.SpectralAreaLight.$TYPE"
+            fields="{channel}"
+            inherit="true" />
+        </ref>
+      </ref>
+    </ref>
+
+  </registry>
+</plugin>

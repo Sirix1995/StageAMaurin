@@ -1,0 +1,15 @@
+README.txt
+setup.cfg
+setup.py
+groimp/__init__.py
+groimp/__wralea__.py
+groimp/client.py
+groimp/graphio.py
+groimp.egg-info/PKG-INFO
+groimp.egg-info/SOURCES.txt
+groimp.egg-info/dependency_links.txt
+groimp.egg-info/entry_points.txt
+groimp.egg-info/namespace_packages.txt
+groimp.egg-info/not-zip-safe
+groimp.egg-info/top_level.txt
+test/test1.py

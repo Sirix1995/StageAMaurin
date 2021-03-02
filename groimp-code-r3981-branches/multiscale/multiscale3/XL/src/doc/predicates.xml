@@ -1,0 +1,90 @@
+<chapter id="c-predicates">
+<title>Class Predicates</title>
+
+<para>
+<firstterm>Class predicates</firstterm> are used as
+predicates in queries (<xref linkend="c-queries"/>). They
+are declared by a declaration of a concrete subclass of
+<classname>de.grogra.xl.qnp.ClassPredicate</classname>
+in the following way:
+</para>
+<orderedlist>
+<listitem><para>Let <replaceable>P</replaceable> be a concrete
+subclass of <classname>ClassPredicate</classname>.
+If <replaceable>P</replaceable> has a static
+method <replaceable>m</replaceable>
+named <methodname>signature</methodname> as a member,
+proceed as follows. Otherwise,
+no class predicate is declared.
+</para></listitem>
+<listitem><para>
+Let <replaceable>U<subscript>1</subscript></replaceable>, ...,
+<replaceable>U<subscript>n</subscript></replaceable> be the types of
+<replaceable>m</replaceable>'s parameters. The signature and in-/out-parameters
+of the class predicates declared in the later steps are
+determined as follows:
+<itemizedlist>
+<listitem><para>If a
+<replaceable>U<subscript>k</subscript></replaceable> equals
+<classname>ClassPredicate.InOut</classname>, then
+the signature is the subsequence of 
+<replaceable>U<subscript>1</subscript></replaceable>, ...,
+<replaceable>U<subscript>n</subscript></replaceable> where
+<replaceable>U<subscript>k</subscript></replaceable> has been removed.
+The in-out-parameter of the predicates is at index
+<replaceable>k</replaceable> (thus corresponds to the parameter
+following <replaceable>U<subscript>k</subscript></replaceable>). It is
+a compile-time error if <replaceable>k</replaceable> equals
+<replaceable>n</replaceable>, i.e., if
+<replaceable>U<subscript>k</subscript></replaceable> is the last parameter
+type.
+</para></listitem>
+<listitem><para>Otherwise, if a
+<replaceable>U<subscript>i</subscript></replaceable> equals
+<classname>ClassPredicate.In</classname>, then
+there must be a
+<replaceable>U<subscript>o</subscript></replaceable> which equals
+<classname>ClassPredicate.Out</classname>,
+or a compile-time error occurs.
+The signature is the subsequence of 
+<replaceable>U<subscript>1</subscript></replaceable>, ...,
+<replaceable>U<subscript>n</subscript></replaceable> where
+<replaceable>U<subscript>i</subscript></replaceable> and
+<replaceable>U<subscript>o</subscript></replaceable> have
+been removed. The in-parameter of the predicates has the index of
+<replaceable>U<subscript>i+1</subscript></replaceable> in this sequence,
+the out-parameter of the predicates has the index of
+<replaceable>U<subscript>o+1</subscript></replaceable> in this sequence.
+It is a compile-time error if
+<replaceable>U<subscript>i</subscript></replaceable> and
+<replaceable>U<subscript>o</subscript></replaceable> are
+neighbouring, or if <replaceable>i</replaceable> or
+<replaceable>o</replaceable> equals
+<replaceable>n</replaceable>.
+</para></listitem>
+<listitem><para>Otherwise, the signature is
+<replaceable>U<subscript>1</subscript></replaceable>, ...,
+<replaceable>U<subscript>n</subscript></replaceable>, and there
+are no in-/out-parameters.
+</para></listitem>
+</itemizedlist>
+</para></listitem>
+<listitem><para>
+Let <replaceable>T</replaceable> be the entity of which
+<replaceable>P</replaceable> is a member (thus,
+<replaceable>T</replaceable> is a package or a type).
+A class predicate is declared as a member of <replaceable>T</replaceable>
+whose simple name is the simple name of <replaceable>P</replaceable>.
+Its accessibility is the same as for <replaceable>P</replaceable>.
+</para></listitem>
+<listitem><para>
+In addition, if <replaceable>T</replaceable> is a type,
+let <replaceable>E</replaceable> be the entity of which
+<replaceable>T</replaceable> is a member.
+A class predicate is declared as a member of <replaceable>E</replaceable>
+whose simple name is the simple name of <replaceable>T</replaceable>.
+Its accessibility is the same as for <replaceable>P</replaceable>.
+</para></listitem>
+</orderedlist>
+
+</chapter>

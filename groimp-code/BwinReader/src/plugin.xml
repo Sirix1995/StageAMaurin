@@ -1,0 +1,36 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin id ="de.grogra.bwinreader" version="1.0" xmlns="http://grogra.de/registry">
+<library file ="BwinReader.jar" prefixes="{de.grogra.bwinReader}"/>
+<import plugin="de.grogra.pf"/>
+<import plugin="de.grogra.xl.compiler"/>
+<import plugin="de.grogra.pf.ui.swing"/>
+<import plugin="de.grogra.rgg"/>
+<registry>
+  <ref name="io">
+      <ref name="filetypes">
+        <ext name="TreeGross" extensions="{.xml}" mimeType="model/x-treegross"/>
+      </ref>
+  <ref name="mimetypes">
+   		<mimetype name="model/x-treegross" editable="true">
+         <filter input="reader" outputClass="de.grogra.xl.compiler.CompilationUnit" create="de.grogra.rgg.model.RGGFilter"/>
+          
+          <filter input="freader" outputClass="de.grogra.pf.io.ProjectLoader" create="de.grogra.bwinReader.BwinSourceFile$Loader">
+            <link name="layout" source="/ui/layouts/rgg"/>
+          </filter>
+  <var name="context"/>
+        </mimetype>
+  	</ref>
+  </ref>
+  		<ref name="ui">
+  		<ref name="panels">
+				<panel name="BwinReader-settings">
+					<exists name=".available" ref="/"/>
+					<object expr="de.grogra.bwinReader.GuiLauncher.createPanel">
+					<var name="context"/>
+					<vars/>
+			</object>
+		</panel>
+	</ref>
+</ref>
+</registry>
+</plugin>

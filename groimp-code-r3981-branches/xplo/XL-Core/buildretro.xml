@@ -1,0 +1,17 @@
+<project name="XL-Core-Retroweaver" default="makejar">
+  <description>
+    Ant build file for compilation of Retroweaver-Runtime
+  </description>
+
+  <target name="compile">
+  	<mkdir dir="build"/>
+	<javac srcdir="src" includes="net/,org/" destdir="build"/>
+  </target>
+	
+  <target name="makejar" depends="compile">
+    <jar destfile="../Build/lib/retroweaver-grogra.de.jar"
+         basedir="build"
+         includes="net/,org/"
+    />
+  </target>
+</project>

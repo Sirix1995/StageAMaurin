@@ -1,0 +1,25 @@
+<project name="XL" default="compile">
+
+  <description>
+    Ant build file for the XL plugin
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="XL-Core"/>
+    </antcall>
+  </target>
+
+  <target name="src">
+    <antcall target="-src-vtl"/>
+  </target>
+
+  <target name="doc">
+    <antcall target="-doc">
+      <param name="input" value="src/doc/specification.xml"/>
+    </antcall>
+  </target>
+
+</project>

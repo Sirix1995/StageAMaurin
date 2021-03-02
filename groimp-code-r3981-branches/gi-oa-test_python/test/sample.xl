@@ -1,0 +1,11 @@
+module XY extends Node {	
+	float z;
+}
+
+protected void init() [
+	Axiom ==> XY;
+]
+
+public void run() [
+    a:XY ==> a Cylinder;
+]

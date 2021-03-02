@@ -1,0 +1,49 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.ext.sunshine"
+  version="0.9.7"
+  class="de.grogra.ext.sunshine.SunshinePlugin"
+  xmlns="http://grogra.de/registry">
+
+  <library file="Sunshine.jar" prefixes="{de.grogra.ext.sunshine}"/>
+
+  <import plugin="de.grogra.imp3d"/>
+
+  <registry>
+    <ref name="renderers">
+    	<ref name="3d">
+    	 
+			<object name="Sunshine" expr="de.grogra.ext.sunshine.Sunshine">
+			<var name="item"/>        	       	        	 
+			  <option name="grid" type="java.lang.Integer" value="2" />
+			  
+			  <option name="rec_deep" type="java.lang.Integer" value="3" />
+			  
+			  <option name="accelerator" type="java.lang.Boolean" value="false" />			   
+			  
+			  <option name="rayprocessor"
+						type="de.grogra.ext.sunshine.Sunshine.RAYPROCESSOR"
+						value="de.grogra.ext.sunshine.SunshinePathtracer" />
+						
+			<optiongroup name="BidirectionalPathTracer">
+			  	<option name="eyeDepth" type="java.lang.Integer" 		value="10" />
+				<option name="lightDepth" type="java.lang.Integer" 		value="10" />	
+			</optiongroup>
+			
+			<optiongroup name="SpectralPathTracer">
+			  	<option name="lamdaMin" type="java.lang.Integer" 		value="380" />
+				<option name="lamdaMax" type="java.lang.Integer" 		value="780" />	
+				<option name="lamdaInterval" type="java.lang.Integer" 	value="5" 	/>	
+			</optiongroup>
+			
+			<optiongroup name="AdditionalOptions">
+			  	<option name="tileSize" type="java.lang.Integer" 		value="256" />
+				<option name="refresh" type="java.lang.Integer" 		value="30" 	/>	
+				<option name="loopStep" type="java.lang.Integer" 		value="1000" />	
+			</optiongroup>
+			
+        </object> 
+    	</ref>
+    </ref>
+  </registry>
+</plugin>

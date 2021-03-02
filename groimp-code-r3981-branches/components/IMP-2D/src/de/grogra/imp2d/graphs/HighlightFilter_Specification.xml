@@ -1,0 +1,10 @@
+<HighlightFilter_Specification>
+	<Filter_Hide>
+		<Criterion><de.grogra.imp.caption compare="=">RU*</de.grogra.imp.caption></Criterion>
+		<Subnodes/>
+	</Filter_Hide>
+	<Filter_Highlight>
+		<Criterion><de.grogra.imp.caption compare="=">RL*</de.grogra.imp.caption></Criterion>
+		<Result><de.grogra.imp.caption>TEST</de.grogra.imp.caption><de.grogra.imp.fillColor>0.66,0.33,0.11</de.grogra.imp.fillColor><de.grogra.imp2d.shape>Octagon</de.grogra.imp2d.shape></Result>
+	</Filter_Highlight>
+</HighlightFilter_Specification>

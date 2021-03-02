@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/IMP-3D"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Grammar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XL-Compiler"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XL-Impl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XL-VMX"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XL"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Numeric"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

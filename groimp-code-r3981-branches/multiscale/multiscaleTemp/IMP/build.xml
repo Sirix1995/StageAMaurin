@@ -1,0 +1,45 @@
+<project name="IMP" default="compile">
+  <property name="src2jar" value="*.html"/>
+
+  <description>
+    Ant build file for the GroIMP plugin
+  </description>
+
+  <target name="-libs">
+    <antcall target="-addlib">
+      <param name="lib" value="lib/jai_imageio.jar"/>
+    </antcall>
+    <antcall target="-addlib">
+      <param name="lib" value="lib/BrowserLauncher2-1_3.jar"/>
+    </antcall>
+    <antcall target="-addlib">
+      <param name="lib" value="lib/mysql-connector-java-2.0.14-bin.jar"/>
+    </antcall>
+  </target>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="Platform"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="Platform-Swing"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="Math"/>
+    </antcall>
+  </target>
+
+  <target name="src">
+    <antcall target="-src-vtl"/>
+    <antcall target="-src-enhance"/>
+  </target>
+
+  <target name="doc">
+	<antcall target="-doc">
+	  <param name="input" value="src/doc/manual.xml"/>
+	</antcall>
+  </target>
+
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Platform/lib/jsr173_1.0_api.jar"/>
+	<classpathentry kind="lib" path="/Platform/lib/xbean.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/IMP-3D"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XL-Compiler"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XL-Impl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/RGG"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Grammar"/>
+	<classpathentry kind="lib" path="lib/xegxmlbeans.jar" sourcepath="graph/exchangegraph.src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/3D-CS"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

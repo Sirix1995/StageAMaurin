@@ -1,0 +1,207 @@
+<chapter id="c-names">
+<title>Names and Scopes</title>
+
+<para>
+<firstterm>Names</firstterm> are used to refer to entities declared
+in a programme, namely to packages, class or interface types,
+class predicates, members
+(class, interface, class predicate, field, method)
+of reference types, or local
+variables (which, for the purpose of this specification, include
+method, constructor, or exception handler parameters). Names in a
+programme are either <firstterm>simple</firstterm>, consisting of a
+single identifier, or <firstterm>qualified</firstterm>, consisting of
+a sequence of identifiers separated by '.' tokens. The following
+production defines this syntax of names:
+</para>
+
+<productionset><title>Names</title>
+<production id="ebnf.name">
+  <lhs>Name</lhs>
+  <rhs>Identifier {'.' Identifier}
+  </rhs>
+</production>
+</productionset>
+
+<para>
+The XL programming language makes use of names similarly to the
+Java programming language. However, there are new ways of declaring
+entities and new contexts and rules for the disambiguation among
+packages, types, variables, methods, and class predicates
+with the same name.
+</para>
+
+<section><title>Declarations</title>
+
+<para>
+A <firstterm>declaration</firstterm> introduces one or more entities
+into a programme and includes (implicitly for type- or static-import-on-demand
+declarations and instance expression lists)
+an identifier that can be used in a name
+to refer to these entities. A declared entity is one of the following:
+</para>
+<itemizedlist>
+<listitem><para>A package, declared in a package declaraton.
+</para></listitem>
+<listitem><para>An imported type, declared in a
+single-type-import declaration
+or a type-import-on-demand declaration.
+</para></listitem>
+<listitem><para>An imported member, declared in a
+single-static-import declaration
+or a static-import-on-demand declaration.
+</para></listitem>
+<listitem><para>A class, declared in a class or module declaration.
+</para></listitem>
+<listitem><para>An interface, declared in an interface type declaration.
+</para></listitem>
+<listitem><para>A member of a reference type, one of the following:
+<itemizedlist>
+<listitem><para>A member class, declared explicitly by a member
+class declaration or implicitly by a module declaration, in the latter
+case the identifier being equal to <classname>Predicate</classname>.
+</para></listitem>
+<listitem><para>A member interface, declared by a member interface
+declaration.
+</para></listitem>
+<listitem><para>A field declared in a class, interface, or module declaration,
+or the field <methodname>length</methodname> declared implicitly in
+every array type.
+</para></listitem>
+<listitem><para>A method declared explicitly in a class or interface
+declaration, or declared implicitly by an instancing module declaration
+(the identifier being equal to <methodname>instantiate</methodname>)
+or by a module declaration
+(the identifier being equal to <methodname>signature</methodname>).
+</para></listitem>
+</itemizedlist>
+</para></listitem>
+<listitem><para>A local variable, one of the following:
+<itemizedlist>
+<listitem><para>A parameter of a method, constructor, or an exception
+handler.
+</para></listitem>
+<listitem><para>A local variable declared in a block, an expression list,
+an instance expression list, a
+<literal>for</literal>-statement, a construction block, or on the right hand
+side of a transformation or instantiation rule.
+</para></listitem>
+<listitem><para>A local variable named <methodname>$</methodname>,
+declared implicitly in an assignment or the left hand side of an
+instance expression list.
+</para></listitem>
+<listitem><para>A query variable declared in a query.
+</para></listitem>
+</itemizedlist>
+</para></listitem>
+<listitem><para>A member of the type of the instance in an
+instance scope. Instance scopes occur in instance expression lists,
+on the right hand side of rules, and in instancing methods.
+</para></listitem>
+<listitem><para>A class predicate, whose declaration is induced
+by a special class declaration (<xref linkend="c-predicates"/>).
+</para></listitem>
+</itemizedlist>
+
+</section>
+
+<section id="s-meaning"><title>Determining the Meaning of a Name</title>
+
+<para>
+The meaning of a name depends on the context in which it is used. The
+determination of the meaning of a name is done as follows.
+</para>
+<orderedlist>
+<listitem><para>The context causes the possible meanings of a given name
+to be restricted to a subset of the following meanings:
+<itemizedlist>
+<listitem><para>A <firstterm>package name</firstterm> occurs
+in the context of a package declaration and of a type-import-on-demand
+declaration.
+</para></listitem>
+<listitem><para>A <firstterm>type name</firstterm> occurs in several
+contexts, e.g., in import
+declarations, in <literal>extends</literal>- and <literal>implements</literal>-
+clauses, in the headers of field and method declarations, in queries,
+on the right hand side of rules, in property access expressions.
+</para></listitem>
+<listitem><para><firstterm>Expression names</firstterm> occur in several
+expression contexts, in queries and on the right hand side of rules.
+</para></listitem>
+<listitem><para><firstterm>Method names</firstterm> occur before
+the opening parenthesis of a method invocation expression, in
+queries and on the right hand side of rules.
+</para></listitem>
+<listitem><para><firstterm>Predicate names</firstterm> occur
+in queries.
+</para></listitem>
+</itemizedlist>
+</para></listitem>
+<listitem id="i-meaning"><para>
+If the name is a simple name, consisting of a simple identifier,
+then it is determined for every possible meaning
+whether such a meaning of the identifier actually exists
+as described by the Java Language Specification (with the addition
+of predicate names which are treated analogously to type names, replacing
+type declarations by class predicate declarations).
+Now there are three cases:
+<itemizedlist>
+<listitem><para>
+If there exists no actual meaning at all, a compile-time error
+occurs.
+</para></listitem>
+<listitem><para>
+If there exists exactly one actual meaning,
+then this is the meaning of the name.
+</para></listitem>
+<listitem><para>
+Otherwise, obscuring (see the Java Language Specification) is used in order to
+disambiguate between the alternatives. Expression names obscure
+all other meanings of names. Package names are obscured by
+all other meanings of names. Predicate names obscure method names.
+If the context is a name predicate (<xref linkend="s-namepred"/>),
+type names obscure predicate names and method names. Otherwise
+predicate names and method names obscure type names.
+</para></listitem>
+</itemizedlist>
+</para></listitem>
+<listitem><para>
+Otherwise, the name is a qualified name,
+consisting of a name <replaceable>q</replaceable>,
+a '.', and an identifier <replaceable>i</replaceable>. The meaning of the
+qualified name is determined recursively:
+<itemizedlist>
+<listitem><para>
+The meaning of <replaceable>q</replaceable> is determined by a recursion
+to step <xref linkend="i-meaning"/>, where the set of possible meanings for
+<replaceable>q</replaceable> contains
+<itemizedlist>
+<listitem><para>package names iff the current set of possible meanings
+contains package names, type names, or predicate names,
+</para></listitem>
+<listitem><para>type names iff the current set of possible meanings
+contains type names, predicate names, expression names, or method names.
+</para></listitem>
+<listitem><para>expression names iff the current set of possible meanings
+contains expression names or method names.
+</para></listitem>
+<listitem><para>The set never contains predicate names or method names.
+</para></listitem>
+</itemizedlist>
+</para></listitem>
+<listitem><para>
+Given the meaning of <replaceable>q</replaceable>, for every
+possible meaning of <replaceable>q.i</replaceable>
+it is determined whether such a meaning actually exists
+according to the Java Language Specification
+(again with the addition of predicate names). The disambiguation between
+different meanings is done as in step <xref linkend="i-meaning"/>.
+</para></listitem>
+</itemizedlist>
+</para></listitem>
+</orderedlist>
+
+</section>
+
+
+</chapter>

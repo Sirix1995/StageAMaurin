@@ -1,0 +1,18 @@
+groimp (1.6) raring; urgency=low
+
+ == 1.6 ==
+ * added library of textures
+ * added Video-Export-Plugin
+ * added OpenAlea interface
+ * added "tic/toc functions" to measure performance
+ * added color maps
+ * added PLY export
+ * added LaTeX/TikZ export
+ * added bidirectional BwinPro interface
+ * added Rchart plugin
+ * added 2/3D NURBS editor
+ * added SphereSegment, GPP, and GWedge 3D objects
+ * added "render as wireframe" flag of objects in OpenGL views
+ * general bug fixes
+
+-- GroIMP Developer Team, 01 Nov 2020 12:05:00 +0100

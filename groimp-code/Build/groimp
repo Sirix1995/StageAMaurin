@@ -1,0 +1,58 @@
+#!/bin/bash
+
+Xmx=""
+INPUTFILE=""
+rest=""
+
+# get options...
+while getopts "hLi:Xmx:" OPTION
+  do
+  case $OPTION in
+    h )  # print help
+		echo "Copyright (C) 2014 GroIMP Developer Team"
+		echo Usage: $0 [-options]
+		echo "The default action is to run GroIMP with 800 MB as maximum java heap size."
+		echo Options:
+		echo "   -h          shows this help"
+		echo "   -i <file>   define input file"      
+		echo "   -L          for software license"
+#		echo "   -Cn         Chinese GUI"
+		echo "   -Xmx<size>   set the maximum Java heap size (java - Xmx<size>m) [MB]"
+		echo ""
+		echo "GroIMP assumes to find the following files:"
+		echo "   * jogl.jar"
+		echo "   * gluegen-rt.jar"
+		echo "   * jocl.jar"
+		echo "and the associated native libraries in /usr/share/GroIMP/ext/"
+		echo "Otherwise OpenGL and OpenCL will not work." 
+		exit
+    ;;
+	i ) #input file
+		INPUTFILE="$OPTARG"
+	;;
+    L )  # show license
+		cat /usr/share/GroIMP/LICENSE
+		exit
+    ;;
+#    [Cn] )  # run Java with chinese language option
+#    	Cn=-Duser.language=zh
+#    ;;    
+    [Xmx] )  # maximum Java heap size
+    	Xmx=-"$OPTARG"
+    ;;
+    \?) # else
+    	rest=$rest" -"$OPTARG
+  esac
+done
+
+LIBs=/usr/share/GroIMP/ext
+
+cd /usr/share/GroIMP
+# run GroIMP jar
+java $Xmx -Djava.library.path=$LIBs -cp $LIBs/jocl.jar:$LIBs/jogl.jar:$LIBs/gluegen-rt.jar -jar core.jar $INPUTFILE
+
+# run GroIMP for compiled source code
+#java $Xmx $Cn -Djava.library.path=$LIBs -cp $LIBs/jocl.jar:$LIBs/jogl.jar:$LIBs/gluegen-rt.jar:XL-Core/build:Utilities/build:Graph/build:Platform-Core/build de.grogra.pf.boot.Main --project-tree
+
+# run GroIMP headless for compiled source code
+#java $Xmx $Cn -Djava.library.path=$LIBs -cp $LIBs/jocl.jar:$LIBs/jogl.jar:$LIBs/gluegen-rt.jar:XL-Core/build:Utilities/build:Graph/build:Platform-Core/build -Djava.util.prefs.userRoot=/home/<username>/home de.grogra.pf.boot.Main --project-tree --headless --debug=INFO -Xraytracerseed=$3 -- -cmd "/cmdline/render=$1 $2 $4" 2> ~/render_out.txt

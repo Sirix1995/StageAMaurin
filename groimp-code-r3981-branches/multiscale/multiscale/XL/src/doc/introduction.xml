@@ -1,0 +1,205 @@
+<chapter><title>Introduction</title>
+
+<para>The XL programming language adds syntactic
+and semantic support for access and
+rule-based modification of relational data sources to the programming language
+Java. It is an implementation of the calculus of relational growth
+grammars <xref linkend="bib-rgg"/>.
+The latter is defined as a graph-based extension of the L-system
+formalism <xref linkend="bib-lsystem"/>
+which has been widely used in plant modelling (and in fact led to the
+name XL which may be read as eXtended L-systems). However, the XL programming
+language's field of application is not restricted to graphs and plant
+modelling; it may be used for any relational data source by implementing the XL
+data model interface. Graphs are just a special, but important case. In
+this case, the programming language XL may be seen as an implementation
+of the calculus of programmed graph replacement systems as defined in
+<xref linkend="bib-progres"/>.</para>
+<para>The development of the XL
+programming language started in 2002. Since then, the language has undergone a
+set of changes. This is a normal process for an initially experimental
+language; however, one should be aware of this fact when looking at earlier
+XL-related publications. They may contain examples of source code that are no
+longer valid XL code, or they may contain terms that are no more used.
+This XL language specification reflects the first stable
+version of the XL programming language, future versions are expected to be
+essentially backwards-compatible to this specification.</para>
+<para>
+The programming language XL is defined as an extension of the Java
+programming language.
+Thus the XL programming language benefits from the well-grounded
+concepts of structured, modular and object-oriented programming on which
+the Java programming is based. Being an extension not only at the
+level of the language specification, but also at the binary level,
+all existing Java libraries can be addressed immediately by XL programmes.
+This introduces at once an enormous power,
+since the Java programming language is known for being a language with
+a comprehensive set of high-quality, freely available
+run-time libraries, including
+sophisticated graphical user interface components, internet communications,
+2D- and 3D-graphics, and XML support.
+</para>
+<para>Because the
+XL programming language is an extension of the Java programming language, this
+specification often refers (explicitly or implicitly) to the Java Language
+Specification, Second Edition <xref linkend="bib-jls2"/>
+(Java Language Specification for short), and in some
+cases to the Java Language Specification, Third Edition
+<xref linkend="bib-jls3"/>.
+The reader should be familiar with the
+Java programming language and the terms defined in the Java Language
+Specification.</para>
+
+<section><title>Organization</title>
+
+<para>This specification is organized as follows.
+The structure deliberately resembles that of the Java
+Language Specification, and some verbalizations of the
+Java Language Specification were adopted in the chapters.</para>
+
+<itemizedlist>
+<listitem><para><xref linkend="c-features"/> gives a short,
+informal overview of some of the new
+features of the XL programming language.
+</para></listitem>
+<listitem><para><xref linkend="c-datamodel"/>
+gives an overview of the XL data model interface
+and the dependencies of an XL programme on this model. The specific details of
+these dependencies are explained in the later chapters.
+</para></listitem>
+<listitem><para><xref linkend="c-vmxstate"/>
+describes the extended state of the virtual machine that is used at run-time
+and assists in implementing some of the new features of the XL programming
+language. The extended state provides a stack that is more powerful than
+the stack of the Java virtual machine, because it not only allows for
+the access of the current stack frame, but also of enclosing stack frames.
+</para></listitem>
+<listitem><para><xref linkend="c-lexical"/>
+describes the lexical structure of the XL programming
+language. It is nearly the same as for the Java programming language, with the
+difference of a set of new tokens.
+</para></listitem>
+<listitem><para><xref linkend="c-types"/>
+describes the types of the XL
+programming language. The types are those of the Java programming language,
+with the addition of the intersection type (which has also been defined
+similarly in the Java Language Specification, Third Edition).
+</para></listitem>
+<listitem><para><xref linkend="c-variables"/>
+describes the variables of the XL programming language.
+These are those of the Java programming language,
+with the addition of query variables and
+property variables.
+</para></listitem>
+<listitem><para><xref linkend="c-conversions"/>
+describes conversions. The XL programming language
+adds the possibility of implicit conversions from
+<classname>double</classname> to
+<classname>float</classname>.</para></listitem>
+<listitem><para><xref linkend="c-names"/>
+describes declarations, names and
+scopes. Declarations of modules and query variables are new features of
+the XL programming language, as are some implicit declarations.
+</para></listitem>
+<listitem><para><xref linkend="c-packages-cunits"/>
+describes the structure of a programme. As for the
+Java programming language, a programme consists of a set of compilation units,
+organized in a hierarchical package structure. The XL programming language adds
+static import declarations (which have also been defined in the Java Language
+Specification, Third Edition).</para></listitem>
+<listitem><para><xref linkend="c-classes"/>
+describes classes and interfaces. At class level, there are foure
+extensions of the Java programming language defined: Generator methods,
+operator methods,
+instancing methods, and annotations. Generator methods successively
+yield values to their invoker which is very useful for iterations over
+collections, e.g., over the objects of a relational data source.
+Operator methods are used to overload operators of the XL programming
+language.
+Instancing methods are syntactic sugar for the technique of
+object instancing common in 3D computer graphics (but this specification
+makes no reference to this concrete usage).
+Annotations are similar to the annotations
+defined in the Java Language Specification, Third Edition.</para></listitem>
+<listitem><para><xref linkend="c-predicates"/>
+describes class predicates. Class predicates are used in queries, they
+represent an atomic pattern.
+</para></listitem>
+<listitem><para><xref linkend="c-signatures"/>
+describes signatures, their applicability and specificity. A signature
+is a method or a class predicate.
+</para></listitem>
+<listitem><para><xref linkend="c-modules"/>
+describes modules. Modules are a shorter way of
+declaring classes for typical situations in rule-based
+modelling.</para></listitem>
+<listitem><para><xref linkend="c-statements"/>
+describes blocks and statements. The main extension
+is the definition of transformation blocks which contain sets of rules that
+operate in parallel on a relational data source.
+Their syntax is defined in such a way that it
+is backwards-compatible with the traditional syntax of L-systems,
+but easily extends to more complex relational data sources that contain,
+e.g., labelled hyper-edges. Quasi-parallel assignment
+statements perform modifications of properties as if they were executed in
+parallel. An enhanced <literal>for</literal>-statement
+is defined which is an extension of the
+enhanced <literal>for</literal>-statement
+of the Java Language Specification, Third Edition,
+and cooperates with generator expressions and a new iterator class.
+A construction block allows for the construction of a relational
+structure. <literal>yield</literal> is used to yield the results
+of a generator method. An
+<literal>assert</literal>-statement serves to verify
+conditions at run-time, this has also been
+defined in the Java Language Specification, Third Edition.</para></listitem>
+<listitem><para><xref linkend="c-expressions"/>
+describes expressions. These are those of the Java programming language,
+plus query expressions of relational data sources,
+expression lists (as known from the comma operator of C),
+instance scope expressions (similar to the
+<literal>with</literal>-statement of Basic and Pascal),
+property access expressions,
+exponentiation, containment,
+invocations of aggregate methods, and generator expressions, namely
+ranges of type <classname>int</classname> and <classname>long</classname>,
+array generators, guard expressions, and invocations of generator methods
+and filter methods.
+</para></listitem>
+<listitem><para><xref linkend="c-queries"/>
+describes the syntax and semantics of queries in detail. Queries are
+used in query expressions and as the left hand side of rules
+in transformation blocks. The query syntax resembles the syntax of
+the right hand side of rules in order to stress the rewriting
+character of rules, but contains various additions. E.g.,
+there is a regular-expression style syntax that allows for the specification
+of transitive closures of binary relations.
+</para></listitem>
+</itemizedlist>
+
+<para>
+The above chapters do not cover all aspects of the XL programming language.
+For the remaining aspects, the XL programming language behaves
+identically to the Java programming language (e.g., arrays, exceptions,
+threads and locks).
+</para>
+
+</section>
+
+<section><title>Relation to Predefined Classes and Interfaces</title>
+
+<para>The XL programming language cannot be defined independently from
+a set of predefined core Java classes. These classes are, among others,
+the core classes of the Java programming language in the package
+<classname>java.lang</classname>, e.g., <classname>Object</classname>,
+<classname>Class</classname>, and <classname>String</classname>,
+classes in the package <classname>de.grogra.reflect</classname>,
+and a set of classes
+in subpackages of <classname>de.grogra.xl</classname>.
+Classes are referred to
+by their canonical name, or by their simple name if their package is
+obvious from context.</para>
+
+</section>
+
+</chapter>

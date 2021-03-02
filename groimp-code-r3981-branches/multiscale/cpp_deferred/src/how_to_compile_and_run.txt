@@ -1,0 +1,74 @@
+/**************************************************************************************************
+ *
+ * How to Compile
+ *
+ **************************************************************************************************/
+
+ Windows:
+ ----------
+
+ - Install Microsoft Visual C++ Express. It is available on the internet
+ - Go to 'Start-> the Microsoft Visual Studio 2010 Express -> Visual Studio Command Prompt (2010)'
+ - Change directory to directory where 'makefile.win' resides. 
+   To change directory in command prompt, type:
+
+	cd <directory>
+ 
+ - To compile the application, type:
+
+	nmake -f makefile.win
+
+ - To clean previous compilation (in order to rebuild the application), type:
+
+	nmake -f makefile.win cln 
+
+
+ Mac:
+ ------
+ - To compile the application, type:
+
+	make -f makefile.mac
+
+ - To create application bundle for mac, type:
+ 
+	make -f makefile.mac run
+
+	
+	
+ Linux:
+ --------
+ - <coming soon>
+
+
+
+/**************************************************************************************************
+ *
+ * How to Run
+ *
+ **************************************************************************************************/
+
+ Windows:
+ ----------
+
+ - Start a command prompt. (Click on 'Start -> Run'. In 'Open', type 'cmd' and click 'Ok')
+ - Change directory to directory where 'multiscale.exe' resides.
+   Type:
+
+	cd <directory>
+
+
+ - To run application, type:
+	
+	multiscale.exe
+
+
+
+ Mac:
+ ------
+ - <coming soon>
+
+
+
+ Linux:
+ --------
+ - <coming soon>

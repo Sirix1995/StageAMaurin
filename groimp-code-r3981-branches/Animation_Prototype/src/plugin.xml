@@ -1,0 +1,94 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin id="de.grogra.animation" version="0.9.7"
+  xmlns="http://grogra.de/registry">
+
+  <library file="animation.jar" prefixes="{de.grogra.animation}" />
+
+  <import plugin="de.grogra.imp3d" />
+  <import plugin="de.grogra.pf" />
+
+  <registry>
+
+    <ref name="ui">
+      <ref name="panels">
+        <directory name="animation">
+
+          <toolbar name="toolbar">
+            <exists name=".available" ref="/project" />
+            <directory name="menu">
+              <directory name="src">
+                <command name="setKey"
+                  run="de.grogra.animation.AnimToolbar.setKey" />
+                <command name="setRadiusKey"
+                  run="de.grogra.animation.AnimToolbar.setRadiusKey" />
+                <command name="testButton1"
+                  run="de.grogra.animation.AnimToolbar.testButton1" />
+                <command name="testButton2"
+                  run="de.grogra.animation.AnimToolbar.testButton2" />
+              </directory>
+            </directory>
+          </toolbar>
+
+          <panel name="timeline">
+            <exists name=".available" ref="/project" />
+            <object
+              expr="de.grogra.animation.timeline.TimelineManager.createTimeline">
+              <var name="context" />
+              <vars />
+            </object>
+          </panel>
+
+          <panel name="trackview">
+            <exists name=".available" ref="/project" />
+            <object expr="de.grogra.animation.trackview.TrackViewManager.createTrackView">
+              <var name="context" />
+              <vars />
+            </object>
+          </panel>
+
+        </directory>
+      </ref>
+    </ref>
+
+    <ref name="hooks">
+      <ref name="projectloaded">
+        <hook name="animation">
+          <void method="de.grogra.animation.Init.init">
+            <var name="workbench" />
+            <var name="filesystem" />
+          </void>
+        </hook>
+      </ref>
+      <ref name="saving">
+        <hook name="animation">
+          <void method="de.grogra.animation.Init.save">
+            <var name="filesystem" />
+            <var name="projectfile" />
+          </void>
+        </hook>
+      </ref>
+      <ref name="rgg">
+        <ref name="finished">
+          <hook name="animationstep">
+            <void method="de.grogra.animation.AnimManager.animationStep">
+              <var name="workbench" />
+              <var name="context" />
+              <var name="methodName" />
+            </void>
+          </hook>
+        </ref>
+      </ref>
+    </ref>
+
+    <ref name="io">
+      <ref name="filter">
+        <ref name="rgg">
+          <ref name="statictypeimports">
+            <var name="de.grogra.animation.Library"/>
+          </ref>
+        </ref>
+      </ref>
+    </ref>
+    
+  </registry>
+</plugin>

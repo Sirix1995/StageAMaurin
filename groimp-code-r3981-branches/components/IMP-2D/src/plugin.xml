@@ -1,0 +1,550 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.imp2d"
+  version="1.2"
+  class="de.grogra.imp2d.IMP2D"
+  xmlns="http://grogra.de/registry">
+
+  <library file="IMP-2D.jar" prefixes="{de.grogra.imp2d}"/>
+
+  <import plugin="de.grogra.imp"/>
+
+  <registry>
+    <ref name="attributes">
+      <ref name="geometry">
+        <ref name="transformation">
+          <attribute name="transform"/>
+        </ref>
+        <ref name="shape">
+          <attribute name="shape"/>
+        </ref>
+      </ref>
+    </ref>
+    <ref name="objects">
+      <ref name="math">
+        <ref name="curves">
+          <object name="connection2d" class="de.grogra.imp2d.objects.Connection"/> 
+        </ref> 
+      </ref>
+      <ref name="graphs">
+        <factory name="topology"  class="de.grogra.imp2d.graphs.TopologyGraphDescriptor"/>
+        <factory name="highlight" class="de.grogra.imp2d.graphs.HighlightFilterDescriptor"/>
+        <factory name="component"  class="de.grogra.imp2d.graphs.ComponentGraphDescriptor"/>
+      </ref>
+      <directory name="2d">
+        <group name="geometry">
+          <command name=".addobject" run="de.grogra.imp.IMP.addNode"/>
+          <group name="primitives" itemGroup="true">
+            <object name="rectangle" class="de.grogra.imp2d.objects.Shape2D"> 
+              <config>
+                <object name="shape" class="java.awt.geom.Rectangle2D$Float">
+                  <config>
+                    <float name="width" value="0.5"/>
+                    <float name="height" value="0.5"/>
+                  </config>
+                </object>
+              </config>
+            </object>
+            <object name="ellipse" class="de.grogra.imp2d.objects.Shape2D"> 
+              <config>
+                <object name="shape" class="java.awt.geom.Ellipse2D$Float">
+                  <config>
+                    <float name="width" value="0.5"/>
+                    <float name="height" value="0.5"/>
+                  </config>
+                </object>
+              </config>
+            </object>
+            <object name="qline" class="de.grogra.imp2d.objects.QuadraticLine"/> 
+            
+            <object name="rhombus" class="de.grogra.imp2d.objects.Shape2D"> 
+            	 <config>
+            	 	<object name="shape" class="de.grogra.imp2d.objects.Rhombus">
+             			<config>
+                  		  	<float name="width" value="0.5"/>
+                    		<float name="height" value="0.5"/>
+                  		</config>
+                	</object>   
+                </config>
+           	</object>
+
+           	<object name="hexagon" class="de.grogra.imp2d.objects.Shape2D"> 
+            	 <config>
+            	 	<object name="shape" class="de.grogra.imp2d.objects.Hexagon">
+             			<config>
+                  		  	<float name="width" value="0.5"/>
+                    		<float name="height" value="0.5"/>
+                  		</config>
+                	</object>   
+                </config>
+           	</object>
+
+        	<object name="textlabel" class="de.grogra.imp2d.objects.TextLabel"/>
+                   	  
+           	  <object name="octangon" class="de.grogra.imp2d.objects.Shape2D"> 
+            	 <config>
+            	 	<object name="shape" class="de.grogra.imp2d.objects.Octagon">
+             			<config>
+                  		  	<float name="width" value="0.5"/>
+                    		<float name="height" value="0.5"/>
+                  		</config>
+                	</object>   
+                </config>
+           	</object>
+
+           	<object name="triangle" class="de.grogra.imp2d.objects.Shape2D"> 
+            	 <config>
+            	 	<object name="shape" class="de.grogra.imp2d.objects.Triangle">
+             			<config>
+                  		  	<float name="width" value="0.5"/>
+                    		<float name="height" value="0.5"/>
+                  		</config>
+                	</object>   
+                </config>
+           	</object>
+           	
+           	<object name="switchshape" class="de.grogra.imp2d.objects.Shape2D"> 
+            	 <config>
+            	 	<object name="shape" class="de.grogra.imp2d.objects.SwitchShape">
+             			<config>
+                  		  	<float name="width" value="0.5"/>
+                    		<float name="height" value="0.5"/>
+                  		</config>
+                	</object>   
+                </config>
+           	</object>
+           	 
+           	<object name="trapezoid" class="de.grogra.imp2d.objects.Shape2D"> 
+            	 <config>
+            	 	<object name="shape" class="de.grogra.imp2d.objects.Trapezoid">
+             			<config>
+                  		  	<float name="width" value="0.5"/>
+                    		<float name="height" value="0.5"/>
+                  		</config>
+                	</object>   
+                </config>
+           	</object>
+  	           	  
+            <object name="nurbs" class="de.grogra.imp2d.objects.NURBSShape2D"> 
+              <config>
+                <object name="curve" class="de.grogra.math.Circle"/>
+              </config>
+            </object>
+          </group>
+        </group>
+        <directory name="shapes">
+          <factory name="rectangle" class="java.awt.geom.Rectangle2D$Float">
+            <config useOld="de.grogra.imp2d.IMP2D.copySize">
+              <float name="width" value="0.5"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+          <factory name="ellipse" class="java.awt.geom.Ellipse2D$Float">
+            <config useOld="de.grogra.imp2d.IMP2D.copySize">
+              <float name="width" value="0.5"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+          <factory name="roundrectangle" class="java.awt.geom.RoundRectangle2D$Float">
+            <config useOld="de.grogra.imp2d.IMP2D.copySize">
+              <float name="width" value="0.5"/>
+              <float name="height" value="0.3"/>
+              <float name="arcwidth" value="0.2"/>
+              <float name="archeight" value="0.2"/>
+            </config>
+          </factory>
+          <factory name="arc" class="java.awt.geom.Arc2D$Float">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+              <float name="start" value="0"/>
+              <float name="extent" value="0.5"/>
+              <int name="type" value="0"/>
+            </config>
+          </factory>
+          
+          <factory name="rhombus" class="de.grogra.imp2d.objects.Rhombus">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>         
+
+          <factory name="octagon" class="de.grogra.imp2d.objects.Octagon">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+          
+          <factory name="triangle" class="de.grogra.imp2d.objects.Triangle">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+          
+          <factory name="trapezoid" class="de.grogra.imp2d.objects.Trapezoid">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+          
+           <factory name="switchshape" class="de.grogra.imp2d.objects.SwitchShape">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+          
+          <factory name="hexagon" class="de.grogra.imp2d.objects.Hexagon">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+         
+          <factory name="textlabel" class="de.grogra.imp2d.objects.TextLabel">
+            <config>
+              <float name="width" value="0.3"/>
+              <float name="height" value="0.3"/>
+            </config>
+          </factory>
+          
+        </directory>
+        
+        <resdir name="layouts">
+          <factory name="GeneralPurpose" class="de.grogra.imp2d.layout.GeneralPurposeLayout"/>
+          <factory name="random" class="de.grogra.imp2d.layout.RandomLayout"/>
+          <factory name="square" class="de.grogra.imp2d.layout.SquareLayout"/>
+          <factory name="circle" class="de.grogra.imp2d.layout.CircleGraphLayout"/>
+          <factory name="tree" class="de.grogra.imp2d.layout.TreeLayout"/>
+          <factory name="sugiyama" class="de.grogra.imp2d.layout.SugiyamaLayout"/>
+          <factory name="spring" class="de.grogra.imp2d.layout.SpringLayout"/>
+          <factory name="eades" class="de.grogra.imp2d.layout.EadesLayout"/>
+          <factory name="fruchterman" class="de.grogra.imp2d.layout.FruchtermanReingoldLayout"/>
+          <factory name="davidson" class="de.grogra.imp2d.layout.DavidsonHarelLayout"/>
+          <factory name="energy" class="de.grogra.imp2d.layout.EnergyModelLayout"/>
+          <factory name="touch" class="de.grogra.imp2d.layout.TouchLayout"/>
+          <factory name="simpleEdgeBased" class="de.grogra.imp2d.layout.SimpleEdgeBasedLayout"/>
+          <factory name="edgeBased2" class="de.grogra.imp2d.layout.EdgeBasedLayout2"/>
+        </resdir>
+      </directory>
+    </ref>
+    <ref name="ui">
+      <ref name="editors">
+        <directory name="2d">
+          <composite name="stroke" type="de.grogra.imp2d.objects.StrokeAdapter.$TYPE" fields="{lineWidth,lineStyle,dashLength,lineJoin,miterLimit,capStyle}"/>
+          <poly name="shape" type="java.awt.Shape" directory="/objects/2d/shapes"/>
+          <composite name="rectangle" type="de.grogra.imp2d.objects.RectangleType.$TYPE" fields="{width,height}"/>
+          <composite name="ellipse" type="de.grogra.imp2d.objects.EllipseType.$TYPE" fields="{width,height}"/>
+          <composite name="roundrectangle" type="de.grogra.imp2d.objects.RoundRectangleType.$TYPE" fields="{width,height,arcwidth,archeight}"/>
+          <composite name="arc" type="de.grogra.imp2d.objects.ArcType.$TYPE" fields="{width,height,start,extent,arcType}"/>
+          <composite name="arrow" type="de.grogra.imp2d.objects.Arrow.$TYPE" fields="{type,width,relHeight}"/>
+          <composite name="edge" type="de.grogra.imp2d.graphs.EdgeBits.$TYPE" fields="{edge,successor,branch,bits}"/>
+          <poly name="layout" type="de.grogra.imp2d.layout.Layout" directory="/objects/2d/layouts"/>
+          <composite name="layoutbase" type="de.grogra.imp2d.layout.Layout.$TYPE" fields="{redraw}">
+			<button name="*redraw" type="de.grogra.imp2d.layout.Layout.$TYPE">
+			  <command run="de.grogra.imp2d.View2DIF.layout"/>
+			</button>
+		  </composite>
+          <composite name="random" type="de.grogra.imp2d.layout.RandomLayout.$TYPE" fields="{magnitude,count,accuracy,startWithRandom, fit, transformationSteps}" inherit="true"/>
+          <composite name="spring" type="de.grogra.imp2d.layout.SpringLayout.$TYPE" fields="{count,relaxation, accuracy, attraction, repulsion, startWithRandom, fit, transformationSteps}" inherit="true"/>
+          <composite name="circle" type="de.grogra.imp2d.layout.CircleGraphLayout.$TYPE" fields="{layerCount, layerDistance, nodeDistance, fit, transformationSteps}" inherit="true"/>
+          <composite name="square" type="de.grogra.imp2d.layout.SquareLayout.$TYPE" fields="{layerCount, layerDistance, nodeDistance, topDown, fit, transformationSteps}" inherit="true"/>
+          <composite name="tree" type="de.grogra.imp2d.layout.TreeLayout.$TYPE" fields="{minDistanceX, minDistanceY, topDown, fit, transformationSteps}" inherit="true"/>
+          <composite name="sugiyama" type="de.grogra.imp2d.layout.SugiyamaLayout.$TYPE" fields="{topDown, minDistanceX, minDistanceY, fit, transformationSteps}" inherit="true"/>
+          <composite name="touch" type="de.grogra.imp2d.layout.TouchLayout.$TYPE" fields="{rigidity, damper, count, fit, transformationSteps}" inherit="true"/>
+          <composite name="eades" type="de.grogra.imp2d.layout.EadesLayout.$TYPE" fields="{relaxation, accuracy, count, startWithRandom, repellingConst, springConst, minDistanceX, minDistanceY, unconnectedNodeX, fit, transformationSteps}" inherit="true"/>
+          <composite name="energy" type="de.grogra.imp2d.layout.EnergyModelLayout.$TYPE" fields="{gravitationFactor, attractionExponent, count, minDistanceX, minDistanceY, unconnectedNodeX, fit, transformationSteps}" inherit="true"/>
+          <composite name="davidson" type="de.grogra.imp2d.layout.DavidsonHarelLayout.$TYPE" fields="{relaxation, accuracy, count, startWithRandom, frameX, frameY, attractionFactor, repulsionFactor, fit, transformationSteps}" inherit="true"/>
+          <composite name="fruchterman" type="de.grogra.imp2d.layout.FruchtermanReingoldLayout.$TYPE" fields="{relaxation, accuracy, count, startWithRandom, scaleFactor, frameX, frameY, fit, transformationSteps}" inherit="true"/>
+          <composite name="simpleEdgeBased" type="de.grogra.imp2d.layout.SimpleEdgeBasedLayout.$TYPE" fields="{edgeLength, degreeDeviationAgainstOverlapping, mirrorLayout, startWithRandom, fit, transformationSteps}" inherit="true"/>
+          <composite name="edgeBased2" type="de.grogra.imp2d.layout.EdgeBasedLayout2.$TYPE" fields="{longEdgeLength, shortEdgeLength, degreeDeviationAgainstOverlapping, mirrorLayout, startWithRandom, fit, transformationSteps}" inherit="true"/>
+          <composite name="generalPurpose" type="de.grogra.imp2d.layout.GeneralPurposeLayout.$TYPE" fields="{idealDistance, yIdealDistance, maxNbOfSteps, fast, startAgain}" inherit="true"/>
+        </directory>
+      </ref>
+      <ref name="panels">
+        <directory name="2d">
+          <panel name="view" hidden="true">
+            <object expr="de.grogra.imp.View.create">
+              <object expr="de.grogra.imp2d.View2D"/>
+              <var name="context"/>
+              <vars/>
+            </object>
+            <directory name="menu">
+              <directory name="src">
+                <directory name="view">
+                  <command name="Redraw" run="de.grogra.imp2d.View2D.layout"/>
+                  <command name="Collapse all" run="de.grogra.imp2d.graphs.TopologyGraph.collapseAll"/>
+                  <command name="Expand all" run="de.grogra.imp2d.graphs.TopologyGraph.expandAll"/>
+                  <link source="/ui/commands/snapshot" />
+                </directory>              
+                <selectable name="layout" expr="de.grogra.imp2d.View2D.getSelectableLayout">
+                  <var name="context"/>
+                </selectable>
+                <selectable name="graph" expr="de.grogra.imp2d.View2D.getSelectableGraph">
+                  <var name="context"/>
+                </selectable>
+                <separator fill="true"/>
+                <command name="move" motion="true" plugin="true"/>
+                <command name="rotate" motion="true" plugin="true"/>
+                <command name="zoom" motion="true" plugin="true"/>
+              </directory>
+              <directory name="xf">
+                <object class="de.grogra.imp.registry.AddViewComponentMenu"/>
+              </directory>
+            </directory>
+          </panel>
+          <panel name="componentview" hidden="true">
+            <object expr="de.grogra.imp.View.create">
+              <object expr="de.grogra.imp2d.ComponentView2D"/>
+              <var name="context"/>
+              <vars/>
+            </object>
+            <directory name="menu">
+              <directory name="src">
+                <directory name="view">
+					<directory name="viewmode">
+						<link source="/ui/viewcomponentview2dselection" />
+					</directory>
+					<selectable name="edges"
+						expr="de.grogra.imp.View.getSelectableEdges">
+						<var name="context" />
+					</selectable>
+                    <command name="Redraw" run="de.grogra.imp2d.ComponentView2D.layout"/>
+<!--
+                    <command name="Collapse all" run="de.grogra.imp2d.graphs.ComponentGraph.collapseAll"/>
+                    <command name="Expand all" run="de.grogra.imp2d.graphs.ComponentGraph.expandAll"/>
+-->
+					<link source="/ui/commands/snapshot" />
+				</directory>
+<!--            <selectable name="layout" expr="de.grogra.imp2d.ComponentView2D.getSelectableLayout">
+                  <var name="context"/>
+                </selectable>
+-->
+                <separator fill="true"/>
+				<command name="up" motion="true" plugin="true"/>
+				<command name="down" motion="true" plugin="true"/>
+				<separator fill="true"/>   
+<!--				<command name="uses" motion="true" plugin="true"/> -->
+                <command name="haspart" motion="true" plugin="true"/>
+                <command name="send" motion="true" plugin="true"/>
+                <command name="slot" motion="true" plugin="true"/>
+                <separator fill="true"/>
+                <command name="move" motion="true" plugin="true"/>
+                <command name="zoom" motion="true" plugin="true"/>
+              </directory>
+              <directory name="xf">
+                <object class="de.grogra.imp.registry.AddViewComponentMenu"/>
+              </directory>
+            </directory>
+          </panel>
+          <panel name="defaultview" source="view">
+            <exists name=".available" ref="/project"/>
+          </panel>
+          <panel name="graph" source="view">
+            <exists name=".available" ref="/project"/>
+            <option name="defaultGraph" type="java.lang.String" editable="false" value="/objects/graphs/topology"/>
+          </panel>
+          <panel name="componentgraph" source="componentview">
+            <exists name=".available" ref="/project"/>
+            <option name="defaultGraph" type="java.lang.String" editable="true" value="/objects/graphs/component"/>
+          </panel>          
+          <toolbar name="toolbar">
+            <exists name=".available" ref="/project"/>
+            <directory name="menu">
+              <directory name="src">
+                <link source="/objects/2d/geometry"/>
+              </directory>
+            </directory>
+          </toolbar>
+        </directory>
+      </ref>
+      
+      <ref name="tools">
+        <group name="2d">
+          <tool name="edit" tools="{de.grogra.imp2d.edit.EditTool}">
+            <directory name="bspline">
+              <eval name="de.grogra.math.BezierCurve" create="de.grogra.imp2d.edit.BezierCurveEdit"/>
+            </directory>
+          </tool>
+        </group>
+      </ref>
+      <directory name="viewcomponent2dselection" elements="{{component,de.grogra.imp.registry.ViewComponentFactory}}">
+        <component name="awt" class="de.grogra.imp2d.AWTCanvas2D" ui="de.grogra.pf.ui.awt.AWTToolkitBase"/>
+      </directory>
+      <choicegroup name="viewcomponentview2dselection"
+        declaring="de.grogra.imp2d.ComponentView2D" option="true"
+		elements="{{component,de.grogra.imp.registry.ViewComponentFactory}}">
+		<component name="graph"
+			class="de.grogra.imp2d.AWTCanvas2D" 
+			ui="de.grogra.pf.ui.awt.AWTToolkitBase">
+			<directory name="menu">
+				<selectable name="options"
+					expr="de.grogra.imp.View.getViewComponent">
+					<var name="context" />
+				</selectable>
+			</directory>
+			<option name="bendedEdges" type="java.lang.Boolean" value="true" />
+			<option name="showSlotEdges" type="java.lang.Boolean" value="true" />
+			<option name="showSlotLabels" type="java.lang.Boolean" value="true" />
+		</component>
+		<component name="hgraph" 
+			class="de.grogra.imp2d.AWTCanvas2DHierarchicalGraph" 
+			ui="de.grogra.pf.ui.awt.AWTToolkitBase">
+			<directory name="menu">
+				<selectable name="options"
+					expr="de.grogra.imp.View.getViewComponent">
+					<var name="context" />
+				</selectable>
+			</directory>
+			<option name="bendedEdges" type="java.lang.Boolean" value="true" />
+			<option name="showSlotEdges" type="java.lang.Boolean" value="true" />
+			<option name="showSlotLabels" type="java.lang.Boolean" value="true" />
+		</component>
+	  </choicegroup>
+    </ref> <!-- end ui -->
+    
+    <!--
+    <directory name="graphlayouts" optionCategory="true">
+      <command name="random" run="de.grogra.imp2d.layout.RandomLayout.run">
+        <option name="magnitude" type="java.lang.Float"/>
+        <option name="count" type="java.lang.Integer"/>
+        <option name="startWithRandom" type="java.lang.Boolean"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="spring" run="de.grogra.imp2d.layout.SpringLayout.run">
+        <option name="count" type="java.lang.Integer"/>
+        <option name="relaxation" type="java.lang.Float"/>
+        <option name="accuracy" type="java.lang.Float"/>
+        <option name="attraction" type="java.lang.Float"/>
+        <option name="repulsion" type="java.lang.Float"/>
+        <option name="startWithRandom" type="java.lang.Boolean"/> 
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+       <command name="circle" run="de.grogra.imp2d.layout.CircleGraphLayout.run">
+        <option name="layerCount" type="java.lang.Integer"/>
+        <option name="layerDistance" type="java.lang.Double"/>
+        <option name="nodeDistance" type="java.lang.Double"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+       <command name="square" run="de.grogra.imp2d.layout.SquareLayout.run">
+        <option name="layerCount" type="java.lang.Integer"/>
+        <option name="layerDistance" type="java.lang.Double"/>
+        <option name="nodeDistance" type="java.lang.Double"/>
+        <option name="topDown" type="java.lang.Boolean"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="tree" run="de.grogra.imp2d.layout.TreeLayout.run">
+        <option name="minDistanceX" type="java.lang.Float"/>
+        <option name="minDistanceY" type="java.lang.Float"/>
+        <option name="topDown" type="java.lang.Boolean"/>
+        <option name="fit" type="java.lang.Boolean"/>
+      </command>
+      <command name="sugiyama" run="de.grogra.imp2d.layout.SugiyamaLayout.run">
+        <option name="topDown" type="java.lang.Boolean"/>
+        <option name="minDistanceX" type="java.lang.Float"/>
+        <option name="minDistanceY" type="java.lang.Float"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="touch" run="de.grogra.imp2d.layout.TouchLayout.run">
+        <option name="rigidity" type="java.lang.Double"/>
+        <option name="damper" type="java.lang.Double"/>
+        <option name="count" type="java.lang.Integer"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="eades" run="de.grogra.imp2d.layout.EadesLayout.run">
+        <option name="relaxation" type="java.lang.Float"/>
+        <option name="accuracy" type="java.lang.Float"/>
+        <option name="count" type="java.lang.Int"/>       
+        <option name="startWithRandom" type="java.lang.Boolean"/>
+        <option name="repellingConst" type="java.lang.Float"/>
+        <option name="springConst" type="java.lang.Float"/>
+        <option name="minDistanceX" type="java.lang.Float"/>
+        <option name="minDistanceY" type="java.lang.Float"/>
+        <option name="unconnectedNodeX" type="java.lang.Float"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+       <command name="energy" run="de.grogra.imp2d.layout.EnergyModelLayout.run">
+        <option name="gravitationFactor" type="java.lang.Float"/>
+        <option name="attractionExponent" type="java.lang.Float"/>
+        <option name="count" type="java.lang.Int"/>
+        <option name="minDistanceX" type="java.lang.Float"/>
+        <option name="minDistanceY" type="java.lang.Float"/>
+        <option name="unconnectedNodeX" type="java.lang.Float"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="davidson" run="de.grogra.imp2d.layout.DavidsonHarelLayout.run">
+        <option name="relaxation" type="java.lang.Float"/>
+        <option name="accuracy" type="java.lang.Float"/>
+        <option name="count" type="java.lang.Int"/>  
+        <option name="startWithRandom" type="java.lang.Boolean"/>      
+        <option name="frameX" type="java.lang.Double"/>
+        <option name="frameY" type="java.lang.Double"/>
+        <option name="attractionFactor" type="java.lang.Double"/>
+        <option name="repulsionFactor" type="java.lang.Double"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="fruchterman" run="de.grogra.imp2d.layout.FruchtermanReingoldLayout.run">
+        <option name="relaxation" type="java.lang.Float"/>
+        <option name="accuracy" type="java.lang.Float"/>
+        <option name="count" type="java.lang.Int"/>
+        <option name="startWithRandom" type="java.lang.Boolean"/>
+        <option name="scaleFactor" type="java.lang.Double"/>
+        <option name="frameX" type="java.lang.Double"/>
+        <option name="frameY" type="java.lang.Double"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="simpleEdgeBased" run="de.grogra.imp2d.layout.SimpleEdgeBasedLayout.run">
+        <option name="edgeLength" type="java.lang.Double"/>
+        <option name="degreeDeviationAgainstOverlapping" type="java.lang.Double"/>
+        <option name="mirrorLayout" type="java.lang.Boolean"/>        
+        <option name="startWithRandom" type="java.lang.Boolean"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+      <command name="edgeBased2" run="de.grogra.imp2d.layout.EdgeBasedLayout2.run">
+        <option name="longEdgeLength" type="java.lang.Double"/>
+        <option name="shortEdgeLength" type="java.lang.Double"/>
+        <option name="degreeDeviationAgainstOverlapping" type="java.lang.Integer"/>
+        <option name="mirrorLayout" type="java.lang.Boolean"/>
+        <option name="startWithRandom" type="java.lang.Boolean"/>
+        <option name="fit" type="java.lang.Boolean"/>
+        <option name="transformationSteps" type="java.lang.Integer"/>
+      </command>
+    </directory>
+    -->
+   	<ref name="hooks">
+      <ref name="startup">
+        <directory name="de.grogra.imp2d">
+          <init class="de.grogra.imp2d.objects.RectangleType"/>
+          <init class="de.grogra.imp2d.objects.RoundRectangleType"/>
+          <init class="de.grogra.imp2d.objects.EllipseType"/>
+          <init class="de.grogra.imp2d.objects.ArcType"/>
+        </directory>
+      </ref>
+      <ref name="complete">
+        <hook name="2d">
+          <exists ref="/projectX"/>
+          <insert target="/workbench/menu/src" resolveLinks="false">
+            <directory name="objects">
+              <link source="/objects/2d/geometry"/>
+            </directory>
+          </insert>
+        </hook>
+      </ref>
+    </ref>
+  </registry>
+</plugin>

@@ -1,0 +1,16 @@
+Source: groimp
+Section: science
+Priority: optional
+Maintainer: GroIMP Developer Team <info@grogra.de>
+Package: groimp
+Version: 1.6
+Architecture: all
+Depends:
+Installed-Size: 146432
+Homepage: http://www.grogra.de
+Description: GroIMP is a 3D-modelling platform	
+ The GroIMP (Growth Grammar-related Interactive Modelling Platform) software 
+ demonstrates the concept of “Relational Growth Grammars” and illustrates it 
+ in its concrete implementation, namely the high-level language XL which 
+ combines the rule-based programming paradigm of graph grammars and L-systems 
+ with the imperative and object-oriented programming paradigm of Java.

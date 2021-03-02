@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book id="groimp-manual">
+	<title>Components Plugin Manual</title>
+	<bookinfo>
+		<title>Components Plugin Manual</title>
+		<pubdate>2013</pubdate>
+		<copyright>
+			<year>2013</year>
+<holder>Copyright (C) 2013 GroIMP Developer Team</holder>
+		</copyright>
+	</bookinfo>
+
+<chapter><title>GroIMP's Components Plugin</title>
+
+<section><title>Overview</title>
+<para>The GroIMP Component Plugin allows the user fast and easy model development. 
+An integrated visual aided modelling concept helps to turn the concentration of the 
+modeller to the model and avoid them from coding. </para>
+</section>
+
+<section><title>Technical background</title>
+<para>Component based software engineering and component based software development.</para>
+</section>
+
+<section><title>Component library</title>
+<para>Library of predefined components ready to use.</para>
+</section>
+
+</chapter>
+
+</book>

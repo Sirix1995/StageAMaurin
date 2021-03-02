@@ -1,0 +1,40 @@
+<project name="ExchangeGraph" default="compile">
+  
+  <description>
+    Ant build file for the ExchangeGraph plugin for GroIMP
+  </description>
+  
+  <import file="../Build/buildproject.xml" />
+
+  <target name="-libs">
+    <antcall target="-addlib">
+      <param name="lib" value="lib/xegxmlbeans.jar" />
+    </antcall>
+    <antcall target="-addlib">
+      <param name="lib" value="lib/httpcore-4.0-beta2.jar" />
+    </antcall>
+  </target>
+  
+  <target name="-projects">
+  	<antcall target="-addproject">
+      <param name="proj" value="IMP-3D" />
+  	</antcall>
+  	<antcall target="-addproject">
+      <param name="proj" value="RGG" />
+  	</antcall>
+  	<antcall target="-addproject">
+      <param name="proj" value="Grammar" />
+  	</antcall>
+ 	<antcall target="-addproject">
+	  <param name="proj" value="XL-Compiler" />
+	</antcall> 
+ 	<antcall target="-addproject">
+	  <param name="proj" value="XL-Impl" />
+	</antcall>  	
+  </target>
+  
+  <target name="src">
+    <antcall target="-src-enhance" />
+  </target>
+  
+</project>

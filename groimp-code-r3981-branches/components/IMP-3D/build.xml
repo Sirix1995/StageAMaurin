@@ -1,0 +1,40 @@
+<project name="IMP-3D" default="compile">
+  <property name="src2dist" value="icons/"/>
+
+  <description>
+    Ant build file for the 3D plugin of GroIMP
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="IMP"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="Raytracer"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="XL-Impl"/>
+    </antcall>
+  </target>
+
+  <target name="-libs">
+    <antcall target="-addlib">
+      <param name="lib" value="lib/jogl.jar"/>
+    </antcall>
+  </target>
+
+  <target name="src">
+    <antcall target="-src-vm"/>
+    <antcall target="-src-vtl"/>
+    <antcall target="-src-enhance"/>
+  </target>
+
+  <target name="doc">
+	<antcall target="-doc">
+	  <param name="input" value="src/doc/manual.xml"/>
+	</antcall>
+  </target>
+
+</project>

@@ -1,0 +1,225 @@
+<chapter id="c-variables">
+<title>Variables</title>
+
+<para>
+A <firstterm>variable</firstterm>
+is a storage location with an associated type (its
+<firstterm>compile-time type</firstterm>). Its value is
+changed by an assignment or by a prefix or postfix increment or
+decrement. The Java programming language defines seven kinds of variables;
+<firstterm>class variables</firstterm> (corresponding to static fields),
+<firstterm>instance variables</firstterm> (corresponding to non-static fields),
+<firstterm>array components</firstterm>,
+<firstterm>method parameters</firstterm>,
+<firstterm>constructor parameters</firstterm>,
+<firstterm>exception-handler parameters</firstterm>,
+and <firstterm>local variables</firstterm>. The last four kinds
+can be subsumed under the common term <firstterm>local variables</firstterm>
+for the purpose of this specification.
+</para>
+<para>
+The XL programming language adopts these kinds of variables and introduces
+two new kinds of variables:
+<orderedlist>
+<listitem><para><firstterm>Query variables</firstterm>
+(<xref linkend="s-queryvar"/>) are a new special kind of local variables.
+Query variables are declared within queries
+(<xref linkend="c-queries"/>) and set by the process of pattern matching
+(they are <firstterm>bound</firstterm> to values).
+Their values cannot be set by the programme itself.
+</para></listitem>
+<listitem><para><firstterm>Property variables</firstterm>
+(<xref linkend="s-properties"/>) are declared by the
+current compile-time model (<xref linkend="s-ctmodel"/>), there is
+no syntax that declares properties. Property variables can be used similarly to
+ordinary instance variables, or in quasi-parallel assignments.
+</para></listitem>
+</orderedlist>
+</para>
+
+<section id="s-properties"><title>Property Variables</title>
+
+<para>
+Like an instance <replaceable>i</replaceable> of a class
+<replaceable>T</replaceable> induces
+one instance variable for every instance field of
+that class <replaceable>T</replaceable>,
+<firstterm>property variables</firstterm>
+of <replaceable>i</replaceable> exist for every
+<firstterm>property</firstterm> of <replaceable>T</replaceable>.
+</para>
+<para>
+The properties of a (non-array) reference type
+<replaceable>T</replaceable> are declared by the current
+compile-time model <replaceable>m</replaceable>
+(<xref linkend="s-ctmodel"/>) in the following way:
+</para>
+<orderedlist>
+<listitem><para>For every valid identifier <replaceable>n</replaceable>
+of the XL programming language for which the method invocation
+<replaceable>m.</replaceable><methodname>getDirectProperty(</methodname><replaceable>T, n</replaceable><methodname>)</methodname>
+returns a (non-null) instance
+<replaceable>p</replaceable> of class
+<classname>de.grogra.xl.lang.Property</classname>, there is a
+<firstterm>direct</firstterm> property <replaceable>p</replaceable>
+named <replaceable>n</replaceable> declared in
+type <replaceable>T</replaceable>. The type of this property is
+the type returned by the method invocation
+<replaceable>p.</replaceable><methodname>getType()</methodname>.
+</para></listitem>
+<listitem><para>For every property <replaceable>p</replaceable>
+declared in type <replaceable>T</replaceable> whose type is a
+reference type <replaceable>S</replaceable>, and for every
+non-null reference type
+<replaceable>C</replaceable> that can be assigned to
+<replaceable>S</replaceable>, the method invocation
+<replaceable>p.</replaceable><methodname>getTypeCastProperty(</methodname><replaceable>C</replaceable><methodname>)</methodname>
+has to return an instance <replaceable>q</replaceable> of class
+<classname>de.grogra.xl.lang.Property</classname>.
+<replaceable>q</replaceable> represents <replaceable>p</replaceable>'s
+<firstterm>type-cast property</firstterm> of type <replaceable>C</replaceable>,
+which has to be the same as the type returned by the method invocation
+<replaceable>q.</replaceable><methodname>getType()</methodname>.
+<replaceable>q</replaceable> is declared in
+type <replaceable>T</replaceable>.
+</para></listitem>
+<listitem><para>For every property <replaceable>p</replaceable>
+declared in type <replaceable>T</replaceable> whose type is a
+non-array reference type <replaceable>S</replaceable>, and for every
+valid identifier <replaceable>n</replaceable>
+of the XL programming language for which the method invocation
+<replaceable>p.</replaceable><methodname>getSubProperty(</methodname><replaceable>n</replaceable><methodname>)</methodname>
+returns a (non-null) instance <replaceable>s</replaceable> of class
+<classname>de.grogra.xl.lang.Property</classname>, there is a
+<firstterm>subproperty</firstterm> <replaceable>s</replaceable>
+of <replaceable>p</replaceable> named <replaceable>n</replaceable>.
+<replaceable>s</replaceable> is declared in type <replaceable>T</replaceable>.
+The type of this property is the type returned by the method invocation
+<replaceable>s.</replaceable><methodname>getType()</methodname>.
+</para></listitem>
+<listitem><para>For every property <replaceable>p</replaceable>
+declared in type <replaceable>T</replaceable> whose type is an
+array type <replaceable>A[]</replaceable>,
+and if the method invocation
+<replaceable>p.</replaceable><methodname>getComponentProperty()</methodname>
+returns a non-null instance <replaceable>r</replaceable> of class
+<classname>de.grogra.xl.lang.Property</classname>,
+<replaceable>r</replaceable> represents <replaceable>p</replaceable>'s
+<firstterm>component property</firstterm>. Its type is
+<replaceable>A</replaceable>,
+which has to be the same as the type returned by the method invocation
+<replaceable>r.</replaceable><methodname>getType()</methodname>.
+<replaceable>r</replaceable> is declared in
+type <replaceable>T</replaceable>. If the invocation of
+<replaceable>p.</replaceable><methodname>getComponentProperty()</methodname>
+returns null, no component property exists.
+</para></listitem>
+</orderedlist>
+
+<para>
+So far the discussion specifies the compile-time aspects of properties.
+For a property <replaceable>p</replaceable>, an XL compiler uses the
+string <replaceable>id</replaceable> returned by the method invocation
+<replaceable>p.</replaceable><methodname>getRuntimeName()</methodname>
+as an identifier for that property in compiled code.
+This identifier is used at run-time
+in order to determine <replaceable>p</replaceable>'s
+<firstterm>run-time property</firstterm>, subsequently denoted by
+<replaceable>p<subscript>R</subscript></replaceable>. Namely, for the
+run-time model <replaceable>r</replaceable>
+(<xref linkend="s-rtmodel"/>) that corresponds to the current
+compile-time model for <replaceable>p</replaceable>, and for the
+type loader <replaceable>L</replaceable> of the immediately enclosing
+class, the method invocation
+<replaceable>r.</replaceable><methodname>propertyForName(</methodname><replaceable>id</replaceable>, <replaceable>L</replaceable><methodname>)</methodname> has to return
+a (non-null) instance <replaceable>p<subscript>R</subscript></replaceable>
+of class
+<classname>de.grogra.xl.runtime.Property</classname>. The type of
+<replaceable>p<subscript>R</subscript></replaceable>
+is the type of <replaceable>p</replaceable>.
+This run-time
+property induces a property variable for every instance of the type
+<replaceable>T</replaceable> in which the original property
+<replaceable>p</replaceable> was declared. The XL programming
+language does not specify a format for the idenfifier
+<replaceable>id</replaceable>; it is up to the compile-time and
+run-time models to define a suitable scheme.
+</para>
+<para>
+The XL programming language does not specify how the property variables
+of an instance <replaceable>i</replaceable> are associated internally with that
+instance. This depends on the implementation of the
+run-time model (<xref linkend="s-rtmodel"/>); typically, the values
+of property variables are stored in ordinary instance variables.
+</para>
+<para>
+However, the XL programming language specifies how the values
+of property variables
+are read and written. Let <replaceable>i</replaceable> be the instance
+and <replaceable>p<subscript>R</subscript></replaceable>
+the run-time property to which a property
+variable corresponds, <replaceable>S</replaceable> the
+type affix (<xref linkend="s-typeaffix"/>) of
+<replaceable>p<subscript>R</subscript></replaceable>'s
+type, and <replaceable>x</replaceable> the current
+extended state of the virtual machine (<xref linkend="c-vmxstate"/>),
+then the value of the property variable is the returned value
+of the method invocation
+<replaceable>p<subscript>R</subscript>.</replaceable><methodname>get</methodname><replaceable>S</replaceable><methodname>(</methodname><replaceable>i, x</replaceable><methodname>)</methodname>.
+A value <replaceable>v</replaceable> is stored in the
+property variable by the method invocation
+<replaceable>p<subscript>R</subscript>.</replaceable><methodname>set</methodname><replaceable>S</replaceable><methodname>(</methodname><replaceable>i, v, x</replaceable><methodname>)</methodname>.
+</para>
+<para>
+If <replaceable>p<subscript>R</subscript></replaceable>'s compile-time property
+<replaceable>p</replaceable> involves a number
+<replaceable>n</replaceable> of component properties, i.e.,
+<replaceable>n</replaceable> invocations of
+<methodname>getComponentProperty</methodname> as described above are necessary
+in order to get from a direct property to <replaceable>p</replaceable>,
+then <replaceable>n</replaceable> indices for array access have to be
+on top of <replaceable>x</replaceable>'s <classname>int</classname>-stack.
+These have to be popped within the implementations of
+<replaceable>p<subscript>R</subscript></replaceable>'s
+get- and set-methods, where the topmost
+value on the stack corresponds to the last component property
+in the chain from a direct property to <replaceable>p</replaceable>.
+</para>
+<para>
+Compile-time and run-time model implementations
+should ensure a reasonable behaviour for properties. E.g., let
+<replaceable>p</replaceable> be a property having an array type
+and a component property
+<replaceable>q</replaceable>. For fixed instance <replaceable>i</replaceable>
+and valid index <replaceable>k</replaceable>,
+the value of <replaceable>q</replaceable>'s property variable
+(assuming that <replaceable>k</replaceable> has been pushed on the stack)
+should be the same as the value of the array component at index
+<replaceable>k</replaceable> of the value of
+<replaceable>p</replaceable>'s property variable. However,
+the effects of assigning the same value to either the
+component property variable or the array component may differ: The
+implementation of <replaceable>q</replaceable>'s set-method may involve
+a side-effect that, e.g., notifies a set of observers about the
+modification of the property. If a value is directly assigned to
+the array component, no set-method of a run-time property is involved,
+so no notification can be sent.
+</para>
+<para>
+Property variables are also modified by quasi-parallel assignments.
+</para>
+<para>
+Contrary to a field, a property is not a member of its declaring type.
+Thus, it is not inherited by subclasses or subinterfaces. However,
+the semantics of an implementation of the compile-time and run-time model
+normally implies that if a property <replaceable>p</replaceable> named
+<replaceable>n</replaceable> is declared in a type<replaceable>T</replaceable>,
+then there will be corresponding properties named
+<replaceable>n</replaceable> in subtypes of
+<replaceable>T</replaceable> whose property variables are the same as
+those of <replaceable>p</replaceable>.
+</para>
+
+</section>
+
+</chapter>

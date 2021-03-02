@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Graph"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Utilities"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jai"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jocl"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jogl"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

@@ -1,0 +1,159 @@
+<chapter id="c-lexical">
+<title>Lexical Structure</title>
+
+<para>
+This chapter specifies the lexical structure of the XL programming
+language. This structure is based on the lexical structure of the
+Java programming language. Thus, the following features are taken over;
+for the term definitions see the Java Language Specification.
+</para>
+
+<itemizedlist>
+<listitem>
+<para>
+Programmes are written using the Unicode character set. Unicode
+escapes of the form <literal>\u</literal><replaceable>xxxx</replaceable>, where
+<replaceable>xxxx</replaceable> is a hexadecimal value, are
+translated into the corresponding Unicode character. Following,
+the input stream is translated into input characters and line terminators.
+</para>
+</listitem>
+<listitem>
+<para>
+The resulting stream is translated into
+<firstterm>input elements</firstterm>, from
+which white space and comments are discarded. The result is a stream of
+<firstterm>tokens</firstterm> that are the terminal symbols of the
+syntactic grammar. Tokens
+are <firstterm>identifiers</firstterm> (<xref linkend="s-lex-ident"/>),
+<firstterm>keywords</firstterm> (<xref linkend="s-lex-key"/>),
+<firstterm>literals</firstterm>, <firstterm>separators</firstterm>
+and <firstterm>operators</firstterm> (<xref linkend="s-lex-sep-op"/>).
+</para>
+</listitem>
+</itemizedlist>
+
+<section id="s-lex-ident"><title>Identifiers</title>
+
+<para>
+As for the Java programming language, an <firstterm>identifier</firstterm>
+is an unlimited-length sequence of <firstterm>Java letters</firstterm>
+and <firstterm>Java digits</firstterm>,
+the first of which must be a Java letter. An identifier
+cannot have the same spelling as a keyword or a literal.
+</para>
+<note><title>Difference to the Java programming language</title>
+<para>
+The XL programming language introduces three new keywords
+(<xref linkend="s-lex-key"/>), namely <literal>in</literal>,
+<literal>module</literal> and <literal>yield</literal>.
+In order to be able to address existing entities of the Java
+runtime environment that have these keywords as simple name,
+e.g., the field <varname>System.in</varname> or the method
+<methodname>Thread.yield()</methodname>,
+identifiers undergo an additional translation:
+If a raw identifier (resulting from the stream of input elements)
+happens to be equal to one of the character
+sequences <literal>$in</literal>, <literal>$module</literal>,
+or <literal>$yield</literal>, the leading <literal>$</literal> is discarded
+and the identifier is subsequently treated as being equal
+to the character sequence <literal>in</literal>,
+<literal>module</literal>, or <literal>yield</literal>, respectively.
+</para>
+</note>
+
+</section>
+
+<section id="s-lex-key"><title>Keywords</title>
+
+<para>
+The following character sequences are reserved for use as
+<firstterm>keywords</firstterm> and cannot be used as identifiers:
+</para>
+<programlisting>
+abstract     default      implements   private      throw
+assert       do           import       protected    throws
+boolean      double       in           public       transient
+break        else         instanceof   return       try
+byte         extends      int          short        void
+case         final        interface    static       volatile
+catch        finally      long         strictfp     while
+char         float        module       super        yield
+class        for          native       switch
+const        goto         new          synchronized
+continue     if           package      this
+</programlisting>
+<para>
+The keyword <literal>goto</literal> is reserved,
+even though it is not currently used.
+The keyword <literal>const</literal>
+is reserved for the Java programming language, but
+used in the XL programming language as a modifier in variable declarations.
+The keyword <literal>assert</literal> is introduced in the Java Language
+Specification,
+Third Edition, it is used here for the same purpose. The keywords
+<literal>in</literal>, <literal>module</literal> and
+<literal>yield</literal> are introduced by this specification.
+</para>
+<para>
+The tokens <literal>true</literal>,
+<literal>false</literal> and <literal>null</literal>
+might appear to be keywords, however,
+they are technically literals.
+</para>
+
+</section>
+
+<section id="s-lex-sep-op"><title>Separators and Operators</title>
+
+<para>
+The following tokens are the <firstterm>separators</firstterm>:
+</para>
+<programlisting>
+(     )     {     }     [     ]     ;     ,     .
+(*    *)    \(    `     @
+</programlisting>
+<para>
+The second line contains the separators that are introduced by
+the XL programming language. The separator <literal>@</literal> has also
+been introduced by the Java Language Specification, Third Edition.
+</para>
+<para>
+The following tokens are the <firstterm>operators</firstterm>:
+</para>
+<programlisting>
+=     >     &lt;     !     ~     ?     :
+==    &lt;=    >=    !=    &amp;&amp;    ||    ++    --
++     -     *     /     &amp;     |     ^     %     &lt;&lt;    >>    >>>
++=    -=    *=    /=    &amp;=    |=    ^=    %=    &lt;&lt;=   >>=   >>>=
+:+=   :-=   :*=   :/=   :&amp;=   :|=   :^=   :=    **    &lt;=>   ::
+==>   ==>>  ::>   ->    &lt;-    +>    &lt;+    -->   &lt;--
+</programlisting>
+<para>
+The last two lines contain the operators that are introduced by
+the XL programming language.
+</para>
+<note><title>Difference to the Java programming language</title>
+<para>
+For lexical translations, the longest possible match is always used.
+Thus, the input characters <literal>i&lt;-m</literal> and
+<literal>i-->=0</literal> are tokenized as
+<literal>i</literal>, <literal>&lt;-</literal>, <literal>m</literal>,
+and <literal>i</literal>, <literal>--></literal>, <literal>=</literal>,
+<literal>0</literal>, respectively, whereas they would be tokenized as
+<literal>i</literal>, <literal>&lt;</literal>, <literal>-</literal>,
+<literal>m</literal>,
+and <literal>i</literal>, <literal>--</literal>, <literal>>=</literal>,
+<literal>0</literal>, respectively, in the Java programming language
+(because of the absence of the tokens <literal>&lt;-</literal>
+and <literal>--></literal>).
+Of course, these different tokenizations lead to a different
+interpretation of the input. Thus, in some cases additional
+white space between tokens is necessary in order to yield the
+intended tokenization.
+</para>
+</note>
+
+</section>
+
+</chapter>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE SERVICES SYSTEM "services.dtd">
+
+<!-- Modifications for GroIMP-integration made by Ole Kniemeyer 2005/08/17   -->
+<!-- Copyright (C) 2005 Lehrstuhl Grafische Systeme, BTU Cottbus             -->
+
+<SERVICES>
+	<!-- Virtual file systems -->
+	<SERVICE CLASS="org.gjt.sp.jedit.io.VFS" NAME="favorites">
+		new FavoritesVFS();
+	</SERVICE>
+	<SERVICE CLASS="org.gjt.sp.jedit.io.VFS" NAME="roots">
+		new FileRootsVFS();
+	</SERVICE>
+
+    <!-- 2005/08/17: added by Ole Kniemeyer -->
+	<SERVICE CLASS="org.gjt.sp.jedit.io.VFS" NAME="project">
+		de.grogra.ext.jedit.VFSAdapter.forAllProjects();
+	</SERVICE>
+
+	<!-- Fold handlers -->
+	<SERVICE CLASS="org.gjt.sp.jedit.buffer.FoldHandler" NAME="explicit">
+		new ExplicitFoldHandler();
+	</SERVICE>
+	<SERVICE CLASS="org.gjt.sp.jedit.buffer.FoldHandler" NAME="indent">
+		new IndentFoldHandler();
+	</SERVICE>
+	<SERVICE CLASS="org.gjt.sp.jedit.buffer.FoldHandler" NAME="none">
+		new DummyFoldHandler();
+	</SERVICE>
+
+    <!-- 2005/08/17: added by Ole Kniemeyer -->
+	<SERVICE CLASS="org.gjt.sp.jedit.buffer.FoldHandler" NAME="XL">
+		new de.grogra.ext.jedit.StringFoldHandler("XL", "{ [ /*", "} ] */", true);
+	</SERVICE>
+</SERVICES>

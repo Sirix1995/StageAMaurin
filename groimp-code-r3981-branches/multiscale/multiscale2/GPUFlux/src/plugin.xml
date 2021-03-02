@@ -1,0 +1,134 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.gpuflux"
+  version="1.4.3"
+  class="de.grogra.gpuflux.GPUFlux"
+  xmlns="http://grogra.de/registry">
+
+  <library file="GPUFlux.jar" prefixes="{de.grogra.gpuflux,de.grogra.imp3d}"/>
+
+  <import plugin="de.grogra.imp3d"/>
+  <import plugin="de.grogra.imp" />
+  
+  <registry>
+    <ref name="renderers">
+      <ref name="3d">
+      	  <object name="GPUFluxRenderer" expr="de.grogra.gpuflux.tracer.FluxRenderer">
+      		<var name="item" />
+      		<optiongroup name="general">
+				<option name="spectralresolution"
+					type="java.lang.Integer" value="1" />
+				<option name="rayprocessor.flatness"
+					type="java.lang.Float" value="10" />
+				<option name="rayprocessor.skyresolution"
+					type="java.lang.Integer" value="512" />
+				<option name="rayprocessor.channelresolution"
+					type="java.lang.Integer" value="128" />
+			</optiongroup>
+			<optiongroup name="renderer">
+				<option name="tracer"
+					type="de.grogra.gpuflux.tracer.FluxRenderer.TRACER"
+					value="de.grogra.gpuflux.tracer.FluxWhittedTracer" />
+				<option name="spectral"
+					type="java.lang.Boolean" value="false" />
+				<option name="dispersion"
+					type="java.lang.Boolean" value="false" />
+				<option name="rayprocessor.depth"
+					type="java.lang.Integer" value="5" />
+				<option name="rayprocessor.minpower"
+					type="java.lang.Float" value="0.01" />
+			</optiongroup>
+			<optiongroup name="opencl">
+				<option name="gpu"
+					type="java.lang.Boolean" value="true" />
+				<option name="multigpu"
+					type="java.lang.Boolean" value="true" />
+				<optiongroup name="advanced">
+					<option name="precompile"
+						type="java.lang.Boolean" value="true" />
+					<option name="performance"
+						type="de.grogra.gpuflux.FluxSettings.PERFORMANCE_TYPE" value="1" />
+					<option name="rayprocessor.iterationtime"
+						type="java.lang.Integer" value="500" />
+					<option name="rayprocessor.initialsamplecount"
+						type="java.lang.Integer" value="100000" />
+					<!-- option name="rayprocessor.maximumsamplecount"
+						type="java.lang.Integer" value="1000000000" /-->
+					<option name="rayprocessor.minimalmeasurements"
+						type="java.lang.Integer" value="8192" />
+				</optiongroup>
+			</optiongroup>
+      	  </object>
+      </ref>
+    </ref>
+    <ref name="objects">
+		<ref name="3d">
+			<ref name="lights">
+				<factory name="physicallight"
+					class="de.grogra.imp3d.objects.PhysicalLight" />
+				<factory name="spectrallight"
+					class="de.grogra.imp3d.objects.SpectralLight" />
+				<resdir name="lights">
+					<filefactory name="file" type="de.grogra.imp3d.objects.LightDistribution" directory="lights"/>
+				</resdir>
+			</ref>
+			<ref name="shaders">
+				<factory name="IOR"
+					class="de.grogra.imp3d.shading.IORShader" />
+			</ref>
+		</ref>
+		<ref name="maps">
+			<factory name="spectralchannel"	class="de.grogra.imp3d.shading.ChannelSPD" />
+			<filefactory name="spdfile" type="de.grogra.imp3d.shading.SPD" directory="maps"/>
+			<factory name="constantspd" class="de.grogra.imp3d.shading.ConstantSPD" />
+			<factory name="blackbodyspd" class="de.grogra.imp3d.shading.BlackbodySPD" />
+			<factory name="spectrallightmapnode" class="de.grogra.imp3d.objects.SpectralLightMapNode" />
+		</ref>
+		<resdir name="spectra">
+			<factory name="spectrallightmapnode"
+				class="de.grogra.imp3d.objects.SpectralLightMapNode" />
+		</resdir>
+	</ref>
+	<ref name="ui">
+		<ref name="editors">
+			<poly name="spectrallightmap"
+				type="de.grogra.imp3d.objects.SpectralLightMap"
+				directory="/objects/spectra" />
+			<ref name="3d">
+				<composite name="spectrallightmapnode"
+					type="de.grogra.imp3d.objects.SpectralLightMapNode.$TYPE" fields="{spectraldistribution}"
+					inherit="true" />
+				<composite name="spectralchannel"
+					type="de.grogra.imp3d.shading.ChannelSPD.$TYPE" fields="{spectraldistribution}"
+					inherit="true" />
+				<composite name="spectrallight"
+					type="de.grogra.imp3d.objects.SpectralLight.$TYPE"
+					fields="{spectrum,power,light}"
+					inherit="true" />
+				<poly name="ldf" 
+					type="de.grogra.imp3d.objects.LightDistribution.$TYPE"
+					directory="/objects/3d/lights" />
+				<poly name="spectraldistribution"
+					type="de.grogra.imp3d.shading.SPD.$TYPE"
+					directory="/objects/maps" />
+			</ref>
+		</ref>
+	</ref>
+	<ref name="io">
+		<ref name="filetypes">
+			<ext name="SPD" extensions="{.spd}" mimeType="model/x-spd" />
+		</ref>
+		<ref name="filetypes">
+			<ext name="LUMINANCE" extensions="{.lum}" mimeType="model/x-luminance" />
+		</ref>
+		<ref name="mimetypes">
+			<mimetype name="model/x-luminance">
+				<filter input="reader" outputClass="de.grogra.imp3d.objects.LightDistribution" create="de.grogra.imp3d.io.LuminanceFilter"/>
+			</mimetype>
+			<mimetype name="model/x-spd">
+				<filter input="reader" outputClass="de.grogra.imp3d.shading.SPD" create="de.grogra.imp3d.io.SPDFilter"/>
+			</mimetype>
+		</ref>
+	</ref>
+  </registry>
+</plugin>

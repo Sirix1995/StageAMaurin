@@ -1,0 +1,12 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.ray"
+  version="1.4.3"
+  xmlns="http://grogra.de/registry">
+
+  <library file="kd.jar" prefixes="{edu.wlu.cs}"/>
+  <library file="Raytracer.jar" prefixes="{de.grogra.ray,de.grogra.ray2,de.grogra.task,net.goui.util,org.sunflow}"/>
+
+  <import plugin="de.grogra.vecmath"/>
+  
+</plugin>

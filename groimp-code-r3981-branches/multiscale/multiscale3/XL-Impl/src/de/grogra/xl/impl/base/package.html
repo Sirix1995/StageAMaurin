@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+</head>
+<body>
+
+Abstract base implementation of XL's compile-time and run-time models for
+graphs with objects as nodes and <code>int</code>-coded, directed edges.
+
+<h2>Package Specification</h2>
+
+This package contains a collection of classes that can be used as
+base classes for an implementation of XL's
+{@link de.grogra.xl.query.CompiletimeModel} and
+{@link de.grogra.xl.query.RuntimeModel}. These classes are suitable for
+data sources that can be represented as graphs with objects
+as nodes and <code>int</code>-coded, directed edges:
+<ul>
+  <li>Each node of the graph is an instance of a common base class for nodes.
+      This base class is returned by {@link de.grogra.xl.impl.base.CompiletimeModel#getNodeType}
+      and {@link de.grogra.xl.impl.base.RuntimeModel#getNodeType}.
+  <li>An ordered tuple of nodes may be connected by at most one edge that is labeled
+      by an <code>int</code>-value. This <code>int</code>-value is interpreted
+      as a set of sub-edges in the following way:
+      <ul>
+        <li>The bits 0 to 7 (masked by {@link de.grogra.xl.impl.base.RuntimeModel#SPECIAL_MASK})
+            represent the edge's special sub-edge. If these bits, interpreted as a byte,
+            have the value 0, no special sub-edge is present. Otherwise, the special sub-edge
+            identified by this byte is present in this edge. Because the value 255 (all bits set)
+            is used as a wildcard mask in pattern matching, that value should not be used
+            as a special sub-edge identifier. Note that at most one special edge
+            may exist at a time between the nodes of an ordered tuple.
+        <li>The other 24 bits (bits 8 to 31) represent 24 possible standard
+            sub-edges. E.g., branch and successor edges are encoded by the
+            bit masks {@link de.grogra.xl.impl.base.RuntimeModel#BRANCH_EDGE} and
+            {@link de.grogra.xl.impl.base.RuntimeModel#SUCCESSOR_EDGE}. Implementations may define
+            further types of sub-edges by further bit masks. Thus, at most
+            24 different standard sub-edges may exist independently between the nodes
+            of an ordered tuple.
+      </ul>
+</ul>
+
+</body>
+</html>

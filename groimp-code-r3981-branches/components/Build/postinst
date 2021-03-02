@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd /usr/share/GroIMP/ext
+
+#  Select platform automatically, i386 or x64 {{{
+PLATFORM=`uname -m`
+case "$PLATFORM" in
+    i386 | i486 | i586 | i686 | k7) cd 32bit;;
+    x86_64 | EM64T) cd 64bit;;
+esac
+
+mv * ..
+cd /usr/share/GroIMP/ext
+rm -R *bit

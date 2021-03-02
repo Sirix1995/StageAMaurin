@@ -1,0 +1,28 @@
+<project name="GPUFlux" default="compile">
+	<property name="src2dist" value="icons/"/>
+	
+  <description>
+    Ant build file for the GPUFlux plugin
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="IMP-3D"/>
+    </antcall>
+  </target>
+
+  <target name="-libs">
+    <antcall target="-addlib">
+      <param name="lib" value="lib/jocl.jar"/>
+    </antcall>
+  </target>
+
+  <target name="src">
+  	<antcall target="-src-vm"/>
+  	<antcall target="-src-vtl"/>
+    <antcall target="-src-enhance"/>
+  </target>
+	
+</project>

@@ -1,0 +1,24 @@
+<project name="Raytracer" default="compile">
+
+  <description>
+    Ant build file for the Raytracer plugin
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-libs">
+    <antcall target="-addlib">
+      <param name="lib" value="lib/junit.jar"/>
+    </antcall>
+    <antcall target="-addlib">
+      <param name="lib" value="lib/kd.jar"/>
+    </antcall>
+  </target>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="Vecmath"/>
+    </antcall>
+  </target>
+
+</project>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 rel. 3 sp1 (http://www.altova.com) by Schneider (private) -->
+<xs:schema xmlns="http://grogra.de/msml" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://grogra.de/msml" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="msml">
+		<xs:annotation>
+			<xs:documentation>root node of the multiscaled modeling language</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="library" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>a library contains data, that is used within the msml-file</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:choice>
+					<xs:element ref="group">
+						<xs:annotation>
+							<xs:documentation>declares groups of multiscaled objects or groups</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element ref="msobject"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="version" type="msmlVersion" use="required" fixed="1.0"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="msmlVersion">
+		<xs:annotation>
+			<xs:appinfo>msmlVersion enumeration constants are used to identify the allowed versions for an MSML scene graph.</xs:appinfo>
+			<xs:documentation source="http://www.grogra.de/msml/specification/concepts.html#Profiles"/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1.0">
+				<xs:annotation>
+					<xs:appinfo>MSML v1.0</xs:appinfo>
+					<xs:documentation source="http://www.grogra.de/msml/specification/index.html"/>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="library">
+		<xs:annotation>
+			<xs:documentation>declares a libraries, that contains datas or msobjects</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="data" minOccurs="0"/>
+				<xs:element name="msobject" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="data" minOccurs="0"/>
+							<xs:choice>
+								<xs:element ref="extSrc"/>
+								<xs:sequence>
+									<xs:choice maxOccurs="unbounded">
+										<xs:element ref="scale"/>
+										<xs:element ref="edge" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>declares an edge connecting nodes of different scales, to model the refinement relationships between them</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+							</xs:choice>
+						</xs:sequence>
+						<xs:attribute name="DEF" type="xs:ID" use="required"/>
+						<xs:attribute name="showScale" type="xs:NCName" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="group">
+		<xs:annotation>
+			<xs:documentation>declares groups of objects, multiscaled objects or groups</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="data" minOccurs="0"/>
+				<xs:sequence>
+					<xs:choice maxOccurs="unbounded">
+						<xs:element ref="group">
+							<xs:annotation>
+								<xs:documentation>declares groups of multiscaled objects or groups</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="msobject"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="msobject">
+		<xs:annotation>
+			<xs:documentation>declares a multiscaled object</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="data" minOccurs="0"/>
+				<xs:choice>
+					<xs:element ref="extSrc">
+						<xs:annotation>
+							<xs:documentation>declares a link to an external source of a msobject</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:sequence>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element ref="scale"/>
+							<xs:element ref="edge" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>declares an edge connecting nodes of different scales, to model the refinement relationships between them</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:choice>
+					</xs:sequence>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="USE" type="xs:IDREF" use="optional"/>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+			<xs:attribute name="showScale" type="xs:NCName" use="optional"/>
+			<xs:attribute name="class" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="extSrc">
+		<xs:annotation>
+			<xs:documentation>declares a link to an external source</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="src" type="xs:anyURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="scale">
+		<xs:annotation>
+			<xs:documentation>declares a scale for a multiscaled object</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="data" minOccurs="0"/>
+				<xs:choice>
+					<xs:element ref="extSrc">
+						<xs:annotation>
+							<xs:documentation>declares a link to an external source of a msobject</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:choice maxOccurs="unbounded">
+						<xs:element ref="msobject">
+							<xs:annotation>
+								<xs:documentation>declares a multiscaled node of a scale</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="node">
+							<xs:annotation>
+								<xs:documentation>declares a node of a scale</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="edge"/>
+					</xs:choice>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="name" type="xs:NCName" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="node">
+		<xs:annotation>
+			<xs:documentation>declares a node of an object</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="data" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="name" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="data">
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:any namespace="##any" processContents="skip"/>
+			</xs:sequence>
+			<!--	<xs:attribute name="USE" type="xs:IDREF" use="optional"/>-->
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="edge">
+		<xs:annotation>
+			<xs:documentation>declares an edge connecting two nodes</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="data" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="source" type="xs:IDREF" use="required"/>
+			<xs:attribute name="target" type="xs:IDREF" use="required"/>
+			<xs:attribute name="type" type="edgetypes" use="optional" default="userdefined"/>
+			<xs:attribute name="order" type="xs:int" use="optional" default="1"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="edgetypes">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="branch"/>
+			<xs:enumeration value="successor"/>
+			<xs:enumeration value="refinement"/>
+			<xs:enumeration value="userdefined"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

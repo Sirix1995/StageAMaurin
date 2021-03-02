@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book id="groimp-manual">
+  <title>3D Plugin Manual</title>
+
+  <bookinfo>
+    <title>3D Plugin Manual</title>
+
+    <pubdate>2006</pubdate>
+
+    <copyright>
+      <year>2006</year>
+
+      <holder>Lehrstuhl Grafische Systeme, Brandenburgische Technische
+      Universität Cottbus</holder>
+    </copyright>
+  </bookinfo>
+
+  <chapter>
+    <title>GroIMP's 3D Plugin</title>
+
+    <section>
+      <title>Overview</title>
+
+      <para>As GroIMP's primary purpose is the modelling of three-dimensional
+      virtual plants, GroIMP's 3D facilities play a prominent role. They are
+      made available by the 3D plugin and contain the following
+      features:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>3D geometry objects: Spheres, cones and other primitives,
+          NURBS curves and various kinds of NURBS surfaces,
+          heightfields.</para>
+        </listitem>
+
+        <listitem>
+          <para>Materials can be assigned to objects to produce a variety of
+          shading effects in visualization. Materials are defined using a
+          <emphasis>shading network</emphasis>: This establishes a data flow
+          through the nodes of the network which finally leads to the visible
+          material properties like colour and opacity. Several kinds of nodes
+          are available: Image maps, procedural maps, transformations. You can
+          freely mix them in the shading network, which gives you great
+          flexibility in defining materials.</para>
+        </listitem>
+
+        <listitem>
+          <para>An integrated viewer displays the current scene in three
+          dimensions. Easy navigation is enabled by navigation buttons;
+          objects can be selected in the viewer. Currently, the viewer
+          supports a simple wireframe representation on all Systems. An
+          OpenGL-based representation is available for Systems where the
+          <emphasis>Java Binding for the OpenGL API</emphasis> (<ulink
+          url="???">JOGL</ulink>) is installed.</para>
+        </listitem>
+
+        <listitem>
+          <para>External renders can be used to create a 3D view of higher
+          quality. The POV-Ray Plugin provides a scene export to the POV-Ray
+          format which makes it possible to use the free ray-tracer POV-Ray as
+          an external renderer, see the <ulink
+          url="plugin:de.grogra.ext.povray/doc/index.html">POV-Ray
+          manual</ulink>. The resulting image is directly shown in GroIMP's 3D
+          view.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="s-3d-ui">
+      <title>The 3D User Interface</title>
+
+      <para>GroIMP's 3D user interface consists of two panels, see <xref
+      linkend="f-3d-panels" />: The <guilabel>View</guilabel> panel displays
+      the scene, the toolbar contains buttons for creating objects and
+      selecting the current tool.</para>
+
+      <figure id="f-3d-panels">
+        <title>GroIMP's 3D Panels</title>
+
+        <graphic fileref="res/panels.png" format="PNG" />
+      </figure>
+
+      <para>In the view panel, objects can be selected with the mouse: The
+      object currently under the mouse is highlighted, and by clicking with
+      the left mouse button, it becomes selected. If there is more than one
+      object under the mouse, you can choose the object you want to select by
+      clicking with the middle mouse button: This cycles through the list of
+      objects under the mouse. Once an object is selected, its attributes are
+      shown in the attribute editor where they can be modified.</para>
+
+      <para>The currently selected object can also be modified by 3D tools. In
+      <xref linkend="f-3d-panels" />, you can see three arrows which are the
+      handles for GroIMP's 3D translation tool. By dragging the arrows with
+      the mouse, the object is moved along the arrow direction. If you use the
+      middle mouse button for dragging, the movement is in a plane
+      perpendicular to the arrow direction.</para>
+
+      <para>Another 3D tool is the rotation tool. It is activated in the
+      toolbar by clicking on the rotation icon. As handles, it displays three
+      circles which can be dragged to rotate the selected object.</para>
+
+      <para>Navigation in the view panel is possible with the navigation
+      buttons in the view panel's wupper right corner or with the mouse. To
+      navigate using the buttons, press a button and drag with the mouse while
+      keeping the button pressed. To navigate using the mouse only, press the
+      <keycap>Shift</keycap> button and drag with the mouse over the view
+      panel: The left mouse button rotates the view, the middle mouse button
+      moves the viewpoint in the viewing plane, and the right mouse button
+      makes a dolly movement along the viewing direction (or a zoom for a view
+      camera with parallel projection). The mouse wheel works similarly to the
+      right mouse button.</para>
+
+      <para>The <guimenu>Camera</guimenu> menu of GroIMP's 3D view allows the
+      selection of different cameras. Some cameras are predefined, among them
+      the common orthographic projections. You can add user-defined cameras to
+      your project in the <guilabel>Camera Explorer</guilabel> (the menu item
+      <guimenuitem>Panels/Object Explorers/3D/Cameras</guimenuitem> brings it
+      up); these cameras can be selected as current camera in the
+      <guimenu>Camera</guimenu> menu, too. They can be edited through the
+      navigation facilities or in the <guilabel>Attribute
+      Editor</guilabel>.</para>
+
+      <para>The <guimenu>Render View</guimenu> menu displays the installed
+      external renderers. The POV-Ray Plugin defines an interface to the
+      external renderer POV-Ray, a free ray-tracer, which can be used to
+      render 3D scenes in high quality, see <ulink
+      url="plugin:de.grogra.ext.povray/doc/index.html">POV-Ray
+      manual</ulink>.</para>
+    </section>
+
+    <section id="s-ogl-ui">
+      <title>The OpenGL-based 3D User Interface</title>
+
+      <para>GroIMP features OpenGL-accelerated display of the scene. The
+      OpenGL-based display may be selected if the <emphasis>Java Binding for
+      the OpenGL API</emphasis> (<ulink url="???">JOGL</ulink>) is installed.
+      The menu <guimenu>View/Display</guimenu> of GroIMP's 3D view brings up
+      the selection for the different supported display modes. These
+      are:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Wireframe (AWT): A wireframe view of the scene. Will run on
+          all systems.</para>
+        </listitem>
+
+        <listitem>
+          <para>OpenGL: OpenGL-based view. Will run on all systems with OpenGL
+          1.1 support. This mode will display colors and simple
+          textures.</para>
+        </listitem>
+
+        <listitem>
+          <para>OpenGL (Proteus): OpenGL-based view. Requires a OpenGL 2.1
+          compatible GPU. This mode will preview the output of the internal
+          raytracer Twilight in realtime. It features:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Preview of most materials including procedurally
+              calculated shaders using the OpenGL Shading Language
+              (GLSL)</para>
+            </listitem>
+
+            <listitem>
+              <para>Per pixel lighting</para>
+            </listitem>
+
+            <listitem>
+              <para>Rendering of shadows</para>
+            </listitem>
+
+            <listitem>
+              <para>Preview of Sky-Nodes as background</para>
+            </listitem>
+
+            <listitem>
+              <para>Rendering of transparent materials</para>
+            </listitem>
+          </itemizedlist>
+        </listitem>
+      </itemizedlist>
+
+      <para>Navigation and control is the same for the Wireframe and both
+      OpenGL-based modes as explained in <xref linkend="s-3d-ui" />. A
+      comparison of all three modes for an example scene is shown in figure
+      <xref linkend="f-3d-view-comparison" /></para>
+
+      <figure id="f-3d-view-comparison">
+        <title>Comparison of GroIMP's 3D view modes</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="res/3d_view_comp.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <section id="s-ogl-options">
+        <title>Options in OpenGL mode</title>
+
+        <para>The OpenGL view can be configured by opening the Option-Dialog
+        (<guimenuitem>View/Display/Option/Edit</guimenuitem>) of GroIMP's 3D
+        view while OpenGL is selected. The dialog features the following
+        options:</para>
+
+        <para><itemizedlist>
+            <listitem>
+              <para>lighting: If enabled the scene will be lit by the
+              user-defined light-nodes (only up to 8 lights will be used). If
+              disabled the scene will not be lit resulting in flat colored
+              surfaces. [This option is not available for OpenGL (Proteus)
+              mode]</para>
+            </listitem>
+
+            <listitem>
+              <para>Level of Detail: This option defines how "round" 3D
+              Primitives appear. A higher value needs more rendering time but
+              increases the quality</para>
+            </listitem>
+
+            <listitem>
+              <para>Show points: If disabled the 3D primitive "Point" will not
+              be displayed. Points are normally used for displaying
+              information of the used RGG model or to visualizie lightsources.
+              These objects are not part of the physical scene. Hiding points
+              helps to preview the scene as seen in results produced by a
+              raytracer. Disabled this option may also increase
+              performance.</para>
+            </listitem>
+
+            <listitem>
+              <para>Show Grid: If enabled a grid of lines is displayed at the
+              scene's origin. The grid is an orientation helper while
+              navigating and modifying the scene.</para>
+            </listitem>
+
+            <listitem>
+              <para>Grid dimension: This value sets the dimension of the
+              displayed grid (in meters).</para>
+            </listitem>
+
+            <listitem>
+              <para>Grid spacing: This value defines the spacing between grid
+              lines. A spacing of 1.0 means every meter a line is
+              drawn.</para>
+            </listitem>
+
+            <listitem>
+              <para>Grid color (red, green, blue): These three values define
+              the color of the grid. Each value may be set to a number between
+              0.0 and 1.0. If all values are set to 1.0 the lines of the grid
+              will be displayed in white.</para>
+            </listitem>
+
+            <listitem>
+              <para>Show axes of coordinates: If enabled the orientation of
+              the coordinate axes is displayed in the lower left corner. The
+              axis are color-coded in red, green and blue representing the x-,
+              z-, y-Axes respectively.</para>
+            </listitem>
+
+            <listitem>
+              <para>Show names at axes: If enabled the names of the axes are
+              shown the coordinate axes.</para>
+            </listitem>
+
+            <listitem>
+              <para>Show display size: If enabled the size of the view in
+              pixel is rendered at the upper left corner of the view.</para>
+            </listitem>
+          </itemizedlist></para>
+      </section>
+
+      <section>
+        <title>Options in OpenGL (Proteus) mode</title>
+
+        <para>OpenGL (Proteus) mode shares the options of OpenGL mode (see
+        <xref linkend="s-ogl-options" />). Additionaly the following options
+        are available in the Option-Dialog
+        (<guimenuitem>View/Display/Option/Edit</guimenuitem>):</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Enable lights: If this option is enabled contribution of all
+            light sources in the scene are shown. If disabled a default,
+            directional light source replaces all other lights. This option
+            may be disabled if a scene features many lights to increase
+            performance.</para>
+          </listitem>
+
+          <listitem>
+            <para>Use physical lighting falloff: If this option is enabled a
+            quadratic falloff is used for all lightsources. This approximates
+            the pathtracer of Twilight. If disabled no falloff is used which
+            approximates the results of the standard raytracer of
+            Twilight.</para>
+          </listitem>
+
+          <listitem>
+            <para>Enable shadows: If enabled shadows will be approximated and
+            rendered to the scene. This will decrease performance drastically
+            for dynamic scenes and while editing. For static scenes shadows
+            will decrease performance only slightly. Disabling this option has
+            the same effect as marking all lightsources as shadowless.</para>
+          </listitem>
+
+          <listitem>
+            <para>Show sky: If enabled the material of Sky-Nodes is rendered
+            as the scenes background. If disabled a generic grey-colored
+            pattern is shown.</para>
+          </listitem>
+
+          <listitem>
+            <para>Show diffuse Sky-Light: If enabled the 3D-View uses
+            Sky-Nodes as an additional lightsource. For a bright, blue sky the
+            scene will be shaded in a bluish color.</para>
+          </listitem>
+
+          <listitem>
+            <para>Global brightness: This value is used to scale the
+            brightness of the rendered image. A low value will darken the
+            scene while a higher value will brighten up the displayed
+            picture.</para>
+          </listitem>
+
+          <listitem>
+            <para>Enable tonemapping: If enabled the value for
+            Global-brightness is ignored. The image is transformed by the
+            specified algorithm</para>
+          </listitem>
+
+          <listitem>
+            <para>Tonemapping algorithm: The selected Tonemapping algorithm
+            controlls how the lit scene is presented to the user. The default
+            value is linear mapping which divides the channels of each pixel
+            by the maximum valued channel over all pixels.</para>
+
+            <para>DRR (Dynamic Range Reduction) uses the algorithm descriped
+            in the paper "Dynamic Range Reduction Inspired by Photoreceptor
+            Physiology" by Erik Reinhard and Kate Devlin (<ulink
+            url="http://dx.doi.org/10.1109/TVCG.2005.9">link</ulink>).
+            Currently only the default values for <emphasis>m</emphasis>,
+            <emphasis>f'</emphasis>, <emphasis>c</emphasis> and
+            <emphasis>a</emphasis> are used.</para>
+          </listitem>
+
+          <listitem>
+            <para>Enable shader antialiasing: Some materials will result in
+            hard edges or aliasing-artefacts. If enabled the visual quality of
+            materials may be improved resulting in a small performance
+            reduction. (This feature is not implemented by most shaders up to
+            now)</para>
+          </listitem>
+
+          <listitem>
+            <para>Expand planes to infinity: If enabled planes will be
+            rendered as infinitely large. If disabled a simple square is used
+            to represent planes. This feature may not be supported by all
+            GPU's so disabling will help to increase compatibility.</para>
+          </listitem>
+
+          <listitem>
+            <para>Max. depth layers: If set to a value higher than 0
+            transparent objects will be rendered. This value defines the
+            maximum number of transparent layers that may be used to composite
+            the image. A higher value allows to see more transparent objects
+            behind other transparent object. Depending on the scenes setting
+            (especially on how many transparent objects are positioned behind
+            each other) a high value will reduce performance drastically. A
+            small value (around 4) is recommended.</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section>
+      <title>GroIMP's 3D Objects</title>
+
+      <section>
+        <title>Primitives</title>
+
+        <para>GroIMP defines the 3D primitive objects sphere, box, cylinder,
+        cone, frustum, parallelogram, plane, and text label. They can be moved
+        and rotated interactively as explained in <xref
+        linkend="s-3d-ui" />.</para>
+      </section>
+
+      <section>
+        <title>NURBS Curves and Surfaces</title>
+
+        <para>NURBS (Non-Uniform Rational B-Splines) are a popular and
+        versatile representation of curves and surfaces. GroIMP contains full
+        NURBS support, e.g., techniques to construct NURBS surfaces out of a
+        set of NURBS curves, including surface skinning, surfaces of
+        revolution, extrusion and sweep surfaces. A detailed description of
+        these techniques will follow in later versions of this manual. For the
+        time being, you can experiment with the surface settings in the
+        <guilabel>Attribute Editor</guilabel>. Of course, you have to create a
+        surface via <guimenuitem>Objects/NURBS/Surface</guimenuitem> at
+        first.</para>
+      </section>
+
+      <section>
+        <title>Scene Objects</title>
+
+        <para>The global 3D objects light and sky are contained in GroIMP.
+        They can be placed into the scene similarly to primitive objects. In
+        the wireframe representation, the sky object is displayed as a sphere;
+        its position is irrelevant because it represents a sky sphere at
+        infinity. Visual effects cannot be seen in the wireframe
+        representation, use POV-Ray to get a ray-traced image which makes use
+        of these objects.</para>
+      </section>
+    </section>
+  </chapter>
+</book>

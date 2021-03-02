@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="graph" type="Graph" />
+	<xs:complexType name="Graph">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="type" type="Type" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="root" type="Root" minOccurs="0" maxOccurs="1" />
+			<xs:element name="node" type="Node" minOccurs="0" maxOccurs="unbounded" />
+       		<xs:element name="edge"	type="Edge" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Edge">
+		<xs:attribute name="id" type="id_type" use="optional" />
+		<xs:attribute name="src_id" type="id_type" use="required" />
+		<xs:attribute name="dest_id" type="id_type" use="required" />
+		<xs:attribute name="type" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:simpleType name="float_type">
+		<xs:restriction base="xs:float" />
+	</xs:simpleType>
+
+	<xs:simpleType name="int_type">
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="list_of_float_type">
+		<xs:list itemType="float_type" />
+	</xs:simpleType>
+	
+	<xs:simpleType name="list_of_int_type">
+		<xs:list itemType="int_type" />
+	</xs:simpleType>
+	
+	<xs:simpleType name="float4x4_type">
+		<xs:restriction base="list_of_float_type">
+			<xs:minLength value="16" />
+			<xs:maxLength value="16" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="matrix_type">
+		<xs:annotation>
+			<xs:documentation>
+				Matrix transformations embody mathematical changes to
+				points within a coordinate systems or the coordinate
+				system itself. The matrix element contains a 4-by-4
+				matrix of floating-point values.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="float4x4_type" />
+	</xs:simpleType>
+	
+	<xs:simpleType name="float3x1_type">
+		<xs:restriction base="list_of_float_type">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="float4x1_type">
+		<xs:restriction base="list_of_float_type">
+			<xs:minLength value="4"/>
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rgb_type">
+		<xs:restriction base="float3x1_type"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rgba_type">
+		<xs:restriction base="float4x1_type"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="list_of_float">
+		<xs:restriction base="list_of_float_type"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="list_of_int">
+		<xs:restriction base="list_of_int_type"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="id_type">
+		<xs:restriction base="xs:long" />
+	</xs:simpleType>
+
+	<xs:complexType name="Node">
+		<xs:sequence maxOccurs="unbounded" minOccurs="0">
+			<xs:element name="property" type="Property" />
+		</xs:sequence>
+		<xs:attribute name="id" type="id_type" use="required" />
+		<xs:attribute name="type" type="xs:string" use="optional" />
+		<xs:attribute name="name" type="xs:string" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="Property">
+		<xs:choice minOccurs="0" maxOccurs="1">
+			<xs:element name="matrix" type="matrix_type" />
+			<xs:element name="rgb" type="rgb_type" />
+			<xs:element name="rgba" type="rgba_type" />
+			<xs:element name="list_of_int" type="list_of_int" />
+			<xs:element name="list_of_float" type="list_of_float" />
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="value" type="xs:string" use="optional" />
+		<xs:attribute name="type" type="xs:string" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="Type">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element name="extends" type="ExtendsType" minOccurs="1" maxOccurs="1" />
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="implements" type="ImplementsType" />
+			</xs:sequence>
+			<xs:sequence maxOccurs="unbounded" minOccurs="0">
+				<xs:element name="property" type="Property" />
+			</xs:sequence>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" />
+	</xs:complexType>
+
+	<xs:complexType name="ImplementsType">
+		<xs:attribute type="xs:string" name="name" />
+	</xs:complexType>
+
+	<xs:complexType name="ExtendsType">
+		<xs:attribute type="xs:string" name="name" />
+	</xs:complexType>
+
+
+
+	<xs:complexType name="Root">
+        <xs:annotation>
+        	<xs:documentation>
+        		Root is an extra node and does NOT reference to an
+        		existing node in the node array. It is used with its ID
+        		to model the edges. This node is mapped in GroIMP as an
+        		object of class Node.
+        	</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="root_id" type="id_type" use="required"></xs:attribute>
+	</xs:complexType>
+</xs:schema>

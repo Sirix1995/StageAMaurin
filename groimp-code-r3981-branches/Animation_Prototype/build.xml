@@ -1,0 +1,28 @@
+<project name="Animation" default="compile">
+	
+  <description>
+    Ant build file for the animation system
+  </description>
+  
+  <import file="../Build/buildproject.xml"/>
+    	
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="Platform-Swing"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="Platform"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="Graph"/>
+    </antcall>
+    <antcall target="-addproject">
+      <param name="proj" value="IMP3D"/>
+    </antcall>
+  </target>
+	
+  <target name="src">
+    <antcall target="-src-enhance" />
+  </target>
+	
+</project>

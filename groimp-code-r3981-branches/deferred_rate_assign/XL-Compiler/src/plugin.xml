@@ -1,0 +1,11 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.xl.compiler"
+  version="0.9.8"
+  xmlns="http://grogra.de/registry">
+
+  <library file="XL-Compiler.jar" prefixes="{de.grogra.xl}"/>
+
+  <import plugin="de.grogra.grammar"/>
+  <import plugin="de.grogra.xl.vmx"/>
+</plugin>

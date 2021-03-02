@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=GroIMP
+Comment=interactive 3D modelling platform
+Comment[de]= Interaktive 3D Modellierungsplatform
+Comment[fr]=plateforme interactive de modélisation en 3D
+Comment[zh_CN]=互动3D模拟平台
+Encoding=UTF-8
+Comment= Growth Grammar-related Interactive Modelling Platform - 3D-modelling platform
+Comment[de]= Growth Grammar-related Interactive Modelling Platform - 3D-Modellierungsplattform
+Exec=groimp
+Icon=groimp
+Terminal=false
+Type=Application
+Categories=Science;Development;Biology;Education;
+StartupNotify=false

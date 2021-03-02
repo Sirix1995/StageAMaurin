@@ -1,0 +1,40 @@
+<project name="Platform-Core" default="compile">
+  <property name="src2dist" value="*"/>
+  <property name="mx" value="700m"/>
+
+  <description>
+    Ant build file for the core package of the platform
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-app"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="Graph"/>
+    </antcall>
+  </target>
+
+  <target name="src">
+    <antcall target="-src-vtl"/>
+    <antcall target="-src-enhance"/>
+  </target>
+
+  <target name="GroIMP">
+    <java classname="de.grogra.pf.boot.Main"
+        fork="true"
+		maxmemory="${mx}"
+    >
+	  <jvmarg value="-ea"/>
+      <arg value="--project-tree"/> 
+	  <arg value="${groimp.args}"/>
+      <classpath>
+        <pathelement location="../XL-Core/build"/>
+	    <pathelement location="../Utilities/build"/>
+	    <pathelement location="../Graph/build"/>
+	    <pathelement location="build"/>
+      </classpath>
+	</java>
+  </target>
+</project>

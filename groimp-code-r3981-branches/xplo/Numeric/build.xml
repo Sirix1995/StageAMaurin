@@ -1,0 +1,18 @@
+<project name="Numeric" default="compile">
+
+  <description>
+    The "Numeric" plugin provides functionality to solve ODEs.
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-libs">
+    <antcall target="-addlib">
+      <param name="lib" value="lib/commons-math-2.2.jar" />
+    </antcall>
+    <antcall target="-addlib">
+      <param name="lib" value="lib/jna.jar" />
+    </antcall>
+  </target>
+
+</project>

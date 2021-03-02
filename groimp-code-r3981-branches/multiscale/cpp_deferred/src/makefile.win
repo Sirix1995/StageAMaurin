@@ -1,0 +1,50 @@
+CC=cl
+
+CFLAGS=/W3 /Zi /DWIN32 /c /O2 /nologo /wd4996 /I..\fssimplewindow\src 
+
+ASSIMP_HOME=..\assimp--2.0.863-sdk
+ASSIMP_INCS=$(ASSIMP_HOME)\include
+ASSIMP_LIBS=$(ASSIMP_HOME)\lib\assimp_release-dll_win32
+
+LIBS=gdi32.lib user32.lib kernel32.lib shell32.lib winmm.lib opengl32.lib glu32.lib assimp.lib
+
+OBJSIMPLEWIN=$(OBJDIR)\fswin32keymap.obj $(OBJDIR)\fswin32wrapper.obj $(OBJDIR)\fswin32winmain.obj
+OBJS=$(OBJDIR)\multiscale.obj $(OBJSIMPLEWIN)
+
+OBJDIR=.\obj
+
+EXE=multiscale.exe
+
+SUBSYS=/subsystem:windows
+#SUBSYS=/subsystem:console
+
+$(EXE) : $(OBJDIR) $(OBJS)
+	$(CC) /Fe$(EXE) $(OBJS) $(LIBS) /link /debug $(SUBSYS) /LIBPATH:$(ASSIMP_LIBS)
+
+link :
+	$(CC) /Fe$(EXE) $(OBJS) $(LIBS) /link /debug $(SUBSYS) /LIBPATH:$(ASSIMP_LIBS)
+
+$(OBJDIR) :
+	mkdir $(OBJDIR)
+
+cln :
+	del $(EXE)
+	del *.ilk
+	del *.pdb
+	rd /S /Q $(OBJDIR)
+
+
+$(OBJDIR)\multiscale.obj : multiscale.cpp
+    $(CC) $? $(CFLAGS) /Fo$@  -I $(ASSIMP_INCS)
+
+
+
+$(OBJDIR)\fswin32keymap.obj : ..\fssimplewindow\src\windows\fswin32keymap.cpp
+    $(CC) $? $(CFLAGS) /Fo$@
+
+$(OBJDIR)\fswin32wrapper.obj : ..\fssimplewindow\src\windows\fswin32wrapper.cpp
+    $(CC) $? $(CFLAGS) /Fo$@
+
+$(OBJDIR)\fswin32winmain.obj : ..\fssimplewindow\src\windows\fswin32winmain.cpp
+    $(CC) $? $(CFLAGS) /Fo$@
+

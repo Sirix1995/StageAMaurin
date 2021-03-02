@@ -1,0 +1,13 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.numeric"
+  version="1.4.3"
+  xmlns="http://grogra.de/registry">
+
+  <library file="commons-math-2.2.jar" prefixes="{org.apache.commons.math}"/>
+  <library file="jna.jar" prefixes="{com.sun.jna}"/>
+  <library file="Numeric.jar" prefixes="{de.grogra.numeric}"/>
+
+  <registry>
+  </registry>
+</plugin>

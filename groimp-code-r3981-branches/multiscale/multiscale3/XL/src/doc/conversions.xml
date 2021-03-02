@@ -1,0 +1,100 @@
+<chapter id="c-conversions">
+<title>Conversions and Promotions</title>
+
+<para>
+Every expression written in the XL programming language has a
+compile-time type that can be deduced from the expression.
+By a <firstterm>conversion</firstterm> from type <replaceable>S</replaceable>
+to type <replaceable>T</replaceable>, an expression of type
+<replaceable>S</replaceable> can be treated as having the
+compile-time type <replaceable>T</replaceable>.
+</para>
+<para>
+The Java programming language defines several categories of conversions:
+<firstterm>Identity conversions</firstterm>,
+<firstterm>widening primitive conversions</firstterm>,
+<firstterm>narrowing primitive conversions</firstterm>,
+<firstterm>widening reference conversions</firstterm>,
+<firstterm>narrowing reference conversions</firstterm>,
+<firstterm>string conversions</firstterm>,
+and <firstterm>value set conversions</firstterm>. These conversions
+occur in several conversion contexts:
+<firstterm>Assignment conversion</firstterm>,
+<firstterm>method invocation conversion</firstterm>,
+<firstterm>casting conversion</firstterm>,
+<firstterm>string conversion</firstterm>,
+and <firstterm>unary</firstterm> and
+<firstterm>binary numeric promotion</firstterm>.
+</para>
+<para>
+The XL programming language modifies the definition of widening primitive
+conversions in order to allow for an implicit conversion from
+<classname>double</classname> to <classname>float</classname>
+and adds the conversion context
+of <firstterm>binary floating-point promotion</firstterm>
+(<xref linkend="s-fp-promotion"/>),
+which is exclusively used for the exponentiation operator.
+</para>
+
+<section id="s-widening"><title>Widening Primitive Conversions</title>
+
+<para>
+The <firstterm>widening primitive conversions</firstterm> of the
+XL programming language are the following conversions:
+<itemizedlist>
+<listitem><para><classname>byte</classname> to
+<classname>short</classname>, <classname>int</classname>,
+<classname>long</classname>, <classname>float</classname>, or
+<classname>double</classname>
+</para></listitem>
+<listitem><para><classname>short</classname> to
+<classname>int</classname>,
+<classname>long</classname>, <classname>float</classname>, or
+<classname>double</classname>
+</para></listitem>
+<listitem><para><classname>char</classname> to
+<classname>int</classname>,
+<classname>long</classname>, <classname>float</classname>, or
+<classname>double</classname>
+</para></listitem>
+<listitem><para><classname>int</classname> to
+<classname>long</classname>, <classname>float</classname>, or
+<classname>double</classname>
+</para></listitem>
+<listitem><para><classname>long</classname> to
+<classname>float</classname> or <classname>double</classname>
+</para></listitem>
+<listitem><para><classname>float</classname> to
+<classname>double</classname>
+</para></listitem>
+<listitem><para><classname>double</classname> to
+<classname>float</classname>, but only if this is enabled by a
+corresponding compiler option.
+</para></listitem>
+</itemizedlist>
+</para>
+
+</section>
+
+<section id="s-fp-promotion"><title>Binary Floating-Point Promotion</title>
+
+<para>
+<firstterm>Binary floating-point promotion</firstterm> is a
+special case of binary numeric promotion. It is applied to the operands
+of the exponentiation operator:
+<itemizedlist>
+<listitem><para>If either operand is of type <classname>double</classname>,
+the other is converted to <classname>double</classname> by a widening
+conversion.
+</para></listitem>
+<listitem><para>Otherwise, both operands are converted to
+<classname>float</classname> by a widening conversion.
+</para></listitem>
+</itemizedlist>
+After the type conversion, if any, value set conversion is applied
+to each operand.
+</para>
+
+</section>
+
+</chapter>

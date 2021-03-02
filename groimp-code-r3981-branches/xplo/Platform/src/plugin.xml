@@ -1,0 +1,317 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<plugin
+  id="de.grogra.pf"
+  version="1.4.3"
+  class="de.grogra.pf.ui.UI"
+  xmlns="http://grogra.de/registry">
+  
+  <library file="itext-1.4.jar" prefixes="{com.lowagie}"/>
+  <library file="poi-3.7-20101029.jar" prefixes="{org.apache.poi}"/>
+  <library file="poi-ooxml-3.7-20101029.jar" prefixes="{org.apache.poi}"/>
+  <library file="jsr173_1.0_api.jar" prefixes="{javax.xml.stream}" />
+  <library file="xbean.jar" prefixes="{org.apache.xmlbeans,schemaorg_apache_xmlbeans}" />
+  <library file="xml-apis.jar" prefixes="{org.apache.xmlcommons,org.w3c.css,org.w3c.dom,org.xml.sax,javax.xml}" />
+  <library file="xercesImpl.jar" prefixes="{org.apache.html.dom,org.apache.wml,org.apache.xerces,org.w3c.dom.html}" />
+  <library file="xalan.jar" prefixes="{java_cup.runtime,org.apache.bcel,org.apache.regexp,org.apache.xalan,org.apache.xml,org.apache.xpath}" />
+  <library file="serializer.jar" prefixes="{org.apache.xml.serializer}" />
+  <library file="Platform.jar" prefixes="{de.grogra.pf.ui,de.grogra.pf.data,de.grogra.msml,org.jfree}"/>
+ 
+
+  <registry elements="{{command,de.grogra.pf.ui.registry.CommandItem},{group,de.grogra.pf.ui.registry.Group},{choicegroup,de.grogra.pf.ui.registry.ChoiceGroup},{checkboxitem,de.grogra.pf.ui.registry.CheckBoxItem},{separator,de.grogra.pf.ui.registry.Separator},{dependency,de.grogra.pf.ui.registry.UIPropertyDependency},{selectable,de.grogra.pf.ui.registry.SelectableItem}}">
+
+    <directory name="applications"/>
+    <directory name="attributes" elements="{{attribute,de.grogra.pf.ui.registry.AttributeItem},{composite,de.grogra.pf.ui.edit.CompositeEditor},{poly,de.grogra.pf.ui.edit.PolyEditor},{button,de.grogra.pf.ui.edit.ButtonEditor}}">
+      <attribute name="de.grogra.graph.name"/>
+      <attribute name="de.grogra.graph.layer"/>
+      <directory name="userdefined">
+        <attribute name="de.grogra.graph.userFields">
+          <de.grogra.pf.ui.edit.UserFieldsEditor name="user"/>
+        </attribute>
+      </directory>
+    </directory>
+    <directory name="objects" elements="{{resdir,de.grogra.pf.ui.registry.ResourceDirectory},{factory,de.grogra.pf.ui.registry.ObjectItemFactory},{itemfactory,de.grogra.pf.ui.registry.ItemFactory},{filefactory,de.grogra.pf.ui.registry.FileFactory},{file,de.grogra.pf.ui.registry.FileObjectItem}}">
+      <resdir name="files" createExplorer="false"/>
+      <resdir name="datasets"/>
+    </directory>
+    <directory name="cmdline"/>
+    <directory name="ui" optionCategory="true">
+      <null name="options">
+        <option name="windowwidth" type="java.lang.Integer" value="700"/>
+        <option name="windowheight" type="java.lang.Integer" value="500"/>
+        <option name="windowmaximized" type="java.lang.Boolean" value="false"/>
+        <option name="iconsize" type="java.lang.Integer" value="64"/>
+        <option name="saveProjectOnFileModification" type="java.lang.Boolean" value="true"/>
+        <option name="showHostname" type="java.lang.Boolean" value="false"/>
+        <option name="languages" type="de.grogra.pf.ui.Languages.LANGUAGE_LIST" value="0"/>
+        <option name="auto_update_check" type="java.lang.Boolean" value="false"/>
+      </null>
+      <directory name="commands">
+        <command name="open" run="de.grogra.pf.ui.Workbench.open"/>
+        <command name="opendemo" run="de.grogra.pf.ui.Workbench.openAsDemo"/>
+        <command name="save" run="de.grogra.pf.ui.Workbench.save"/>
+        <command name="saveas" run="de.grogra.pf.ui.Workbench.saveAs"/>
+        <command name="undo" run="de.grogra.pf.ui.Workbench.undo"/>
+        <command name="addlayout" run="de.grogra.pf.ui.registry.Layout.addLayout">
+          <exists name=".available" ref="/project"/>
+        </command>
+<!--        <command name="cut" run="de.grogra.pf.ui.Workbench.cut">
+          <dependency property="workbenchSelection"/>
+          <object name=".enabled" expr="de.grogra.pf.ui.Workbench.isCutEnabled">
+            <var name="context"/>
+          </object>
+        </command>
+        <command name="copy" run="de.grogra.pf.ui.Workbench.copy">
+          <dependency property="workbenchSelection"/>
+          <object name=".enabled" expr="de.grogra.pf.ui.Workbench.isCopyEnabled">
+            <var name="context"/>
+          </object>
+        </command>
+        <command name="paste" run="de.grogra.pf.ui.Workbench.paste">
+        </command> -->
+        <command name="delete" run="de.grogra.pf.ui.Workbench.delete">
+          <dependency property="workbenchSelection"/>
+          <object name=".enabled" expr="de.grogra.pf.ui.Workbench.isDeleteEnabled">
+            <var name="context"/>
+          </object>
+        </command>
+        <command name="exporttable" run="de.grogra.pf.data.Dataset.export"/>
+      </directory>
+      <directory name="editors" elements="{{composite,de.grogra.pf.ui.edit.CompositeEditor},{poly,de.grogra.pf.ui.edit.PolyEditor},{method,de.grogra.pf.ui.edit.MethodEditor},{button,de.grogra.pf.ui.edit.ButtonEditor}}">
+        <de.grogra.pf.ui.edit.NumericEditor name="numeric"/>
+        <de.grogra.pf.ui.edit.NumberEditor name="number"/>
+        <de.grogra.pf.ui.edit.StringEditor name="string"/>
+        <de.grogra.pf.ui.edit.BooleanEditor name="boolean"/>
+        <de.grogra.pf.ui.edit.BooleanEditor name="Boolean" wrapped="true"/>
+        <de.grogra.pf.ui.edit.EnumerationEditor name="objectenum"/>
+        <de.grogra.pf.ui.edit.EnumerationEditor name="intenum" intenum="true"/>
+        <de.grogra.pf.ui.edit.EnumerationEditor name="enum" type="de.grogra.util.EnumValue"/>
+        <composite name="object" type="java.lang.Object" fields="{}"/>
+      </directory>
+      <directory name="explorer">
+        <directory name="menu">
+          <directory name="src">
+            <directory name="object">
+              <directory name="new"/>
+            </directory>
+          </directory>
+          <directory name="xf">
+            <object class="de.grogra.pf.ui.registry.ExplorerMenuBuilder"/>
+          </directory>
+        </directory>
+      </directory>
+      <group name="panels" elements="{{panel,de.grogra.pf.ui.registry.PanelFactory},{toolbar,de.grogra.pf.ui.registry.ToolBarFactory},{explorer,de.grogra.pf.ui.registry.ExplorerFactory}}">
+        <explorer name="fileexplorer"
+          objectDir="/project/objects/files" factoryDir="/objects/files">
+          <exists name=".available" ref="/project"/>
+          <link source="/ui/explorer/menu"/>
+        </explorer>
+        <panel name="attributeeditor">
+          <object expr="de.grogra.pf.ui.edit.PropertyEditorManager.createEditor">
+            <var name="context"/>
+            <vars/>
+          </object>
+        </panel>
+        <panel name="texteditor">
+          <exists name=".available" ref="/project"/>
+          <object expr="createTextEditor">
+            <object expr="de.grogra.pf.ui.UIToolkit.get">
+              <var name="context"/>
+            </object>
+            <var name="context"/>
+            <vars/>
+          </object>
+        </panel>
+        <panel name="log">
+          <object expr="createLogViewer">
+            <object expr="de.grogra.pf.ui.UIToolkit.get">
+              <var name="context"/>
+            </object>
+            <var name="context"/>
+            <vars/>
+          </object>
+        </panel>
+        <panel name="viewer" hidden="true">
+          <object expr="createViewerPanel">
+            <object expr="de.grogra.pf.ui.UIToolkit.get">
+              <var name="context"/>
+            </object>
+            <var name="context"/>
+            <var name="systemId"/>
+            <vars/>
+          </object>
+        </panel>
+        <panel name="chart" hidden="true">
+          <object expr="createChartPanel">
+            <object expr="de.grogra.pf.ui.UIToolkit.get">
+              <var name="context"/>
+            </object>
+            <var name="context"/>
+            <vars/>
+          </object>
+        </panel>
+        <panel name="table" hidden="true">
+          <object expr="createPanel">
+            <object expr="de.grogra.pf.ui.UIToolkit.get">
+              <var name="context"/>
+            </object>
+            <var name="context"/>
+            <null/>
+            <vars/>
+          </object>
+          <directory name="menu">
+            <directory name="src">
+              <link source="/ui/commands/exporttable"/>
+            </directory>
+          </directory>
+        </panel>
+        <panel name="statusbar">
+          <object expr="createStatusBar">
+            <object expr="de.grogra.pf.ui.UIToolkit.get">
+              <var name="context"/>
+            </object>
+            <var name="context"/>
+            <vars/>
+          </object>
+        </panel>
+        <explorer name="layouts" objectDir="/project/layouts">
+          <exists name=".available" ref="/project"/>
+          <link source="/ui/explorer/menu"/>
+        </explorer>
+        <panel name="help">
+          <object expr="de.grogra.pf.ui.registry.ExplorerFactory.createHelpExplorer">
+            <var name="context"/>
+            <vars/>
+          </object>
+        </panel>
+        <de.grogra.pf.ui.registry.OptionExplorerFactory name="preferences"/>
+        <directory name="objects"/>
+      </group>
+      <group name="layouts" itemGroup="true" elements="{{layout,de.grogra.pf.ui.registry.Layout}}">
+        <link source="/project/layouts"/>
+      </group>
+      <directory name="iconthemes">
+        <eval name="default">
+          <object expr="de.grogra.icon.ScaledIconTheme.readFromDirectory">
+            <string value="icontheme"/>
+            <resource name="icons"/>
+            <string value=".png"/>
+          </object>
+        </eval>
+      </directory>
+      <first name="toolkits" dir="true"/>
+    </directory>
+    <directory name="help"/>
+    <directory name="io" optionCategory="true">
+      <directory name="filetypes" elements="{{ext, de.grogra.pf.io.ExtensionItem}}">
+        <ext name="project-zip" extensions="{.gsz}" mimeType="application/x-grogra-project+zip"/>
+        <ext name="project" extensions="{.gs}" mimeType="application/x-grogra-project"/>
+        <ext name="jar" extensions="{.jar}" mimeType="application/x-jar"/>
+        <ext name="txt" extensions="{.txt}" mimeType="text/plain"/>
+        <ext name="sci" extensions="{.sci}" mimeType="text/sci"/>
+        <ext name="html" extensions="{.html,.htm}" mimeType="text/html"/>
+        <ext name="xml" extensions="{.xml}" mimeType="text/xml"/>
+        <ext name="graphml" extensions="{.graphml}" mimeType="text/graphml+xml"/>
+        <ext name="xls" extensions="{.xls}" mimeType="application/vnd.ms-excel"/>
+        <ext name="ps" extensions="{.ps,.eps}" mimeType="application/postscript"/>
+        <ext name="csv" extensions="{.csv}" mimeType="text/x-csv"/>
+        <ext name="pdf" extensions="{.pdf}" mimeType="application/pdf"/>
+      </directory>
+      <directory name="mimetypes" elements="{{mimetype,de.grogra.pf.io.MimeTypeItem},{filter, de.grogra.pf.io.FilterItem}}">
+        <mimetype name="text/plain" editable="true">
+          <filter name="text" input="is" create="de.grogra.pf.io.NullResourceFilter"/>
+        </mimetype>
+        <mimetype name="text/sci" editable="false">
+          <filter name="sci" input="is" create="de.grogra.pf.io.NullResourceFilter"/>
+        </mimetype>        
+        <mimetype name="text/html" viewable="true">
+          <filter name="html" input="is" create="de.grogra.pf.io.NullResourceFilter"/>
+        </mimetype>
+        <mimetype name="text/xml" viewable="true">
+        </mimetype>
+        <mimetype name="application/x-jar" viewable="false">
+          <filter name="jar" input="is" create="de.grogra.pf.io.NullResourceFilter"/>
+        </mimetype>
+        <mimetype name="application/x-grogra-project">
+          <filter input="freader" create="de.grogra.pf.io.GSReader"/>
+        </mimetype>
+        <mimetype name="application/x-grogra-project+zip">
+          <filter input="is" create="de.grogra.pf.io.GSZReader"/>
+        </mimetype>
+        <mimetype name="application/x-grogra-registry+xml">
+          <filter input="sax" create="de.grogra.pf.io.RegistryReader"/>
+        </mimetype>
+        <mimetype name="application/x-grogra-graph+xml">
+          <filter input="sax" create="de.grogra.pf.io.GraphReader"/>
+        </mimetype>
+        <mimetype name="application/x-java-jvm-local-objectref">
+          <filter name="gs" inputClass="de.grogra.pf.registry.Registry" create="de.grogra.pf.io.GSWriter"/>
+          <filter name="gsz" inputClass="de.grogra.pf.registry.Registry" create="de.grogra.pf.io.GSZWriter"/>
+          <filter name="ds_csv" inputClass="de.grogra.pf.data.Dataset" create="de.grogra.pf.data.CSVWriter"/>
+          <filter name="ds_html" inputClass="de.grogra.pf.data.Dataset" create="de.grogra.pf.data.HTMLWriter"/>
+          <filter name="ds_pdf" inputClass="de.grogra.pf.data.Dataset" create="de.grogra.pf.data.PDFWriter"/>
+          <filter name="ds_xls" inputClass="de.grogra.pf.data.Dataset" create="de.grogra.pf.data.ExcelWriter"/>
+          <filter name="ds_txt" inputClass="de.grogra.pf.data.Dataset" create="de.grogra.pf.data.PlainTextWriter"/>
+          <filter name="ds_xml" inputClass="de.grogra.pf.data.Dataset" create="de.grogra.pf.data.XMLWriter"/>
+        </mimetype>
+        <mimetype name="text/graphml+xml">
+          <filter input="sax" create="de.grogra.pf.io.GraphMLReader"/>
+        </mimetype>
+        <mimetype name="text/x-csv"/>
+        <mimetype name="application/pdf"/>
+        <mimetype name="application/postscript"/>
+        <mimetype name="application/vnd.ms-excel"/>
+      </directory>
+      <directory name="streamhandlers"/>
+    </directory>
+    <directory name="hooks">
+      <directory name="postboot">
+        <insert target="/attributes">
+          <directory name="others">
+            <de.grogra.pf.ui.registry.AttributeItem name="de.grogra.graph.impl.additionalFields">
+              <de.grogra.pf.ui.edit.AdditionalNodeFieldsEditor name="additional"/>
+            </de.grogra.pf.ui.registry.AttributeItem>
+          </directory>
+        </insert>
+        <void method="de.grogra.pf.ui.registry.ResourceDirectory.installExplorers">
+          <var name="registry"/>
+        </void>
+        <void method="de.grogra.pf.ui.registry.ExplorerFactory.installHelpTOCs">
+          <var name="registry"/>
+        </void>
+      </directory>
+      <directory name="startup"/>
+      <directory name="shutdown"/>
+      <directory name="configure">
+        <hook name="main">
+          <insert target="/">
+            <directory name="classes"/>
+            <directory name="workbench">
+              <directory name="state"/>
+            </directory>
+          </insert>
+        </hook>
+        <hook name="project">
+          <exists ref="/project"/>
+          <insert target="/project">
+            <directory name="objects"/>
+            <directory name="layouts"/>
+          </insert>
+          <void method="de.grogra.pf.ui.registry.ResourceDirectory.configure">
+            <var name="registry"/>
+          </void>
+        </hook>
+      </directory>
+      <directory name="complete">
+        <hook name="project">
+          <exists ref="/project"/>
+        </hook>
+      </directory>
+      <directory name="projectloaded"/>
+      <directory name="close"/>
+      <directory name="rgg">
+        <directory name="finished"/>
+      </directory>
+      <directory name="saving"/>
+    </directory>
+  </registry>
+</plugin>

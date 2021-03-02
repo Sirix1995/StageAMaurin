@@ -1,0 +1,71 @@
+<project name="jEdit" default="compile">
+
+
+  <property name="src2jar" value=
+    "bsh/commands/*.bsh **/*.dtd org/gjt/sp/jedit/icons/ **/*.props org/**/*.xml **/*.abbrevs"/>
+
+  <property name="src2dist" value="macros/ modes/ startup/ properties/ *.txt doc/tips/"/>
+
+  <property name="build2dist" value="doc/"/>
+
+  <property name="builddocbase" value="../../../build/doc/"/>
+
+  <description>
+    Ant build file for the JEdit-plugin
+  </description>
+
+  <import file="../Build/buildproject.xml"/>
+
+  <target name="-projects">
+    <antcall target="-addproject">
+      <param name="proj" value="Platform-Swing"/>
+    </antcall>
+  </target>
+
+  <target name="-generate-docbook-wrapper">
+    <delete file="src/doc/docbook-wrapper-${format}.xsl"/>
+    <echo file="src/doc/docbook-wrapper-${format}.xsl"
+      message="&lt;xsl:stylesheet"/>
+    <echo file="src/doc/docbook-wrapper-${format}.xsl" append="true"
+      message=" xmlns:xsl='http://www.w3.org/1999/XSL/Transform'"/>
+    <echo file="src/doc/docbook-wrapper-${format}.xsl" append="true"
+      message=" version='1.0'&gt;"/>
+    <echo file="src/doc/docbook-wrapper-${format}.xsl" append="true"
+      message="&lt;xsl:import href='${stylesheet}'/&gt;"/>
+    <echo file="src/doc/docbook-wrapper-${format}.xsl" append="true"
+      message="&lt;/xsl:stylesheet&gt;"/>
+  </target>
+
+  <target name="doc" description="Generate HTML documents with xsltproc tool.">
+    <property name="format" value="html" />
+    <antcall target="-generate-docbook-wrapper"/>
+
+    <exec executable="xsltproc" dir="src/doc/users-guide">
+      <arg value="--catalogs"/>
+      <arg value="--output"/>
+      <arg value="${builddocbase}users-guide/users-guide.html"/>
+      <arg value="../jedithtml.xsl"/>
+      <arg value="users-guide.xml"/>
+    </exec>
+    <exec executable="xsltproc" dir="src/doc/FAQ">
+      <arg value="--catalogs"/>
+      <arg value="--output"/>
+      <arg value="${builddocbase}FAQ/faq.html"/>
+      <arg value="../jedithtml.xsl"/>
+      <arg value="faq.xml"/>
+    </exec>
+    <exec executable="xsltproc" dir="src/doc/news42">
+      <arg value="--catalogs"/>
+      <arg value="--output"/>
+      <arg value="${builddocbase}news42/news.html"/>
+      <arg value="../jedithtml.xsl"/>
+      <arg value="news.xml"/>
+    </exec>
+    <copy todir="build/doc">
+      <fileset dir="src/doc" includes="*.txt *.html *.png"/>
+    </copy>
+  </target>
+
+  <target name="-addjavadoc"/> <!-- no Javadoc for this project -->
+
+</project>
