@@ -44,7 +44,7 @@ class Parser():
 			print("Points : ", points)
 			print("Normales : ", normals)
 			print("Indices : ", indices)
-			lesMesh.append(QuadSet(points, normals, indices))
+			lesMesh.append(TriangleSet(points, normals, indices))
 			print("Todo")		
 		compteur = compteur + 1
 
@@ -59,6 +59,7 @@ class Parser():
 
 		lesPoints = text.split("	")
 
+		listePoints = []
 		points = []
 		
 		"""print(text)"""
@@ -71,7 +72,10 @@ class Parser():
 					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
 				else:
 					resultat = float(nombre[0])	
-				points.append(resultat)
+				listePoints.append(resultat)
+
+		for i in range(int(len(listePoints) / 3)):
+			points.append((listePoints[i * 3], listePoints[i * 3 + 1], listePoints[i * 3 + 2]))
 
 	def normals(self, elts, **props):
 		print("Normals")
@@ -81,6 +85,7 @@ class Parser():
 
 		lesNormales = text.split("	")
 
+		listeNormales = []
 		normals = []
 		
 		"""print(text)"""
@@ -95,7 +100,10 @@ class Parser():
 					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
 				else:
 					resultat = float(nombre[0])
-				normals.append(resultat)
+				listeNormales.append(resultat)
+
+		for i in range(int(len(listeNormales) / 3)):
+			normals.append((listeNormales[i * 3], listeNormales[i * 3 + 1], listeNormales[i * 3 + 2]))
 
 	def textureCoords(self, elts, **props):
 		print("Texture coodinates")
@@ -128,7 +136,7 @@ class Parser():
 			if indice != '\n' and len(indice) > 0:
 				face.append(int(indice))
 		
-		indices.append(face)
+		indices.append((face[0], face[1], face[2]))
 
 	def materialBDD(self, elts, **props):
 		print("MaterialBDD")
