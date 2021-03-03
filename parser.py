@@ -41,7 +41,11 @@ class Parser():
 		global indices
 
 		if compteur > 0:
-			lesMesh.append(QuadSet(points, normals, indices))		
+			print("Points : ", points)
+			print("Normales : ", normals)
+			print("Indices : ", indices)
+			lesMesh.append(QuadSet(points, normals, indices))
+			print("Todo")		
 		compteur = compteur + 1
 
 		for elt in elts:
@@ -57,25 +61,74 @@ class Parser():
 
 		points = []
 		
-		print(text)
+		"""print(text)"""
 		for point in lesPoints:
-			print(point)
+			"""print(point)"""
 			if point != '\n' and len(point) > 0:
 				nombre = point.split("E")
+				"""print(nombre)"""
 				if len(nombre) == 2:
-					resultat = float(nombre[0]) * pow(10, float(nombre[1]))
+					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
 				else:
 					resultat = float(nombre[0])	
 				points.append(resultat)
 
 	def normals(self, elts, **props):
 		print("Normals")
+		
+		global normals
+		global text
+
+		lesNormales = text.split("	")
+
+		normals = []
+		
+		"""print(text)"""
+		for normale in lesNormales:
+			"""print(normale)"""
+			if normale != '\n' and len(normale) > 0:
+				nombre = normale.split("E")
+				"""print(nombre)"""
+				if nombre[0] == "NaN":
+					resultat = float("inf")				
+				elif len(nombre) == 2:
+					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
+				else:
+					resultat = float(nombre[0])
+				normals.append(resultat)
 
 	def textureCoords(self, elts, **props):
 		print("Texture coodinates")
 
 	def faces(self, elts, **props):
 		print("Faces")
+
+		global compteurFaces
+		global indices		
+
+		compteurFaces = 0
+		indices = []
+
+		for elt in elts:
+            		self.dispatch(elt)
+
+	def face(self, elts, **props):
+		print("Face")
+
+		global indices
+		global text
+
+		lesIndices = text.split("	")
+
+		face = []
+		
+		"""print(text)"""
+		for indice in lesIndices:
+			"""print(indice)"""
+			if indice != '\n' and len(indice) > 0:
+				face.append(int(indice))
+		
+		indices.append(face)
 
 	def materialBDD(self, elts, **props):
 		print("MaterialBDD")
@@ -164,6 +217,7 @@ class Parser():
 		print("Name")
 
 compteur = 0
+compteurFaces = 0
 lesMesh = []
 points = []
 normals = []
