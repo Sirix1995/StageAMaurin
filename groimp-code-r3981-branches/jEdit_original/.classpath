@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="jEdit/src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/XL-Core"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="jEdit/lib/annotations-2.0.0.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>

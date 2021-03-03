@@ -1,8 +1,0 @@
-<?xml version = "1.0" encoding="UTF-8"?>
-<plugin
-  id="de.grogra.xl"
-  version="1.4.3"
-  xmlns="http://grogra.de/registry">
-
-  <library file="XL.jar" prefixes="{de.grogra.xl}"/>
-</plugin>

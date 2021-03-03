@@ -1,3 +1,0 @@
-startopenaleaserver.title = Start OpenGroIMP Server
-startopenaleaserver.msg-port = Specify port number of server
-openaleaserver-name = OpenGroIMP Server on Port {0}

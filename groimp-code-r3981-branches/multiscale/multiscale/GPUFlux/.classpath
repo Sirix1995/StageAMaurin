@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/IMP-3D"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/IMP"/>
-	<classpathentry kind="lib" path="lib/jocl.jar"/>
-	<classpathentry kind="output" path="build"/>
-</classpath>

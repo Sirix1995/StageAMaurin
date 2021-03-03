@@ -1,1 +1,0 @@
-C:\Programme\Java\xmlbeans\bin\scomp.cmd -out "xegxmlbeans.jar" -src exchangegraph.src -javasource 1.5 -compiler c:\Programme\Java\jdk1.5.0_16\bin\javac.exe "exchangegraph.xsdconfig" "exchangegraph.xsd"
