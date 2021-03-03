@@ -61,7 +61,12 @@ class Parser():
 		for point in lesPoints:
 			print(point)
 			if point != '\n' and len(point) > 0:
-				points.append(float(point))
+				nombre = point.split("E")
+				if len(nombre) == 2:
+					resultat = float(nombre[0]) * pow(10, float(nombre[1]))
+				else:
+					resultat = float(nombre[0])	
+				points.append(resultat)
 
 	def normals(self, elts, **props):
 		print("Normals")
