@@ -2,7 +2,7 @@ import xml.etree.ElementTree as xml
 from openalea.plantgl.all import * 
 
 class Parser():
-	"""Pour lire le fichier XML"""
+	"""For reading an XML file"""
 
 	def parse(self, fn):
 		"""fichier = open(fn)"""
@@ -14,6 +14,8 @@ class Parser():
 
 	def dispatch(self, elt):
 		try:
+			global text
+			text = elt.text
 			return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib, )
 		except Exception as e:
 			print(e)
@@ -47,8 +49,19 @@ class Parser():
 
 	def points(self, elts, **props):
 		print("Points")
+		
+		global points
+		global text
 
-		lesPoints = self.text.split("	")
+		lesPoints = text.split("	")
+
+		points = []
+		
+		print(text)
+		for point in lesPoints:
+			print(point)
+			if point != '\n' and len(point) > 0:
+				points.append(float(point))
 
 	def normals(self, elts, **props):
 		print("Normals")
@@ -150,6 +163,7 @@ lesMesh = []
 points = []
 normals = []
 indices = []
+text = ""
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
 
