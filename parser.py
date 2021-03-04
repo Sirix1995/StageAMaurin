@@ -41,11 +41,10 @@ class Parser():
 		global indices
 
 		if compteur > 0:
-			print("Points : ", points)
+			"""print("Points : ", points)
 			print("Normales : ", normals)
-			print("Indices : ", indices)
-			lesMesh.append(TriangleSet(points, normals, indices))
-			print("Todo")		
+			print("Indices : ", indices)"""
+			lesMesh.append(TriangleSet(points, indices))		
 		compteur = compteur + 1
 
 		for elt in elts:
@@ -95,7 +94,7 @@ class Parser():
 				nombre = normale.split("E")
 				"""print(nombre)"""
 				if nombre[0] == "NaN":
-					resultat = float("inf")				
+					resultat = 0.0				
 				elif len(nombre) == 2:
 					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
 				else:
@@ -233,4 +232,11 @@ indices = []
 text = ""
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
+shapes = []
+"""Only for testing, materials aren't parsed yet"""
+m = Material(Color3(150,0,0)) 
+for mesh in lesMesh:
+	shapes.append(Shape(mesh, m))
+scene = Scene(shapes)
+Viewer.display(scene)
 
