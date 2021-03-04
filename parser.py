@@ -44,7 +44,7 @@ class Parser():
 			"""print("Points : ", points)
 			print("Normales : ", normals)
 			print("Indices : ", indices)"""
-			lesMesh.append(TriangleSet(pointList = points, indexList= indices, normalList= normals))		
+			lesMesh.append(TriangleSet(pointList = points, indexList= indices))		
 		compteur = compteur + 1
 
 		for elt in elts:
