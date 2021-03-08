@@ -3,6 +3,23 @@ from openalea.plantgl.all import *
 
 class Parser():
 	"""For reading an XML file"""
+	def __init__(self, fn = None):
+		"""XML variables"""
+		self.text = ""
+		self.attribute = {}
+
+		"""Meshes variables"""
+		self.compteurMesh = 0
+		self.compteurFaces = 0
+		self.lesMesh = {}
+		self.points = []
+		self.normals = []
+		self.indices = []
+
+		"""Materials variables"""
+		self.compteurMat = 0
+		self.lesMaterials = dict()
+
 
 	def parse(self, fn):
 		"""fichier = open(fn)"""
@@ -14,59 +31,50 @@ class Parser():
 
 	def dispatch(self, elt):
 		try:
-			global text
-			text = elt.text
+			self.text = elt.text
+			self.attribute.clear()
+			self.attribute = elt.attrib
 			return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib, )
 		except Exception as e:
 			print(e)
 			raise Exception("Unvalid element %s" % elt.tag)
 	
 	def opf(self, elts, **props):
-		print("Opf")
+		# print("Opf")
 		for elt in elts:
             		self.dispatch(elt)	
 
 	def meshBDD(self, elts, **props):
-		print("MeshBDD")
+		# print("MeshBDD")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def mesh(self, elts, **props):
-		print("Mesh")			
-
-		global lesMesh
-		global compteur
-		global points
-		global normals
-		global indices
-
-		if compteur > 0:
-			"""print("Points : ", points)
-			print("Normales : ", normals)
-			print("Indices : ", indices)"""
-			lesMesh.append(TriangleSet(pointList = points, indexList= indices))		
-		compteur = compteur + 1
-
+		# print("Mesh")	
+		print("tic")
 		for elt in elts:
             		self.dispatch(elt)
 
+		print("tac")
+
+		self.lesMesh[self.attribute["Id"]] = TriangleSet(pointList = self.points, indexList= self.indices)
+		self.compteurMesh = compteurMesh + 1
+
+
 	def points(self, elts, **props):
-		print("Points")
-		
-		global points
-		global text
+		# print("Points")
 
 		lesPoints = text.split("	")
 
 		listePoints = []
-		points = []
+		self.points = []
 		
-		"""print(text)"""
+		"""# print(text)"""
 		for point in lesPoints:
-			"""print(point)"""
+			"""# print(point)"""
 			if point != '\n' and len(point) > 0:
 				nombre = point.split("E")
-				"""print(nombre)"""
+				"""# print(nombre)"""
 				if len(nombre) == 2:
 					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
 				else:
@@ -74,25 +82,22 @@ class Parser():
 				listePoints.append(resultat)
 
 		for i in range(int(len(listePoints) / 3)):
-			points.append((listePoints[i * 3], listePoints[i * 3 + 1], listePoints[i * 3 + 2]))
+			self.points.append((listePoints[i * 3], listePoints[i * 3 + 1], listePoints[i * 3 + 2]))
 
 	def normals(self, elts, **props):
-		print("Normals")
+		# print("Normals")
 		
-		global normals
-		global text
-
 		lesNormales = text.split("	")
 
 		listeNormales = []
-		normals = []
+		self.normals = []
 		
-		"""print(text)"""
+		"""# print(text)"""
 		for normale in lesNormales:
-			"""print(normale)"""
+			"""# print(normale)"""
 			if normale != '\n' and len(normale) > 0:
 				nombre = normale.split("E")
-				"""print(nombre)"""
+				"""# print(nombre)"""
 				if nombre[0] == "NaN":
 					resultat = 0.0				
 				elif len(nombre) == 2:
@@ -102,141 +107,140 @@ class Parser():
 				listeNormales.append(resultat)
 
 		for i in range(int(len(listeNormales) / 3)):
-			normals.append((listeNormales[i * 3], listeNormales[i * 3 + 1], listeNormales[i * 3 + 2]))
+			self.normals.append((listeNormales[i * 3], listeNormales[i * 3 + 1], listeNormales[i * 3 + 2]))
 
 	def textureCoords(self, elts, **props):
-		print("Texture coodinates")
+		# print("Texture coodinates")
+		pass
 
 	def faces(self, elts, **props):
-		print("Faces")
+		# print("Faces")	
 
-		global compteurFaces
-		global indices		
-
-		compteurFaces = 0
-		indices = []
+		self.compteurFaces = 0
+		self.indices = []
 
 		for elt in elts:
             		self.dispatch(elt)
 
 	def face(self, elts, **props):
-		print("Face")
-
-		global indices
-		global text
+		# print("Face")
 
 		lesIndices = text.split("	")
 
 		face = []
 		
-		"""print(text)"""
+		"""# print(text)"""
 		for indice in lesIndices:
-			"""print(indice)"""
+			"""# print(indice)"""
 			if indice != '\n' and len(indice) > 0:
 				face.append(int(indice))
 		
-		indices.append((face[0], face[1], face[2]))
+		self.indices.append((face[0], face[1], face[2]))
 
 	def materialBDD(self, elts, **props):
-		print("MaterialBDD")
+		# print("MaterialBDD")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def material(self, elts, **props):
-		print("Material")
+		# print("Material")
+		pass
 
 	def shapeBDD(self, elts, **props):
-		print("ShapeBDD")
+		# print("ShapeBDD")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def shape(self, elts, **props):
-		print("Shape")
+		# print("Shape")
+		pass
 
 	def attributeBDD(self, elts, **props):
-		print("AttributeBDD")
+		# print("AttributeBDD")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def attribute(self, elts, **props):
-		print("Attribute")
+		# print("Attribute")
+		pass
 
 	def topology(self, elts, **props):
-		print("Topology")
+		# print("Topology")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def geometry(self, elts, **props):
-		print("Geometry")
+		# print("Geometry")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def shapeIndex(self, elts, **props):
-		print("shapeIndex")
+		# print("shapeIndex")
+		pass
 
 	def mat(self, elts, **props):
-		print("mat")
+		# print("mat")
+		pass
 
 	def dUp(self, elts, **props):
-		print("dUp")
+		# print("dUp")
+		pass
 
 	def dDwn(self, elts, **props):
-		print("dDwn")
+		# print("dDwn")
+		pass
 
 	def Orthotropy(self, elts, **props):
-		print("Orthotropy")
+		# print("Orthotropy")
+		pass
 
 	def InternodeRank(self, elts, **props):
-		print("InternodeRank")
+		# print("InternodeRank")
+		pass
 
 	def branch(self, elts, **props):
-		print("Branch")
+		# print("Branch")
+		pass
 
 	def decomp(self, elts, **props):
-		print("Decomp")
+		# print("Decomp")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def XEuler(self, elts, **props):
-		print("XEuler")
+		# print("XEuler")
+		pass
 
 	def YEuler(self, elts, **props):
-		print("YEuler")
+		# print("YEuler")
+		pass
 
 	def Length(self, elts, **props):
-		print("Length")
+		# print("Length")
+		pass
 
 	def Width(self, elts, **props):
-		print("Width")
+		# print("Width")
+		pass
 
 	def Toplength(self, elts, **props):
-		print("Topength")
+		# print("Topength")
+		pass
 
 	def Topwidth(self, elts, **props):
-		print("Topwidth")
+		# print("Topwidth")
+		pass
 
 	def follow(self, elts, **props):
-		print("Follow")
+		# print("Follow")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def Name(self, elts, **props):
-		print("Name")
+		# print("Name")
+		pass
 
-compteur = 0
-compteurFaces = 0
-lesMesh = []
-points = []
-normals = []
-indices = []
-text = ""
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
-shapes = []
-"""Only for testing, materials aren't parsed yet"""
-m = Material(Color3(150,0,0)) 
-for mesh in lesMesh:
-	shapes.append(Shape(mesh, m))
-scene = Scene(shapes)
-Viewer.display(scene)
 
+print(lesMesh)
