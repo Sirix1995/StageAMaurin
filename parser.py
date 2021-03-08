@@ -6,19 +6,22 @@ class Parser():
 	def __init__(self, fn = None):
 		"""XML variables"""
 		self.text = ""
-		self.attribute = {}
+		self.lesAttrib = {}
 
 		"""Meshes variables"""
-		self.compteurMesh = 0
 		self.compteurFaces = 0
 		self.lesMesh = {}
-		self.points = []
-		self.normals = []
-		self.indices = []
+		self.tPoints = []
+		self.tNormals = []
+		self.tIndices = []
 
 		"""Materials variables"""
-		self.compteurMat = 0
-		self.lesMaterials = dict()
+		self.lesMaterials = {}
+		self.tEmission = Color3()
+		self.tAmbient = Color3()
+		self.tDiffuse = 0.0
+		self.tSpecular = Color3()
+		self.tShininess = 0.0
 
 
 	def parse(self, fn):
@@ -32,8 +35,8 @@ class Parser():
 	def dispatch(self, elt):
 		try:
 			self.text = elt.text
-			self.attribute.clear()
-			self.attribute = elt.attrib
+			self.lesAttrib.clear()
+			self.lesAttrib = elt.attrib
 			return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib, )
 		except Exception as e:
 			print(e)
@@ -46,28 +49,28 @@ class Parser():
 
 	def meshBDD(self, elts, **props):
 		# print("MeshBDD")
+		print("Parsing Meshes...")
+
 		for elt in elts:
             		self.dispatch(elt)
 
 	def mesh(self, elts, **props):
 		# print("Mesh")	
-		print("tic")
+
+		identifiant = self.lesAttrib["Id"]
+
 		for elt in elts:
             		self.dispatch(elt)
 
-		print("tac")
-
-		self.lesMesh[self.attribute["Id"]] = TriangleSet(pointList = self.points, indexList= self.indices)
-		self.compteurMesh = compteurMesh + 1
-
+		self.lesMesh[identifiant] = TriangleSet(pointList = self.tPoints, indexList= self.tIndices)
 
 	def points(self, elts, **props):
 		# print("Points")
 
-		lesPoints = text.split("	")
+		lesPoints = self.text.split("	")
 
 		listePoints = []
-		self.points = []
+		self.tPoints = []
 		
 		"""# print(text)"""
 		for point in lesPoints:
@@ -82,15 +85,15 @@ class Parser():
 				listePoints.append(resultat)
 
 		for i in range(int(len(listePoints) / 3)):
-			self.points.append((listePoints[i * 3], listePoints[i * 3 + 1], listePoints[i * 3 + 2]))
+			self.tPoints.append((listePoints[i * 3], listePoints[i * 3 + 1], listePoints[i * 3 + 2]))
 
 	def normals(self, elts, **props):
 		# print("Normals")
 		
-		lesNormales = text.split("	")
+		lesNormales = self.text.split("	")
 
 		listeNormales = []
-		self.normals = []
+		self.tNormals = []
 		
 		"""# print(text)"""
 		for normale in lesNormales:
@@ -107,7 +110,7 @@ class Parser():
 				listeNormales.append(resultat)
 
 		for i in range(int(len(listeNormales) / 3)):
-			self.normals.append((listeNormales[i * 3], listeNormales[i * 3 + 1], listeNormales[i * 3 + 2]))
+			self.tNormals.append((listeNormales[i * 3], listeNormales[i * 3 + 1], listeNormales[i * 3 + 2]))
 
 	def textureCoords(self, elts, **props):
 		# print("Texture coodinates")
@@ -117,7 +120,7 @@ class Parser():
 		# print("Faces")	
 
 		self.compteurFaces = 0
-		self.indices = []
+		self.tIndices = []
 
 		for elt in elts:
             		self.dispatch(elt)
@@ -125,7 +128,7 @@ class Parser():
 	def face(self, elts, **props):
 		# print("Face")
 
-		lesIndices = text.split("	")
+		lesIndices = self.text.split("	")
 
 		face = []
 		
@@ -135,19 +138,94 @@ class Parser():
 			if indice != '\n' and len(indice) > 0:
 				face.append(int(indice))
 		
-		self.indices.append((face[0], face[1], face[2]))
+		self.tIndices.append((face[0], face[1], face[2]))
 
 	def materialBDD(self, elts, **props):
 		# print("MaterialBDD")
+		print("Parsing Materials...")
+
 		for elt in elts:
             		self.dispatch(elt)
 
 	def material(self, elts, **props):
 		# print("Material")
-		pass
+		
+		identifiant = self.lesAttrib["Id"]
+
+		for elt in elts:
+            		self.dispatch(elt)
+
+		self.lesMaterials[identifiant] = Material(str(identifiant), self.tAmbient, self.tDiffuse, self.tSpecular, self.tEmission, self.tShininess)
+
+	def emission(self, elts, **props):
+	
+		couleur = self.text.split("	")
+
+		liste = []
+		
+		"""# print(text)"""
+		for nombre in couleur:
+			"""# print(indice)"""
+			if nombre != '\n' and len(nombre) > 0:
+				liste.append(float(nombre))
+		self.tEmission = Color3(int(liste[0] * 255), int(liste[1] * 255), int(liste[2] * 255))
+
+	def ambient(self, elts, **props):
+	
+		couleur = self.text.split("	")
+
+		liste = []
+		
+		"""# print(text)"""
+		for nombre in couleur:
+			"""# print(indice)"""
+			if nombre != '\n' and len(nombre) > 0:
+				liste.append(float(nombre))
+		self.tAmbient = Color3(int(liste[0] * 255), int(liste[1] * 255), int(liste[2] * 255))
+
+	def diffuse(self, elts, **props):
+	
+		couleur = self.text.split("	")
+
+		liste = []
+		
+		"""# print(text)"""
+		for nombre in couleur:
+			"""# print(indice)"""
+			if nombre != '\n' and len(nombre) > 0:
+				liste.append(float(nombre))
+		self.tDiffuse = (self.tEmission.red + self.tEmission.green + self.tEmission.blue) / (liste[0] + liste[1] + liste[2])
+
+	def specular(self, elts, **props):
+
+		couleur = self.text.split("	")
+
+		liste = []
+		
+		"""# print(text)"""
+		for nombre in couleur:
+			"""# print(indice)"""
+			if nombre != '\n' and len(nombre) > 0:
+				liste.append(float(nombre))
+		self.tSpecular = Color3(int(liste[0] * 255), int(liste[1] * 255), int(liste[2] * 255))
+
+	def shininess(self, elts, **props):
+
+		couleur = self.text.split("	")
+
+		liste = []
+		
+		"""# print(text)"""
+		for nombre in couleur:
+			"""# print(indice)"""
+			if nombre != '\n' and len(nombre) > 0:
+				liste.append(float(nombre))
+		self.tShininess = liste[0]
 
 	def shapeBDD(self, elts, **props):
 		# print("ShapeBDD")
+		print("Parsing Shapes...")
+
 		for elt in elts:
             		self.dispatch(elt)
 
@@ -243,4 +321,4 @@ class Parser():
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
 
-print(lesMesh)
+print(leParser.lesMaterials)
