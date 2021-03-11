@@ -9,7 +9,6 @@ class Parser():
 		self.lesAttrib = {}
 
 		"""Meshes variables"""
-		self.compteurFaces = 0
 		self.lesMesh = {}
 		self.tPoints = []
 		self.tNormals = []
@@ -22,6 +21,11 @@ class Parser():
 		self.tDiffuse = 0.0
 		self.tSpecular = Color3()
 		self.tShininess = 0.0
+
+		"""Shape variables"""
+		self.lesShapes = {}
+		self.tMeshID = ""
+		self.tMatID = ""
 
 
 	def parse(self, fn):
@@ -117,9 +121,8 @@ class Parser():
 		pass
 
 	def faces(self, elts, **props):
-		# print("Faces")	
-
-		self.compteurFaces = 0
+		# print("Faces")
+	
 		self.tIndices = []
 
 		for elt in elts:
@@ -220,7 +223,7 @@ class Parser():
 			"""# print(indice)"""
 			if nombre != '\n' and len(nombre) > 0:
 				liste.append(float(nombre))
-		self.tShininess = liste[0]
+		self.tShininess = liste[0] / 10
 
 	def shapeBDD(self, elts, **props):
 		# print("ShapeBDD")
@@ -231,7 +234,22 @@ class Parser():
 
 	def shape(self, elts, **props):
 		# print("Shape")
+
+		identifiant = self.lesAttrib["Id"]
+		
+		for elt in elts:
+            		self.dispatch(elt)
+
+		self.lesShapes[identifiant] = Shape(self.lesMesh[self.tMeshID], self.lesMaterials[self.tMatID])
+
+	def name(self, elts, **props):
 		pass
+	
+	def meshIndex(self, elts, **props):
+		self.tMeshID = self.text
+	
+	def materialIndex(self, elts, **props):
+		self.tMatID = self.text
 
 	def attributeBDD(self, elts, **props):
 		# print("AttributeBDD")
@@ -321,4 +339,7 @@ class Parser():
 leParser = Parser()
 leParser.parse("DA1_Average_MAP_90.opf")
 
-print(leParser.lesMaterials)
+formes = list(leParser.lesShapes.values())
+
+laScene = Scene(formes)
+Viewer.display(laScene)
