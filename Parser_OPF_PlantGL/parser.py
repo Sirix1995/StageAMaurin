@@ -27,6 +27,16 @@ class Parser():
 		self.tMeshID = ""
 		self.tMatID = ""
 
+		"""Geometry variables"""
+		self.tShapeIndex = "0"
+		self.matrice = Matrix4()
+		self.transformations = []
+		self.top = 0.0
+		self.bottom = 0.0
+		self.upTrue = False
+		self.dwnTrue = False
+		self.matTrue = False
+
 
 	def parse(self, fn):
 		"""fichier = open(fn)"""
@@ -262,29 +272,78 @@ class Parser():
 
 	def topology(self, elts, **props):
 		# print("Topology")
+
+		print("Parsing Topology...")
 		for elt in elts:
             		self.dispatch(elt)
 
 	def geometry(self, elts, **props):
 		# print("Geometry")
+		self.upTrue = False
+		self.dwnTrue = False
+		self.matTrue = False
+
 		for elt in elts:
             		self.dispatch(elt)
 
+		if self.upTrue and self.dwnTrue:
+			print(self.tShapeIndex, " ", self.top, " ", self.bottom)
+			self.lesShapes[self.tShapeIndex].geometry = Tapered(primitive=self.lesShapes[self.tShapeIndex].geometry, baseRadius=self.bottom, topRadius = self.top)
+
+		if self.matTrue:
+			self.lesShapes[self.tShapeIndex].geometry = Scaled(self.transformations[0][0], self.transformations[0][1], self.transformations[0][2], self.lesShapes[self.tShapeIndex].geometry)
+			self.lesShapes[self.tShapeIndex].geometry = EulerRotated(self.transformations[1][0], self.transformations[1][1], self.transformations[1][2], self.lesShapes[self.tShapeIndex].geometry)
+			self.lesShapes[self.tShapeIndex].geometry = Translated(self.transformations[2][0], self.transformations[2][1], self.transformations[2][2], self.lesShapes[self.tShapeIndex].geometry)
+
 	def shapeIndex(self, elts, **props):
 		# print("shapeIndex")
-		pass
+		self.tShapeIndex = self.text
 
 	def mat(self, elts, **props):
 		# print("mat")
-		pass
+		self.matrice = Matrix4( (0,0,0,0),
+					(0,0,0,0),
+					(0,0,0,0),
+					(0,0,0,0))
+
+		lesNombres = self.text.split("	")		
+
+		x = 0
+		y = 0
+		for nombre in lesNombres:
+			estNombre = False
+			if nombre != '\n' and len(nombre) > 0:
+				leNombre = nombre.split("E")
+				if len(leNombre) == 2:
+					resultat = float(leNombre[0]) * pow(10.0, float(leNombre[1]))
+					estNombre = True
+				else:
+					resultat = float(leNombre[0])
+					estNombre = True
+			if estNombre:
+				self.matrice[x, y] = resultat
+				x += 1
+				if x == 5:
+					y +=1
+					x = 0
+		self.transformations = self.matrice.getTransformation()
+		self.matTrue = True
+
+
 
 	def dUp(self, elts, **props):
 		# print("dUp")
-		pass
+		self.top = 0.0
+		if self.text != "NaN":
+			self.top = float(self.text)
+			self.upTrue = True
 
 	def dDwn(self, elts, **props):
 		# print("dDwn")
-		pass
+		self.bottom = 0.0
+		if self.text != "NaN":
+			self.bottom = float(self.text)
+			self.dwnTrue = True
 
 	def Orthotropy(self, elts, **props):
 		# print("Orthotropy")
