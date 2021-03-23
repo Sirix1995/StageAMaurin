@@ -288,7 +288,7 @@ class Parser():
 
 		if self.upTrue and self.dwnTrue:
 			print(self.tShapeIndex, " ", self.top, " ", self.bottom)
-			self.lesShapes[self.tShapeIndex].geometry = Tapered(primitive=self.lesShapes[self.tShapeIndex].geometry, baseRadius=self.bottom, topRadius = self.top)
+			# self.lesShapes[self.tShapeIndex].geometry = Tapered(self.bottom, self.top, self.lesShapes[self.tShapeIndex].geometry)
 
 		if self.matTrue:
 			self.lesShapes[self.tShapeIndex].geometry = Scaled(self.transformations[0][0], self.transformations[0][1], self.transformations[0][2], self.lesShapes[self.tShapeIndex].geometry)
@@ -296,7 +296,7 @@ class Parser():
 			self.lesShapes[self.tShapeIndex].geometry = Translated(self.transformations[2][0], self.transformations[2][1], self.transformations[2][2], self.lesShapes[self.tShapeIndex].geometry)
 
 	def shapeIndex(self, elts, **props):
-		# print("shapeIndex")
+		print("shapeIndex")
 		self.tShapeIndex = self.text
 
 	def mat(self, elts, **props):
@@ -355,7 +355,8 @@ class Parser():
 
 	def branch(self, elts, **props):
 		# print("Branch")
-		pass
+		for elt in elts:
+            		self.dispatch(elt)
 
 	def decomp(self, elts, **props):
 		# print("Decomp")
@@ -378,12 +379,88 @@ class Parser():
 		# print("Width")
 		pass
 
-	def Toplength(self, elts, **props):
-		# print("Topength")
+	def Height(self, elts, **props):
+		# print("Height")
 		pass
 
-	def Topwidth(self, elts, **props):
-		# print("Topwidth")
+	def TopLength(self, elts, **props):
+		# print("TopLength")
+		pass
+
+	def TopWidth(self, elts, **props):
+		# print("TopWidth")
+		pass
+
+	def TopHeight(self, elts, **props):
+		# print("TopHeight")
+		pass
+
+	def XInsertionAngle(self, elts, **props):
+		# print("XInsertionAngle")
+		pass
+
+	def YInsertionAngle(self, elts, **props):
+		# print("YInsertionAngle")
+		pass
+
+	def ZInsertionAngle(self, elts, **props):
+		# print("ZInsertionAngle")
+		pass
+
+	def rachisLength(self, elts, **props):
+		# print("rachisLength")
+		pass
+
+	def petioleLength(self, elts, **props):
+		# print("petioleLength")
+		pass
+
+	def angleA(self, elts, **props):
+		# print("angleA")
+		pass
+
+	def Cangle(self, elts, **props):
+		# print("Cangle")
+		pass
+
+	def HorizontalAngle(self, elts, **props):
+		# print("HorizontalAngle")
+		pass
+
+	def Rank(self, elts, **props):
+		# print("Rank")
+		pass
+
+	def Side(self, elts, **props):
+		# print("Side")
+		pass
+
+	def LeafletRank(self, elts, **props):
+		# print("LeafletRank")
+		pass
+
+	def Plane(self, elts, **props):
+		# print("Plane")
+		pass
+
+	def StifnessTapering(self, elts, **props):
+		# print("StifnessTapering")
+		pass
+
+	def StifnessAngle(self, elts, **props):
+		# print("StifnessAngle")
+		pass
+
+	def RelativePosition(self, elts, **props):
+		# print("RelativePosition")
+		pass
+
+	def Stifness(self, elts, **props):
+		# print("Stifness")
+		pass
+
+	def Offset(self, elts, **props):
+		# print("Offset")
 		pass
 
 	def follow(self, elts, **props):
