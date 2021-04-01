@@ -23,6 +23,7 @@ class Parser():
 		self.tShininess = 0.0
 
 		"""Shape variables"""
+		self.lesTuples = {}
 		self.lesShapes = {}
 		self.tMeshID = ""
 		self.tMatID = ""
@@ -250,7 +251,8 @@ class Parser():
 		for elt in elts:
             		self.dispatch(elt)
 
-		self.lesShapes[identifiant] = Shape(self.lesMesh[self.tMeshID], self.lesMaterials[self.tMatID])
+#		self.lesShapes[identifiant] = Shape(self.lesMesh[self.tMeshID], self.lesMaterials[self.tMatID])
+		self.lesTuples[identifiant] = (self.lesMesh[self.tMeshID], self.lesMaterials[self.tMatID])
 
 	def name(self, elts, **props):
 		pass
@@ -288,7 +290,11 @@ class Parser():
 
 		if self.upTrue and self.dwnTrue:
 			print(self.tShapeIndex, " ", self.top, " ", self.bottom)
-			# self.lesShapes[self.tShapeIndex].geometry = Tapered(self.bottom, self.top, self.lesShapes[self.tShapeIndex].geometry)
+			temp = Tapered(self.bottom, self.top, self.lesTuples[self.tShapeIndex][0])
+		else:
+			temp = self.lesTuples[self.tShapeIndex][0]
+
+		self.lesShapes[self.tShapeIndex] = Shape(temp, self.lesTuples[self.tShapeIndex][1])
 
 		if self.matTrue:
 			self.lesShapes[self.tShapeIndex].geometry = Scaled(self.transformations[0][0], self.transformations[0][1], self.transformations[0][2], self.lesShapes[self.tShapeIndex].geometry)
@@ -470,6 +476,10 @@ class Parser():
 
 	def Name(self, elts, **props):
 		# print("Name")
+		pass
+
+	def StiffnessAngle(self, elts, **props):
+		# print("StiffnessAngle")
 		pass
 
 leParser = Parser()
