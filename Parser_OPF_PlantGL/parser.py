@@ -52,7 +52,7 @@ class Parser():
 			self.text = elt.text
 			self.lesAttrib.clear()
 			self.lesAttrib = elt.attrib
-			return self.__getattribute__(elt.tag)(elt.getchildren(), **elt.attrib, )
+			self.__getattribute__(elt.tag)(list(elt.getchildren()), **elt.attrib)
 		except Exception as e:
 			print(e)
 			raise Exception("Unvalid element %s" % elt.tag)
@@ -288,26 +288,26 @@ class Parser():
 		for elt in elts:
             		self.dispatch(elt)
 
+		temp = self.lesTuples[self.tShapeIndex][0]
+
 		if self.upTrue and self.dwnTrue:
-			print(self.tShapeIndex, " ", self.top, " ", self.bottom)
-			temp = Tapered(self.bottom, self.top, self.lesTuples[self.tShapeIndex][0])
-		else:
-			temp = self.lesTuples[self.tShapeIndex][0]
+			# print(self.tShapeIndex, " ", self.top, " ", self.bottom)
+			temp = Tapered(self.bottom, self.top, temp)
+
+		if self.matTrue:
+			temp = Scaled(self.transformations[0], temp)
+			temp = EulerRotated(self.transformations[1][0], self.transformations[1][1], self.transformations[1][2], temp)
+			temp = Translated(self.transformations[2], temp)
 
 		self.lesShapes[self.tShapeIndex] = Shape(temp, self.lesTuples[self.tShapeIndex][1])
 
-		if self.matTrue:
-			self.lesShapes[self.tShapeIndex].geometry = Scaled(self.transformations[0][0], self.transformations[0][1], self.transformations[0][2], self.lesShapes[self.tShapeIndex].geometry)
-			self.lesShapes[self.tShapeIndex].geometry = EulerRotated(self.transformations[1][0], self.transformations[1][1], self.transformations[1][2], self.lesShapes[self.tShapeIndex].geometry)
-			self.lesShapes[self.tShapeIndex].geometry = Translated(self.transformations[2][0], self.transformations[2][1], self.transformations[2][2], self.lesShapes[self.tShapeIndex].geometry)
-
 	def shapeIndex(self, elts, **props):
-		print("shapeIndex")
+		# print("shapeIndex")
 		self.tShapeIndex = self.text
 
 	def mat(self, elts, **props):
 		# print("mat")
-		self.matrice = Matrix4( (0,0,0,0),
+		"""self.matrice = Matrix4( (0,0,0,0),
 					(0,0,0,0),
 					(0,0,0,0),
 					(0,0,0,0))
@@ -331,7 +331,15 @@ class Parser():
 				x += 1
 				if x == 5:
 					y +=1
-					x = 0
+					x = 0 """
+
+		lesNombres = list(map(float,self.text.strip().split()))
+		assert(len(lesNombres)==12)
+		self.matrice = Matrix4(Vector4(lesNombres[0],lesNombres[4],lesNombres[8],0),
+							   Vector4(lesNombres[1],lesNombres[5],lesNombres[9],0),
+							   Vector4(lesNombres[2],lesNombres[6],lesNombres[10],0),
+							   Vector4(lesNombres[3],lesNombres[7],lesNombres[11],1))
+
 		self.transformations = self.matrice.getTransformation()
 		self.matTrue = True
 
