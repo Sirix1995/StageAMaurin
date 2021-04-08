@@ -300,6 +300,7 @@ class Parser():
 			temp = Translated(self.transformations[2], temp)
 
 		self.lesShapes[self.tShapeIndex] = Shape(temp, self.lesTuples[self.tShapeIndex][1])
+		self.lesShapes[self.tShapeIndex].id = int(self.tShapeIndex)
 
 	def shapeIndex(self, elts, **props):
 		# print("shapeIndex")
@@ -347,14 +348,14 @@ class Parser():
 
 	def dUp(self, elts, **props):
 		# print("dUp")
-		self.top = 0.0
+		self.top = 0.5
 		if self.text != "NaN":
 			self.top = float(self.text)
 			self.upTrue = True
 
 	def dDwn(self, elts, **props):
 		# print("dDwn")
-		self.bottom = 0.0
+		self.bottom = 0.5
 		if self.text != "NaN":
 			self.bottom = float(self.text)
 			self.dwnTrue = True
@@ -491,7 +492,9 @@ class Parser():
 		pass
 
 leParser = Parser()
-leParser.parse("DA1_Average_MAP_90.opf")
+leParser.parse("test.opf")
+
+fTest = [leParser.lesShapes["12"]]
 
 formes = list(leParser.lesShapes.values())
 
