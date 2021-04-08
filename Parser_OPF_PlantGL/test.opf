@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<opf version="2.0" editable="true">
+	<meshBDD>
+		<mesh name="" shape="" Id="0">
+			<points>
+				0.0	0.9511	0.309	0.0	0.0	1.0	1.0	0.0	1.0	1.0	0.9511	0.309	0.0	-0.9511	0.309	1.0	-0.9511	0.309	0.0	-0.5878	-0.809	1.0	-0.5878	-0.809	0.0	0.5878	-0.809	1.0	0.5878	-0.809	0.0	0.9511	0.309	1.0	0.9511	0.309	
+			</points>
+			<normals>
+				0.0	0.9511	0.309	0.0	0.0	1.0	0.0	0.0	1.0	0.0	0.9511	0.309	0.0	-0.9511	0.309	0.0	-0.9511	0.309	-0.0	-0.5878	-0.809	-0.0	-0.5878	-0.809	0.0	0.5878	-0.809	0.0	0.5878	-0.809	0.0	0.9511	0.309	0.0	0.9511	0.309	
+			</normals>
+			<textureCoords>
+				1.0	0.0	0.5	0.0	0.5	1.0	1.0	1.0	0.0	0.0	0.0	1.0	0.19098936	0.0	0.19098936	1.0	0.8090106	0.0	0.8090106	1.0	1.0	0.0	1.0	1.0	
+			</textureCoords>
+			<faces>
+				<face Id="0">
+					0	1	2	
+				</face>
+				<face Id="1">
+					2	3	0	
+				</face>
+				<face Id="2">
+					1	4	5	
+				</face>
+				<face Id="3">
+					5	2	1	
+				</face>
+				<face Id="4">
+					4	6	7	
+				</face>
+				<face Id="5">
+					7	5	4	
+				</face>
+				<face Id="6">
+					6	8	9	
+				</face>
+				<face Id="7">
+					9	7	6	
+				</face>
+				<face Id="8">
+					8	10	11	
+				</face>
+				<face Id="9">
+					11	9	8	
+				</face>
+
+			</faces>
+		</mesh>
+
+	</meshBDD>
+	<materialBDD>
+		<material Id="1">
+			<emission>0.0	0.0	0.0	0.0	</emission>
+			<ambient>0.5019608	0.3019608	0.7019608	1.0	</ambient>
+			<diffuse>0.5019608	0.3019608	0.7019608	1.0	</diffuse>
+			<specular>0.5019608	0.3019608	0.7019608	1.0	</specular>
+			<shininess>64.0	</shininess>
+		</material>
+
+	</materialBDD>
+	<shapeBDD>
+		<shape Id="0">
+			<name> Mesh0</name>
+			<meshIndex>0</meshIndex>
+			<materialIndex>0</materialIndex>
+		</shape>
+
+	</shapeBDD>
+	<topology class="Individual" scale="1">
+	<geometry class="Mesh">
+		<mat>
+		-4.371139E-8	0.0	-1.0	0.0		
+		0.0	1.0	0.0	0.0		
+		1.0	0.0	-4.371139E-8	0.0		
+		</mat>
+		<dUp>1.0</dUp>
+		<dDwn>1.0</dDwn>
+	</geometry>
+		<decomp class="Axis" scale="2">
+		<Notes>Trunk</Notes>
+		<geometry class="Mesh">
+			<mat>
+			-4.371139E-8	0.0	-1.0	0.0			
+			0.0	1.0	0.0	0.0			
+			1.0	0.0	-4.371139E-8	0.0			
+			</mat>
+			<dUp>1.0</dUp>
+			<dDwn>1.0</dDwn>
+		</geometry>
+			<decomp class="Internode" scale="6">
+			<Length>5.0</Length>
+			<geometry class="Mesh">
+				<shapeIndex>0</shapeIndex>
+				<mat>
+				-2.1855695E-7	0.0	-1.0	0.0				
+				0.0	1.0	0.0	0.0				
+				5.0	0.0	-4.371139E-8	0.0				
+				</mat>
+				<dUp>1.0</dUp>
+				<dDwn>1.0</dDwn>
+			</geometry>
+			</decomp>
+			<follow class="Internode" scale="6">
+			<Length>4.0</Length>
+			<geometry class="Mesh">
+				<shapeIndex>0</shapeIndex>
+				<mat>
+				-1.7484555E-7	0.0	-1.0	-2.1855695E-7				
+				0.0	1.0	0.0	0.0				
+				4.0	0.0	-4.371139E-8	5.0				
+				</mat>
+				<dUp>1.0</dUp>
+				<dDwn>1.0</dDwn>
+			</geometry>
+			</follow>
+			<follow class="Internode" scale="6">
+			<Length>2.0</Length>
+			<geometry class="Mesh">
+				<shapeIndex>0</shapeIndex>
+				<mat>
+				-8.742278E-8	0.0	-1.0	-3.934025E-7				
+				0.0	1.0	0.0	0.0				
+				2.0	0.0	-4.371139E-8	9.0				
+				</mat>
+				<dUp>1.0</dUp>
+				<dDwn>1.0</dDwn>
+			</geometry>
+				<branch class="Axis" scale="2">
+				<Length>3.0</Length>
+				<geometry class="Mesh">
+					<mat>
+					2.5980763	0.0	-0.5	0.49999952					
+					0.0	1.0	0.0	0.0					
+					1.5	0.0	0.86602545	11.0					
+					</mat>
+					<dUp>1.0</dUp>
+					<dDwn>1.0</dDwn>
+				</geometry>
+					<decomp class="Internode" scale="6">
+					<geometry class="Mesh">
+						<shapeIndex>0</shapeIndex>
+						<mat>
+						2.5980763	0.0	-0.5	0.49999952						
+						0.0	1.0	0.0	0.0						
+						1.5	0.0	0.86602545	11.0						
+						</mat>
+						<dUp>1.0</dUp>
+						<dDwn>1.0</dDwn>
+					</geometry>
+					</decomp>
+				</branch>
+			</follow>
+			<follow class="Internode" scale="6">
+			<Length>1.0</Length>
+			<geometry class="Mesh">
+				<shapeIndex>0</shapeIndex>
+				<mat>
+				-4.371139E-8	0.0	-1.0	-4.808253E-7				
+				0.0	1.0	0.0	0.0				
+				1.0	0.0	-4.371139E-8	11.0				
+				</mat>
+				<dUp>1.0</dUp>
+				<dDwn>1.0</dDwn>
+			</geometry>
+			</follow>
+		</decomp>
+	</topology>
+</opf>
