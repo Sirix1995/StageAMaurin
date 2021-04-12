@@ -48,7 +48,7 @@
 
 	</meshBDD>
 	<materialBDD>
-		<material Id="1">
+		<material Id="0">
 			<emission>0.0	0.0	0.0	0.0	</emission>
 			<ambient>0.5019608	0.3019608	0.7019608	1.0	</ambient>
 			<diffuse>0.5019608	0.3019608	0.7019608	1.0	</diffuse>
