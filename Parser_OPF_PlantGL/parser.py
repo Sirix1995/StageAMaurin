@@ -9,13 +9,13 @@ class Parser():
 		self.lesAttrib = {}
 
 		"""Meshes variables"""
-		self.lesMesh = {}
+		self.meshList = {}
 		self.tPoints = []
 		self.tNormals = []
-		self.tIndices = []
+		self.tIndexes = []
 
 		"""Materials variables"""
-		self.lesMaterials = {}
+		self.materialsList = {}
 		self.tEmission = Color3()
 		self.tAmbient = Color3()
 		self.tDiffuse = 0.0
@@ -23,20 +23,40 @@ class Parser():
 		self.tShininess = 0.0
 
 		"""Shape variables"""
-		self.lesTuples = {}
-		self.lesShapes = {}
+		self.tuplesList = {}
+		self.shapeList = {}
 		self.tMeshID = ""
 		self.tMatID = ""
 
 		"""Geometry variables"""
 		self.tShapeIndex = "0"
-		self.matrice = Matrix4()
+		self.tMatrix = Matrix4()
 		self.transformations = []
 		self.top = 0.0
 		self.bottom = 0.0
 		self.upTrue = False
 		self.dwnTrue = False
 		self.matTrue = False
+
+	def readNumbers(self, text):
+		textList = self.text.split("	")
+
+		numberList = []
+
+		"""# print(text)"""
+		for numberText in textList:
+			"""# print(normale)"""
+			if numberText != '\n' and len(numberText) > 0:
+				number = numberText.split("E")
+				"""# print(nombre)"""
+				if number[0] == "NaN":
+					result = 0.0				
+				elif len(number) == 2:
+					result = float(number[0]) * pow(10.0, float(number[1]))
+				else:
+					result = float(number[0])
+				numberList.append(result)
+		return numberList
 
 
 	def parse(self, fn):
@@ -77,52 +97,22 @@ class Parser():
 		for elt in elts:
             		self.dispatch(elt)
 
-		self.lesMesh[identifiant] = TriangleSet(pointList = self.tPoints, indexList= self.tIndices)
+		self.meshList[identifiant] = TriangleSet(pointList = self.tPoints, indexList= self.tIndexes)
 
 	def points(self, elts, **props):
 		# print("Points")
 
-		lesPoints = self.text.split("	")
-
-		listePoints = []
+		listePoints = self.readNumbers(self.text)
 		self.tPoints = []
-		
-		"""# print(text)"""
-		for point in lesPoints:
-			"""# print(point)"""
-			if point != '\n' and len(point) > 0:
-				nombre = point.split("E")
-				"""# print(nombre)"""
-				if len(nombre) == 2:
-					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
-				else:
-					resultat = float(nombre[0])	
-				listePoints.append(resultat)
 
 		for i in range(int(len(listePoints) / 3)):
 			self.tPoints.append((listePoints[i * 3], listePoints[i * 3 + 1], listePoints[i * 3 + 2]))
 
 	def normals(self, elts, **props):
 		# print("Normals")
-		
-		lesNormales = self.text.split("	")
 
-		listeNormales = []
+		listeNormales = self.readNumbers(self.text)
 		self.tNormals = []
-		
-		"""# print(text)"""
-		for normale in lesNormales:
-			"""# print(normale)"""
-			if normale != '\n' and len(normale) > 0:
-				nombre = normale.split("E")
-				"""# print(nombre)"""
-				if nombre[0] == "NaN":
-					resultat = 0.0				
-				elif len(nombre) == 2:
-					resultat = float(nombre[0]) * pow(10.0, float(nombre[1]))
-				else:
-					resultat = float(nombre[0])
-				listeNormales.append(resultat)
 
 		for i in range(int(len(listeNormales) / 3)):
 			self.tNormals.append((listeNormales[i * 3], listeNormales[i * 3 + 1], listeNormales[i * 3 + 2]))
@@ -134,7 +124,7 @@ class Parser():
 	def faces(self, elts, **props):
 		# print("Faces")
 	
-		self.tIndices = []
+		self.tIndexes = []
 
 		for elt in elts:
             		self.dispatch(elt)
@@ -142,17 +132,11 @@ class Parser():
 	def face(self, elts, **props):
 		# print("Face")
 
-		lesIndices = self.text.split("	")
+		face = self.readNumbers(self.text)
+		
+		assert(len(face)==3)
 
-		face = []
-		
-		"""# print(text)"""
-		for indice in lesIndices:
-			"""# print(indice)"""
-			if indice != '\n' and len(indice) > 0:
-				face.append(int(indice))
-		
-		self.tIndices.append((face[0], face[1], face[2]))
+		self.tIndexes.append((int(face[0]), int(face[1]), int(face[2])))
 
 	def materialBDD(self, elts, **props):
 		# print("MaterialBDD")
@@ -169,72 +153,52 @@ class Parser():
 		for elt in elts:
             		self.dispatch(elt)
 
-		self.lesMaterials[identifiant] = Material(str(identifiant), self.tAmbient, self.tDiffuse, self.tSpecular, self.tEmission, self.tShininess)
+		self.materialsList[identifiant] = Material(str(identifiant), self.tAmbient, self.tDiffuse, self.tSpecular, self.tEmission, self.tShininess)
 
 	def emission(self, elts, **props):
-	
-		couleur = self.text.split("	")
+		# print("Emission")
 
-		liste = []
+		liste = self.readNumbers(self.text)
 		
-		"""# print(text)"""
-		for nombre in couleur:
-			"""# print(indice)"""
-			if nombre != '\n' and len(nombre) > 0:
-				liste.append(float(nombre))
+		assert(len(liste)==4)
+
 		self.tEmission = Color3(int(liste[0] * 255), int(liste[1] * 255), int(liste[2] * 255))
 
 	def ambient(self, elts, **props):
-	
-		couleur = self.text.split("	")
+		#print("Ambient")
 
-		liste = []
+		liste = self.readNumbers(self.text)
 		
-		"""# print(text)"""
-		for nombre in couleur:
-			"""# print(indice)"""
-			if nombre != '\n' and len(nombre) > 0:
-				liste.append(float(nombre))
+		assert(len(liste)==4)
+
 		self.tAmbient = Color3(int(liste[0] * 255), int(liste[1] * 255), int(liste[2] * 255))
 
 	def diffuse(self, elts, **props):
-	
-		couleur = self.text.split("	")
-
-		liste = []
+		#print("Diffuse")
 		
-		"""# print(text)"""
-		for nombre in couleur:
-			"""# print(indice)"""
-			if nombre != '\n' and len(nombre) > 0:
-				liste.append(float(nombre))
+		liste = self.readNumbers(self.text)
+		
+		assert(len(liste)==4)
+
 		self.tDiffuse = (self.tEmission.red + self.tEmission.green + self.tEmission.blue) / (liste[0] + liste[1] + liste[2])
 
 	def specular(self, elts, **props):
+		#print("Specular")
 
-		couleur = self.text.split("	")
-
-		liste = []
+		liste = self.readNumbers(self.text)
 		
-		"""# print(text)"""
-		for nombre in couleur:
-			"""# print(indice)"""
-			if nombre != '\n' and len(nombre) > 0:
-				liste.append(float(nombre))
+		assert(len(liste)==4)
+
 		self.tSpecular = Color3(int(liste[0] * 255), int(liste[1] * 255), int(liste[2] * 255))
 
 	def shininess(self, elts, **props):
-
-		couleur = self.text.split("	")
-
-		liste = []
+		#print("Shininess")
 		
-		"""# print(text)"""
-		for nombre in couleur:
-			"""# print(indice)"""
-			if nombre != '\n' and len(nombre) > 0:
-				liste.append(float(nombre))
-		self.tShininess = liste[0] / 10
+		liste = self.readNumbers(self.text)
+		
+		assert(len(liste)==1)
+
+		self.tShininess = liste[0] / 100
 
 	def shapeBDD(self, elts, **props):
 		# print("ShapeBDD")
@@ -251,8 +215,8 @@ class Parser():
 		for elt in elts:
             		self.dispatch(elt)
 
-#		self.lesShapes[identifiant] = Shape(self.lesMesh[self.tMeshID], self.lesMaterials[self.tMatID])
-		self.lesTuples[identifiant] = (self.lesMesh[self.tMeshID], self.lesMaterials[self.tMatID])
+#		self.shapeList[identifiant] = Shape(self.meshList[self.tMeshID], self.materialsList[self.tMatID])
+		self.tuplesList[identifiant] = (self.meshList[self.tMeshID], self.materialsList[self.tMatID])
 
 	def name(self, elts, **props):
 		pass
@@ -288,7 +252,7 @@ class Parser():
 		for elt in elts:
             		self.dispatch(elt)
 
-		temp = self.lesTuples[self.tShapeIndex][0]
+		temp = self.tuplesList[self.tShapeIndex][0]
 
 		if self.upTrue and self.dwnTrue:
 			# print(self.tShapeIndex, " ", self.top, " ", self.bottom)
@@ -299,7 +263,8 @@ class Parser():
 			temp = EulerRotated(self.transformations[1][0], self.transformations[1][1], self.transformations[1][2], temp)
 			temp = Translated(self.transformations[2], temp)
 
-		self.lesShapes[self.tShapeIndex] = Shape(temp, self.lesTuples[self.tShapeIndex][1])
+		self.shapeList[self.tShapeIndex] = Shape(temp, self.tuplesList[self.tShapeIndex][1])
+		self.shapeList[self.tShapeIndex].id = int(self.tShapeIndex)
 
 	def shapeIndex(self, elts, **props):
 		# print("shapeIndex")
@@ -307,16 +272,16 @@ class Parser():
 
 	def mat(self, elts, **props):
 		# print("mat")
-		"""self.matrice = Matrix4( (0,0,0,0),
+		"""self.tMatrix = Matrix4( (0,0,0,0),
 					(0,0,0,0),
 					(0,0,0,0),
 					(0,0,0,0))
 
-		lesNombres = self.text.split("	")		
+		numberList = self.text.split("	")		
 
 		x = 0
 		y = 0
-		for nombre in lesNombres:
+		for nombre in numberList:
 			estNombre = False
 			if nombre != '\n' and len(nombre) > 0:
 				leNombre = nombre.split("E")
@@ -327,34 +292,34 @@ class Parser():
 					resultat = float(leNombre[0])
 					estNombre = True
 			if estNombre:
-				self.matrice[x, y] = resultat
+				self.tMatrix[x, y] = resultat
 				x += 1
 				if x == 5:
 					y +=1
 					x = 0 """
 
-		lesNombres = list(map(float,self.text.strip().split()))
-		assert(len(lesNombres)==12)
-		self.matrice = Matrix4(Vector4(lesNombres[0],lesNombres[4],lesNombres[8],0),
-							   Vector4(lesNombres[1],lesNombres[5],lesNombres[9],0),
-							   Vector4(lesNombres[2],lesNombres[6],lesNombres[10],0),
-							   Vector4(lesNombres[3],lesNombres[7],lesNombres[11],1))
+		numberList = list(map(float,self.text.strip().split()))
+		assert(len(numberList)==12)
+		self.tMatrix = Matrix4(Vector4(numberList[0],numberList[4],numberList[8],0),
+							   Vector4(numberList[1],numberList[5],numberList[9],0),
+							   Vector4(numberList[2],numberList[6],numberList[10],0),
+							   Vector4(numberList[3],numberList[7],numberList[11],1))
 
-		self.transformations = self.matrice.getTransformation()
+		self.transformations = self.tMatrix.getTransformation()
 		self.matTrue = True
 
 
 
 	def dUp(self, elts, **props):
 		# print("dUp")
-		self.top = 0.0
+		self.top = 0.5
 		if self.text != "NaN":
 			self.top = float(self.text)
 			self.upTrue = True
 
 	def dDwn(self, elts, **props):
 		# print("dDwn")
-		self.bottom = 0.0
+		self.bottom = 0.5
 		if self.text != "NaN":
 			self.bottom = float(self.text)
 			self.dwnTrue = True
@@ -489,11 +454,18 @@ class Parser():
 	def StiffnessAngle(self, elts, **props):
 		# print("StiffnessAngle")
 		pass
+	
+
+	def Notes(self, elts, **props):
+		# print("Notes")
+		pass
 
 leParser = Parser()
-leParser.parse("DA1_Average_MAP_90.opf")
+leParser.parse("test.opf")
 
-formes = list(leParser.lesShapes.values())
+# fTest = [leParser.shapeList["12"]]
+
+formes = list(leParser.shapeList.values())
 
 laScene = Scene(formes)
 Viewer.display(laScene)
