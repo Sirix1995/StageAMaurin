@@ -38,9 +38,46 @@ options += " -D CL_KHR_INT64_EXTENDED_ATOMICS"
 # Options répertoire
 options += " -I kernel/"
 
+# Compilation du programme
 context = cl.create_some_context()
 queue = cl.CommandQueue(context)
 program = cl.Program(context, kernelSource).build(options)
 
 compute = program.compute
 
+# Params
+nbThread = 4
+sampleOffset = 0 # ?
+nSample = 0 # ?
+
+absorbedPower = None
+irradiance = None
+
+detectors = None # ?
+measurementBits = 0 # ?
+
+np = 0 # ?
+ninfp = 0 # ?
+primitives = []
+offsets = [] # ?
+root = 0 # ?
+bvh = [] # ?
+shaders = []
+channels = [] # ?
+nl = 0 # ?
+lights = []
+lightOffsets = [] # ?
+cumulatedLightPower = []
+skyOffset = 0 # ?
+
+ns = 0 # ?
+sensors = []
+sensorRoot = 0 # ?
+sensorBVH = None # ?
+
+deph = 0
+minPower = 0.0
+bounds = None # ?
+sensivityCurve = None # ?
+seed = 0
+grid = None # ?
