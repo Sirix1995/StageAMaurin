@@ -1,5 +1,6 @@
 import sys
 import pyopencl as cl
+import numPy as np
 
 fichier = open("kernel/lightmodel_kernel.cl", "r")
 
@@ -84,8 +85,8 @@ seed = 0
 grid = None # ?
 
 # Buffers de sortie
-bufAbsorbedPower = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(absorbedPower[, default]))
-bufIrradiance = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(irradiance[, default]))
+bufAbsorbedPower = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(absorbedPower))
+bufIrradiance = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(irradiance))
 
 # Buffers d'entrée
 bufDetectors = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=detectors)
