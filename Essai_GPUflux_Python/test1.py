@@ -1,6 +1,6 @@
 import sys
 import pyopencl as cl
-import numPy as np
+import numpy as np
 
 fichier = open("kernel/lightmodel_kernel.cl", "r")
 
