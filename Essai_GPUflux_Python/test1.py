@@ -1,3 +1,4 @@
+import sys
 import pyopencl as cl
 
 fichier = open("kernel/lightmodel_kernel.cl", "r")
@@ -81,3 +82,21 @@ bounds = None # ?
 sensivityCurve = None # ?
 seed = 0
 grid = None # ?
+
+# Buffers de sortie
+bufAbsorbedPower = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(absorbedPower[, default]))
+bufIrradiance = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(irradiance[, default]))
+
+# Buffers d'entrée
+bufDetectors = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=detectors)
+bufPrims = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=primitives)
+bufOffsets = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=offsets)
+bufBVH = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=bvh)
+bufShaders = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=shaders)
+bufChannels = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=channels)
+bufLights = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=lights)
+bufLightOffsets = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=lightOffsets)
+bufSensors = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=sensors)
+bufSensorsBVH = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=sensorBVH)
+bufSensivityCurve = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=sensivityCurve)
+
