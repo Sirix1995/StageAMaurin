@@ -50,16 +50,18 @@ compute = program.compute
 
 # Scene
 points[ (0.0, 0.0, 0.0),
-        (0.0, 1.0, 0.0)
-        (1.0, 0.0, 0.0)
+        (0.0, 1.0, 0.0),
+        (1.0, 0.0, 0.0),
         (1.0, 1.0, 1.0)]
 
-indices[(0, 1, 2)
-        (0, 1, 3)
-        (0, 2, 3)
+indices[(0, 1, 2),
+        (0, 1, 3),
+        (0, 2, 3),
         (1, 2, 3)]
 
 tetra = TriangleSet(points, indices)
+matrice = [(0.0, 0.0, 0.0, 0.0),]
+bbox = BoundingBox(tetra)
 
 # Params
 nbThread = 4
@@ -99,11 +101,11 @@ seed = 0
 grid = None # ?
 
 # Buffers de sortie
-bufAbsorbedPower = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(absorbedPower))
-bufIrradiance = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(irradiance))
+'''bufAbsorbedPower = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(absorbedPower))
+bufIrradiance = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, sys.getsizeof(irradiance))'''
 
 # Buffers d'entrée
-bufDetectors = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=detectors)
+'''bufDetectors = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=detectors)
 bufPrims = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=primitives)
 bufOffsets = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=offsets)
 bufBVH = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=bvh)
@@ -113,5 +115,5 @@ bufLights = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_P
 bufLightOffsets = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=lightOffsets)
 bufSensors = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=sensors)
 bufSensorsBVH = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=sensorBVH)
-bufSensivityCurve = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=sensivityCurve)
+bufSensivityCurve = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=sensivityCurve)'''
 
