@@ -3,6 +3,33 @@ import pyopencl as cl
 import numpy as np
 from openalea.plantgl.all import *  
 
+def getTriangles(trSet):
+    resultList = []
+    indices = trSet.indexList
+    for face in indices:
+        points = [(trSet.pointAt(face[0])[0], trSet.pointAt(face[0])[1], trSet.pointAt(face[0])[2]), (trSet.pointAt(face[1])[0], trSet.pointAt(face[1])[1], trSet.pointAt(face[1])[2]), (trSet.pointAt(face[2])[0], trSet.pointAt(face[2])[1], trSet.pointAt(face[2])[2])]
+        rIndices = [(face[0], face[1], face[2])]
+        print(points, rIndices)
+        resultList.append(TriangleSet(points, rIndices))
+    return resultList
+
+def getPolygons(trSet, matrix, groupIndex, shaderOffset, ior):
+    triangles = getTriangles(trSet)
+    polygons = []
+    firstinfos = np.array([5, groupIndex, shaderOffset, ior]) # Type, Group Index, Shader offset, Index of Reflexion
+    for triangle in triangles:
+        bbox = BoundingBox(triangle)
+        tBBox = np.array([bbox.getXMin(), bbox.getXMax(), bbox.getYMin(), bbox.getYMax(), bbox.getZMin(), bbox.getZMax()])
+        tMatrix = np.array([(matrix[0][0], matrix[0][1], matrix[0][2]),
+                            (matrix[1][0], matrix[1][1], matrix[1][2]),
+                            (matrix[2][0], matrix[2][1], matrix[2][2]),
+                            (matrix[3][0], matrix[3][1], matrix[3][2])])
+        polygon = np.array([])
+        polygon = np.concatenate((polygon, firstinfos), axis=0)
+        polygon = np.concatenate((polygon, tBBox), axis=0)
+        polygon = np.concatenate((polygon, tMatrix), axis=0)
+        # TODO : Données Polygon
+
 fichier = open("kernel/lightmodel_kernel.cl", "r")
 
 kernelSource = fichier.read()
@@ -44,9 +71,9 @@ options += " -I kernel/"
 # Compilation du programme
 context = cl.create_some_context()
 queue = cl.CommandQueue(context)
-program = cl.Program(context, kernelSource).build(options)
+# program = cl.Program(context, kernelSource).build(options)
 
-compute = program.compute
+# compute = program.compute
 
 # Scene
 points = [(0.0, 0.0, 0.0),
@@ -60,8 +87,17 @@ indices = [(0, 1, 2),
            (1, 2, 3)]
 
 tetra = TriangleSet(points, indices)
-matrice = [(0.0, 0.0, 0.0, 0.0),]
-bbox = BoundingBox(tetra)
+matrice = [(1.0, 1.0, 1.0, 1.0),
+           (1.0, 1.0, 1.0, 1.0),
+           (1.0, 1.0, 1.0, 1.0),
+           (1.0, 1.0, 1.0, 1.0)]
+
+triangles = getTriangles(tetra)
+
+bbox1 = BoundingBox(triangles[0])
+bbox2 = BoundingBox(triangles[1])
+bbox3 = BoundingBox(triangles[2])
+bbox4 = BoundingBox(triangles[3])
 
 # Params
 nbThread = 4
