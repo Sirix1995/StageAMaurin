@@ -8,8 +8,7 @@ def getTriangles(trSet):
     indices = trSet.indexList
     for face in indices:
         points = [(trSet.pointAt(face[0])[0], trSet.pointAt(face[0])[1], trSet.pointAt(face[0])[2]), (trSet.pointAt(face[1])[0], trSet.pointAt(face[1])[1], trSet.pointAt(face[1])[2]), (trSet.pointAt(face[2])[0], trSet.pointAt(face[2])[1], trSet.pointAt(face[2])[2])]
-        rIndices = [(face[0], face[1], face[2])]
-        print(points, rIndices)
+        rIndices = [(0, 1, 2)]
         resultList.append(TriangleSet(points, rIndices))
     return resultList
 
@@ -24,11 +23,16 @@ def getPolygons(trSet, matrix, groupIndex, shaderOffset, ior):
                             (matrix[1][0], matrix[1][1], matrix[1][2]),
                             (matrix[2][0], matrix[2][1], matrix[2][2]),
                             (matrix[3][0], matrix[3][1], matrix[3][2])])
+        # Primitive info
         polygon = np.array([])
         polygon = np.concatenate((polygon, firstinfos), axis=0)
         polygon = np.concatenate((polygon, tBBox), axis=0)
         polygon = np.concatenate((polygon, tMatrix), axis=0)
-        # TODO : Données Polygon
+        
+        #Polygon info
+        polygon = np.concatenate((polygon, np.array([triangle.pointAt(0)[0], triangle.pointAt(0)[1], triangle.pointAt(0)[2]])), axis=0)
+        polygon = np.concatenate((polygon, np.array([triangle.pointAt(1)[0], triangle.pointAt(1)[1], triangle.pointAt(1)[2]])), axis=0)
+        polygon = np.concatenate((polygon, np.array([triangle.pointAt(2)[0], triangle.pointAt(2)[1], triangle.pointAt(2)[2]])), axis=0)
 
 fichier = open("kernel/lightmodel_kernel.cl", "r")
 
