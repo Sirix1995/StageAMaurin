@@ -6,18 +6,24 @@ from openalea.plantgl.all import *
 def getTriangles(trSet):
     resultList = []
     indices = trSet.indexList
+    trSet.normalPerVertex = True
+    trSet.computeNormalList()
     for face in indices:
         points = [(trSet.pointAt(face[0])[0], trSet.pointAt(face[0])[1], trSet.pointAt(face[0])[2]), (trSet.pointAt(face[1])[0], trSet.pointAt(face[1])[1], trSet.pointAt(face[1])[2]), (trSet.pointAt(face[2])[0], trSet.pointAt(face[2])[1], trSet.pointAt(face[2])[2])]
         rIndices = [(0, 1, 2)]
-        resultList.append(TriangleSet(points, rIndices))
+        triangle = TriangleSet(points, rIndices)
+        triangle.normalPerVertex = True
+        triangle.normalList = (trSet.normalList[face[0]], trSet.normalList[face[1]], trSet.normalList[face[2]])
+        resultList.append(triangle)
     return resultList
 
 def getPolygons(trSet, matrix, groupIndex, shaderOffset, ior):
     triangles = getTriangles(trSet)
     polygons = []
-    firstinfos = np.array([5, groupIndex, shaderOffset, ior]) # Type, Group Index, Shader offset, Index of Reflexion
+    firstinfos = np.array([5, int(groupIndex), int(shaderOffset), ior]) # Type, Group Index, Shader offset, Index of Reflexion
     for triangle in triangles:
         bbox = BoundingBox(triangle)
+        normalVertex = triangle.normalList
         tBBox = np.array([bbox.getXMin(), bbox.getXMax(), bbox.getYMin(), bbox.getYMax(), bbox.getZMin(), bbox.getZMax()])
         tMatrix = np.array([(matrix[0][0], matrix[0][1], matrix[0][2]),
                             (matrix[1][0], matrix[1][1], matrix[1][2]),
@@ -27,12 +33,22 @@ def getPolygons(trSet, matrix, groupIndex, shaderOffset, ior):
         polygon = np.array([])
         polygon = np.concatenate((polygon, firstinfos), axis=0)
         polygon = np.concatenate((polygon, tBBox), axis=0)
-        polygon = np.concatenate((polygon, tMatrix), axis=0)
+        for x in range(len(matrix)):
+            for y in range(x):
+                np.append(polygon, matrix[x][y])
         
         #Polygon info
         polygon = np.concatenate((polygon, np.array([triangle.pointAt(0)[0], triangle.pointAt(0)[1], triangle.pointAt(0)[2]])), axis=0)
         polygon = np.concatenate((polygon, np.array([triangle.pointAt(1)[0], triangle.pointAt(1)[1], triangle.pointAt(1)[2]])), axis=0)
         polygon = np.concatenate((polygon, np.array([triangle.pointAt(2)[0], triangle.pointAt(2)[1], triangle.pointAt(2)[2]])), axis=0)
+
+        triangle.normelPerVertex = False
+        triangle.computeNormalList()
+        
+        polygon = np.concatenate((polygon, np.array([triangle.normalList[0][0], triangle.normalList[0][1], triangle.normalList[0][1]])))
+
+        print(polygon)
+
 
 fichier = open("kernel/lightmodel_kernel.cl", "r")
 
@@ -96,12 +112,9 @@ matrice = [(1.0, 1.0, 1.0, 1.0),
            (1.0, 1.0, 1.0, 1.0),
            (1.0, 1.0, 1.0, 1.0)]
 
-triangles = getTriangles(tetra)
+polygons = getPolygons(tetra, matrice, 0, 0, 0.0)
 
-bbox1 = BoundingBox(triangles[0])
-bbox2 = BoundingBox(triangles[1])
-bbox3 = BoundingBox(triangles[2])
-bbox4 = BoundingBox(triangles[3])
+
 
 # Params
 nbThread = 4
