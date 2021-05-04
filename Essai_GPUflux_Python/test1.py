@@ -17,10 +17,11 @@ def getTriangles(trSet):
         resultList.append(triangle)
     return resultList
 
-def getPolygons(trSet, matrix, groupIndex, shaderOffset, ior):
+def serializePrimitives(trSet, matrix, groupIndex, shaderOffset, ior):
     triangles = getTriangles(trSet)
-    polygons = []
-    firstinfos = np.array([5, int(groupIndex), int(shaderOffset), ior]) # Type, Group Index, Shader offset, Index of Reflexion
+    polygons = None
+    firstinfos = np.array([5, int(groupIndex), int(shaderOffset)])
+
     for triangle in triangles:
         bbox = BoundingBox(triangle)
         normalVertex = triangle.normalList
@@ -30,24 +31,35 @@ def getPolygons(trSet, matrix, groupIndex, shaderOffset, ior):
                             (matrix[2][0], matrix[2][1], matrix[2][2]),
                             (matrix[3][0], matrix[3][1], matrix[3][2])])
         # Primitive info
-        polygon = np.array([])
-        polygon = np.concatenate((polygon, firstinfos), axis=0)
-        polygon = np.concatenate((polygon, tBBox), axis=0)
-        for x in range(len(matrix)):
-            for y in range(x):
-                np.append(polygon, matrix[x][y])
+        polygon = firstinfos.tobytes() # Type, Group Index, Shader offset
+        polygon = polygon + np.array([ior]).tobytes() # Index of Reflexion
+
+        polygon = polygon + tBBox.tobytes() #Bounding Box
         
-        #Polygon info
-        polygon = np.concatenate((polygon, np.array([triangle.pointAt(0)[0], triangle.pointAt(0)[1], triangle.pointAt(0)[2]])), axis=0)
-        polygon = np.concatenate((polygon, np.array([triangle.pointAt(1)[0], triangle.pointAt(1)[1], triangle.pointAt(1)[2]])), axis=0)
-        polygon = np.concatenate((polygon, np.array([triangle.pointAt(2)[0], triangle.pointAt(2)[1], triangle.pointAt(2)[2]])), axis=0)
+        for x in range(len(matrix)): # World2Object Matrix
+            for y in range(x):
+                polygon = polygon + np.array([matrix[x][y]]).tobytes()
+        
+        # Polygon info
+        polygon = polygon + np.array([triangle.pointAt(0)[0], triangle.pointAt(0)[1], triangle.pointAt(0)[2]]).tobytes() # Vertex
+        polygon = polygon + np.array([triangle.pointAt(1)[0], triangle.pointAt(1)[1], triangle.pointAt(1)[2]]).tobytes()
+        polygon = polygon + np.array([triangle.pointAt(2)[0], triangle.pointAt(2)[1], triangle.pointAt(2)[2]]).tobytes()
 
         triangle.normelPerVertex = False
         triangle.computeNormalList()
         
-        polygon = np.concatenate((polygon, np.array([triangle.normalList[0][0], triangle.normalList[0][1], triangle.normalList[0][1]])))
+        polygon = polygon + np.array([triangle.normalList[0][0], triangle.normalList[0][1], triangle.normalList[0][1]]).tobytes() # Face Normal
 
-        print(polygon)
+        polygon = polygon + np.array([0.0, 0.0, 0.0]).tobytes() # UV coords
+        polygon = polygon + np.array([0.0, 0.0, 0.0]).tobytes()
+        polygon = polygon + np.array([0.0, 0.0, 0.0]).tobytes()
+
+        polygon = polygon + np.array([normalVertex[0][0], normalVertex[0][1], normalVertex[0][2]]).tobytes()
+        polygon = polygon + np.array([normalVertex[1][0], normalVertex[1][1], normalVertex[1][2]]).tobytes()
+        polygon = polygon + np.array([normalVertex[2][0], normalVertex[2][1], normalVertex[2][2]]).tobytes()
+        polygons.append(polygon)
+    
+    return polygons
 
 
 fichier = open("kernel/lightmodel_kernel.cl", "r")
@@ -114,7 +126,7 @@ matrice = [(1.0, 1.0, 1.0, 1.0),
 
 polygons = getPolygons(tetra, matrice, 0, 0, 0.0)
 
-
+print(polygons)
 
 # Params
 nbThread = 4
