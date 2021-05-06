@@ -22,17 +22,10 @@ buffer = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR,
 print(buffer)
 
 kernelSource = structureCL + """
-                __kernel void vadd( __global char* donnees, int retour1, float retour2) {
+                __kernel void vadd( __global char* donnees) {
                         __global structure *params = (const __global structure*)donnees;
-                        retour1 = params->entier+= 2;
-                        retour2 = params->flottant+= 3.5;
                  }"""
 
 program = cl.Program(context, kernelSource).build()
 
-retour1 = 0
-retour2 = 0.0
-
-program.vadd(queue, (len(octets)), None, buffer, retour1, retour2)
-print("Valeur de l'entier après exécution : ", retour1)
-print("Valeur du flottant après exécution : ", retour2)
+program.vadd(queue, (len(octets)), None, buffer)
