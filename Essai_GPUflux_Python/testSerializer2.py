@@ -56,7 +56,7 @@ options += " -D CL_KHR_INT64_BASE_ATOMICS"
 options += " -D CL_KHR_INT64_EXTENDED_ATOMICS"
 
 # Options répertoire
-options += " -I kernel/"
+options += " -I kernel/" 
 
 kernelSource = primitiveCL + """
                 #include "geo/prim.h"
