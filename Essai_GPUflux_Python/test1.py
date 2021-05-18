@@ -17,7 +17,7 @@ def getTriangles(trSet):
         resultList.append(triangle)
     return resultList
 
-def serializePrimitives(trSet, matrix, groupIndex, shaderOffset, ior):
+def serializePrimitives(trSet, matrix, groupIndex, shaderOffset, ior) :
     triangles = getTriangles(trSet)
     polygons = None
     firstinfos = np.array([5, int(groupIndex), int(shaderOffset)])
@@ -48,7 +48,7 @@ def serializePrimitives(trSet, matrix, groupIndex, shaderOffset, ior):
         triangle.normelPerVertex = False
         triangle.computeNormalList()
         
-        polygon = polygon + np.array([triangle.normalList[0][0], triangle.normalList[0][1], triangle.normalList[0][1]]).tobytes() # Face Normal
+        polygon = polygon + np.array([triangle.normalList[0][0], triangle.normalList[0][1], triangle.normalList[0][2]]).tobytes() # Face Normal
 
         polygon = polygon + np.array([0.0, 0.0, 0.0]).tobytes() # UV coords
         polygon = polygon + np.array([0.0, 0.0, 0.0]).tobytes()
