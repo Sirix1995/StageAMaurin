@@ -59,18 +59,18 @@ class Serializer():
         dataTable["zMax"].fill(bbox.getZMax())
 
         #World to Object Matrix
-        dataTable.fill["mat00"].fill(1.0)
-        dataTable.fill["mat01"].fill(0.0)
-        dataTable.fill["mat02"].fill(0.0)
-        dataTable.fill["mat10"].fill(0.0)
-        dataTable.fill["mat11"].fill(1.0)
-        dataTable.fill["mat12"].fill(0.0)
-        dataTable.fill["mat20"].fill(0.0)
-        dataTable.fill["mat21"].fill(0.0)
-        dataTable.fill["mat22"].fill(1.0)
-        dataTable.fill["mat30"].fill(0.0)
-        dataTable.fill["mat31"].fill(0.0)
-        dataTable.fill["mat32"].fill(0.0)
+        dataTable["mat00"].fill(1.0)
+        dataTable["mat01"].fill(0.0)
+        dataTable["mat02"].fill(0.0)
+        dataTable["mat10"].fill(0.0)
+        dataTable["mat11"].fill(1.0)
+        dataTable["mat12"].fill(0.0)
+        dataTable["mat20"].fill(0.0)
+        dataTable["mat21"].fill(0.0)
+        dataTable["mat22"].fill(1.0)
+        dataTable["mat30"].fill(0.0)
+        dataTable["mat31"].fill(0.0)
+        dataTable["mat32"].fill(0.0)
 
     def serializeTriangle(self, triangle, groupIndex, shaderOffset, indexOfReflexion):
         polygon = np.array(1, dtype= self.polygon)
@@ -126,13 +126,15 @@ class Serializer():
     def serializeTriangleSet(self, trSet, groupIndex, shaderOffset, indexOfReflexion):
         triangles = self.getTriangles(trSet)
         triangleDataList = []
-        bytechain = "\x00"
 
         for triangle in triangles:
             triangleDataList.append(self.serializeTriangle(triangle, groupIndex, shaderOffset, indexOfReflexion))
 
-        for triangleData in triangleDataList:
+        bytechain = triangleDataList[0].tobytes()
+        for triangleData in triangleDataList[1:]:
             bytechain+= triangleData.tobytes()
+
+        return bytechain
 
 serial = Serializer()
 
