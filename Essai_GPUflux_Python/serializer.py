@@ -163,8 +163,8 @@ indices = [(0, 1, 2),
 
 tetra = TriangleSet(points, indices)
 
-resultat, offsets = serial.serializeTriangleSet(tetra, 0, 0, 0.0)
-print(resultat)
+primitives, offsets = serial.serializeTriangleSet(tetra, 0, 0, 0.0)
+print(primitives)
 print(offsets)
 
 # Options GPUFlux
@@ -199,16 +199,36 @@ options += " -D CL_KHR_INT64_EXTENDED_ATOMICS"
 # Options répertoire
 options += " -I kernel/"
 
-# Compilation du programme
 context = cl.create_some_context()
 queue = cl.CommandQueue(context)
 
 kernelSource =  """
                 #include "geo/prim.h"
                 
-                __kernel void structTest(__global char* donnees) {
-                    
+                __kernel void structTest(__global char* prims, __global int* offsets, __global int* types) {
+                    int i = get_global_id(0);
+                    int offset = offsets[i];
+                    const __global Prim *prim = (const __global Prim*)(prims + offset);
+
+                    types[i] = prim->type;
                  }"""
 
+taille = len(offsets)
+
+# Input buffers
+bufPrim = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=primitives)
+bufOffsets = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=offsets)
+
+#Output buffers
+bufTypes = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
 
 program = cl.Program(context, kernelSource).build(options)
+
+program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
+
+print(bufTypes)
+
+resultat = np.empty(taille, np.int32)
+cl.enqueue_copy(queue, resultat, bufTypes)
+
+print(resultat)
