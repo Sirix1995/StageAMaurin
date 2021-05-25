@@ -234,7 +234,7 @@ program = cl.Program(context, kernelSource).build(options)
 
 polySize = 0
 primSize = 0
-program.structSize(queue, (1,), None, polySize, primSize)
+program.structSize(queue, None, None, polySize, primSize)
 
 print(polySize, " + ", primSize)
 
