@@ -230,17 +230,17 @@ bufTypes = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
 
 program = cl.Program(context, kernelSource).build(options)
 
-#program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
+program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
 
-polySize = 0
+'''polySize = 0
 primSize = 0
 program.structSize(queue, None, None, polySize, primSize)
 
-print(polySize, " + ", primSize)
+print(polySize, " + ", primSize)'''
 
 print(bufTypes)
 
 resultat = np.empty(taille, np.int32)
-#cl.enqueue_copy(queue, resultat, bufTypes)
+cl.enqueue_copy(queue, resultat, bufTypes)
 
-#print(resultat)
+print(resultat)
