@@ -234,7 +234,8 @@ program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
 
 polySize = 0
 primSize = 0
-program.structSize(polySize, primSize)
+program.structSize(queue, (1,), None, polySize, primSize)
+
 print(polySize, " + ", primSize)
 
 print(bufTypes)
