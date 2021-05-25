@@ -215,8 +215,8 @@ kernelSource =  """
                  }
                  
                 __kernel void structSize(int polySize, int primSize) {
-                    polySize = sizeof(Polygon) 
-                    pprimSize = sizeof(Prim)  
+                    polySize = sizeof(Polygon);
+                    pprimSize = sizeof(Prim);
                 }"""
 
 taille = len(offsets)
