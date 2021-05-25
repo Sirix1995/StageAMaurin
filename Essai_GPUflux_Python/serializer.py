@@ -204,6 +204,7 @@ queue = cl.CommandQueue(context)
 
 kernelSource =  """
                 #include "geo/prim.h"
+                #include "geo/polygon.h"
                 
                 __kernel void structTest(__global char* prims, __global int* offsets, __global int* types) {
                     int i = get_global_id(0);
@@ -211,7 +212,12 @@ kernelSource =  """
                     const __global Prim *prim = (const __global Prim*)(prims + offset);
 
                     types[i] = prim->type;
-                 }"""
+                 }
+                 
+                __kernel void structSize(int polySize, int primSize) {
+                    polySize = sizeof(Polygon) 
+                    pprimSize = sizeof(Prim)  
+                }"""
 
 taille = len(offsets)
 
@@ -226,9 +232,14 @@ program = cl.Program(context, kernelSource).build(options)
 
 program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
 
+polySize = 0
+primSize = 0
+program.structSize(polySize, primSize)
+print(polySize, " + ", primSize)
+
 print(bufTypes)
 
 resultat = np.empty(taille, np.int32)
-cl.enqueue_copy(queue, resultat, bufTypes)
+#cl.enqueue_copy(queue, resultat, bufTypes)
 
-print(resultat)
+#print(resultat)
