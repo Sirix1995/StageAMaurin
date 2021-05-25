@@ -230,7 +230,7 @@ bufTypes = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
 
 program = cl.Program(context, kernelSource).build(options)
 
-program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
+#program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
 
 polySize = 0
 primSize = 0
