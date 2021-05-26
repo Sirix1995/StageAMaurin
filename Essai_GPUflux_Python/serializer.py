@@ -211,7 +211,7 @@ kernelSource =  """
                     int offset = offsets[i];
                     const __global Polygon *prim = (const __global Polygon*)(prims + offset);
 
-                    types[i] = prim->base->type;
+                    types[i] = prim->base.type;
                  }
                  
                 __kernel void structSize(int polySize, int primSize) {
