@@ -209,9 +209,9 @@ kernelSource =  """
                 __kernel void structTest(__global char* prims, __global int* offsets, __global int* types) {
                     int i = get_global_id(0);
                     int offset = offsets[i];
-                    const __global Prim *prim = (const __global Prim*)(prims + offset);
+                    const __global Polygon *prim = (const __global Polygon*)(prims + offset);
 
-                    types[i] = prim->type;
+                    types[i] = prim->base->type;
                  }
                  
                 __kernel void structSize(int polySize, int primSize) {
