@@ -143,7 +143,7 @@ class Serializer():
         for triangleData in triangleDataList[1:]:
             triangleInBytes = triangleData.tobytes()
             bytechain+= triangleInBytes
-            offsets[offsetIndex] = acc + 1
+            offsets[offsetIndex] = acc
             offsetIndex+=1
             acc+= len(triangleInBytes)
 
@@ -211,7 +211,7 @@ kernelSource =  """
                     int offset = offsets[i];
                     const __global Prim *prim = (const __global Prim*)(prims + offset);
 
-                    types[i] = 5;
+                    types[i] = prim->type;
                  }
                  
                 __kernel void structSize(int polySize, int primSize) {
