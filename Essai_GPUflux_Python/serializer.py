@@ -46,9 +46,9 @@ class Serializer():
 
     # Put the generic infos of the primitive in the buffer
     def setPrimInfos(self, buffer, prim, primType, groupIndex, shaderOffset, indexOfReflexion):
-        assert type(primType) == np.int32, 'Primitive Type must be an int32 value.'
-        assert type(groupIndex) == np.int32, 'Group Index must be an int32 value.'
-        assert type(indexOfReflexion) == np.float32, 'Index of Reflexion must be an float32 value.'
+        assert type(primType) == int, 'Primitive Type must be an int value.'
+        assert type(groupIndex) == int, 'Group Index must be an int value.'
+        assert type(indexOfReflexion) == float, 'Index of Reflexion must be an float value.'
 
         #First Infos
         buffer["type"].fill(primType)
