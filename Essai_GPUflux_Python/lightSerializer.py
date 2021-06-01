@@ -24,18 +24,18 @@ class LightSerializer():
 
         self.spectralCdf = []
         for i in range(bins):
-            self.spectralCdf.append(np.float32)
+            self.spectralCdf.append(("bin" + i,np.float32))
 
         self.light = self.firstInfos + self.matrix + self.invmatrix + self.power + self.spectralCdf
 
-    def setLightBase(lightType, samples, power, spectralCdf, lightSource):
+    def setLightBase(self, lightType, samples, power, spectralCdf, bins, buffer):
         assert type(lightType) == int, 'Light Type must be an int value.'
         assert type(samples) == int, 'Samples must be an int value.'
         assert len(power) == 3, 'Power must be a list of three values.'
 
         #First infos
-        lightSource["type"].fill(lightType)
-        lightSource["samples"].fill(samples)
+        buffer["type"].fill(lightType)
+        buffer["samples"].fill(samples)
         
         #World to object matrix
         buffer["mat00"].fill(1.0)
@@ -51,5 +51,33 @@ class LightSerializer():
         buffer["mat31"].fill(0.0)
         buffer["mat32"].fill(0.0)
 
-    def serializePointLight():
-        pass
+        #Object to world matrix
+        WtO = Matrix4(1, 0, 0, 0 , 0, 1, 0, 0 , 0, 0, 1, 0 , 0, 0, 0, 1)
+        OtW = WtO.inverse()
+
+        buffer["imat00"].fill(OtW[0])
+        buffer["imat01"].fill(OtW[1])
+        buffer["imat02"].fill(OtW[2])
+        buffer["imat10"].fill(OtW[3])
+        buffer["imat11"].fill(OtW[4])
+        buffer["imat12"].fill(OtW[5])
+        buffer["imat20"].fill(OtW[6])
+        buffer["imat21"].fill(OtW[7])
+        buffer["imat22"].fill(OtW[8])
+        buffer["imat30"].fill(OtW[9])
+        buffer["imat31"].fill(OtW[10])
+        buffer["imat32"].fill(OtW[11])
+
+        #Power
+        buffer[("powerX", power[0])]
+        buffer[("powerY", power[1])]
+        buffer[("powerZ", power[2])]
+
+        #SpectralCdF
+        for i in range(bins):
+            buffer["bin" + i].fill(spectralCdf[i])
+
+    def serializePointLight(self, samples, power, spectralCdf, bins):
+        pointLight = np.array(dtype=self.light)
+        self.setLightBase(0, samples, power, spectralCdf, bins, pointLight)
+        return pointLight
