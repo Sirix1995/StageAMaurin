@@ -46,6 +46,10 @@ class Serializer():
 
     # Put the generic infos of the primitive in the buffer
     def setPrimInfos(self, buffer, prim, primType, groupIndex, shaderOffset, indexOfReflexion):
+        assert type(primType) == np.int32, 'Primitive Type must be an int32 value.'
+        assert type(groupIndex) == np.int32, 'Group Index must be an int32 value.'
+        assert type(indexOfReflexion) == np.float32, 'Index of Reflexion must be an float32 value.'
+
         #First Infos
         buffer["type"].fill(primType)
         buffer["groupIndex"].fill(groupIndex)
@@ -162,10 +166,15 @@ indices = [(0, 1, 2),
            (1, 2, 3)]
 
 tetra = TriangleSet(points, indices)
+boule = Sphere(2)
+tessel = Tesselator()
+boule.apply(tessel)
+triBoule = tessel.triangulation
+print(triBoule)
 
-primitives, offsets = serial.serializeTriangleSet(tetra, 0, 0, 0.0)
-print(primitives)
-print(offsets)
+primitives, offsets = serial.serializeTriangleSet(triBoule, 0, 0, 0.0)
+# print(primitives)
+# print(offsets)
 
 # Options GPUFlux
 options = " -D MEASURE_FULL_SPECTRUM"
@@ -181,20 +190,20 @@ options += " -D ENABLE_SENSORS"
 # Options machine
 options += " -D CL_KHR_GLOBAL_INT32_BASE_ATOMICS"
 options += " -D CL_KHR_GLOBAL_INT32_EXTENDED_ATOMICS"
-options += " -D CL_KHR_LOCAL_INT32_BASE_ATOMICS"
-options += " -D CL_KHR_LOCAL_INT32_EXTENDED_ATOMICS"
-options += " -D CL_KHR_FP64"
-options += " -D CL_KHR_BYTE_ADDRESSABLE_STORE"
-options += " -D CL_KHR_ICD"
-options += " -D CL_KHR_GL_SHARING"
-options += " -D CL_NV_COMPILER_OPTIONS"
-options += " -D CL_NV_DEVICE_ATTRIBUTE_QUERY"
-options += " -D CL_NV_PRAGMA_UNROLL"
-options += " -D CL_NV_COPY_OPTS"
-options += " -D CL_KHR_GL_EVENT"
-options += " -D CL_NV_CREATE_BUFFER"
+#options += " -D CL_KHR_LOCAL_INT32_BASE_ATOMICS"
+#options += " -D CL_KHR_LOCAL_INT32_EXTENDED_ATOMICS"
+#options += " -D CL_KHR_FP64"
+#options += " -D CL_KHR_BYTE_ADDRESSABLE_STORE"
+#options += " -D CL_KHR_ICD"
+#options += " -D CL_KHR_GL_SHARING"
+#options += " -D CL_NV_COMPILER_OPTIONS"
+#options += " -D CL_NV_DEVICE_ATTRIBUTE_QUERY"
+#options += " -D CL_NV_PRAGMA_UNROLL"
+#options += " -D CL_NV_COPY_OPTS"
+#options += " -D CL_KHR_GL_EVENT"
+#options += " -D CL_NV_CREATE_BUFFER"
 options += " -D CL_KHR_INT64_BASE_ATOMICS"
-options += " -D CL_KHR_INT64_EXTENDED_ATOMICS"
+#options += " -D CL_KHR_INT64_EXTENDED_ATOMICS"
 
 # Options répertoire
 options += " -I kernel/"
