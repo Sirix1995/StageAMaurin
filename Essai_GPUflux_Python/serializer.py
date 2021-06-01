@@ -3,7 +3,7 @@ import pyopencl as cl
 import pyopencl.tools
 import pyopencl.array
 import numpy as np
-from openalea.plantgl.all import *  
+from openalea.plantgl.all import *
 
 class Serializer():
     def __init__(self) -> None:
