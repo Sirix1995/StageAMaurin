@@ -96,6 +96,7 @@ class Serializer():
 
         return buffer
 
+    #Serialize a TriangleSet
     def serializeTriangleSet(self, trSet, groupIndex, shaderOffset, indexOfReflexion):
         triangles = self.getTriangles(trSet)
         triangleDataList = []
@@ -118,6 +119,8 @@ class Serializer():
             acc+= len(triangleInBytes)
 
         return bytechain, offsets
+
+#Class test (will be removed)
 
 serial = Serializer()
 
