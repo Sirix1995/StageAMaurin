@@ -4,28 +4,26 @@ import pyopencl.tools
 import pyopencl.array
 import numpy as np
 from openalea.plantgl.all import *
+import structfill
 
 class Serializer():
     def __init__(self) -> None:
         self.firstInfos = [("type", np.int32), ("groupIndex", np.int32), ("shaderOffset", np.int32), ("indexOfReflexion", np.float32)]
         self.boundingBox = [("xMin", np.float32), ("xMax", np.float32), ("yMin", np.float32), ("yMax", np.float32), ("zMin", np.float32), ("zMax", np.float32)]
-        self.matrix = [("mat00", np.float32), ("mat01", np.float32), ("mat02", np.float32),
-                       ("mat10", np.float32), ("mat11", np.float32), ("mat12", np.float32),
-                       ("mat20", np.float32), ("mat21", np.float32), ("mat22", np.float32),
-                       ("mat30", np.float32), ("mat31", np.float32), ("mat32", np.float32)]
+        self.matrix = [("WtOMatrix", np.float32, 12)]
 
         self.primitive = self.firstInfos + self.boundingBox + self.matrix
 
-        self.polygon = self.primitive + [("x1", np.float32), ("y1", np.float32), ("z1", np.float32),
-                                         ("x2", np.float32), ("y2", np.float32), ("z2", np.float32),
-                                         ("x3", np.float32), ("y3", np.float32), ("z3", np.float32),
-                                         ("faceNormalX", np.float32), ("faceNormalY", np.float32), ("faceNormalZ", np.float32),
-                                         ("uvX1", np.float32), ("uvY1", np.float32),
-                                         ("uvX2", np.float32), ("uvY2", np.float32),
-                                         ("uvX3", np.float32), ("uvY3", np.float32),
-                                         ("normalX1", np.float32), ("normalY1", np.float32), ("normalZ1", np.float32),
-                                         ("normalX2", np.float32), ("normalY2", np.float32), ("normalZ2", np.float32),
-                                         ("normalX3", np.float32), ("normalY3", np.float32), ("normalZ3", np.float32)]
+        self.polygon = self.primitive + [("point1", np.float32, 3),
+                                         ("point2", np.float32, 3),
+                                         ("point3", np.float32, 3),
+                                         ("faceNormal", np.float32, 3),
+                                         ("uvPoint1", np.float32, 2),
+                                         ("uvPoint2", np.float32, 2),
+                                         ("uvPoint3", np.float32, 2),
+                                         ("normalPoint1", np.float32, 3),
+                                         ("normalPoint2", np.float32, 3),
+                                         ("normalPoint3", np.float32, 3)]
 
     # Return a triangleSet for each triangle of trSet in a list
     def getTriangles(self, trSet):
@@ -45,10 +43,12 @@ class Serializer():
         return resultList
 
     # Put the generic infos of the primitive in the buffer
-    def setPrimInfos(self, buffer, prim, primType, groupIndex, shaderOffset, indexOfReflexion):
-        assert type(primType) == int, 'Primitive Type must be an int value.'
-        assert type(groupIndex) == int, 'Group Index must be an int value.'
-        assert type(indexOfReflexion) == float, 'Index of Reflexion must be an float value.'
+    def setPrimInfos(self, buffer, prim, primType, groupIndex, shaderOffset, indexOfReflexion, matrix):
+
+        #Type checking
+        primType = np.int32(primType)
+        groupIndex = np.int32(groupIndex)
+        indexOfReflexion = np.float32(indexOfReflexion)
 
         #First Infos
         buffer["type"].fill(primType)
@@ -66,67 +66,33 @@ class Serializer():
         buffer["zMax"].fill(bbox.getZMax())
 
         #World to Object Matrix
-        buffer["mat00"].fill(1.0)
-        buffer["mat01"].fill(0.0)
-        buffer["mat02"].fill(0.0)
-        buffer["mat10"].fill(0.0)
-        buffer["mat11"].fill(1.0)
-        buffer["mat12"].fill(0.0)
-        buffer["mat20"].fill(0.0)
-        buffer["mat21"].fill(0.0)
-        buffer["mat22"].fill(1.0)
-        buffer["mat30"].fill(0.0)
-        buffer["mat31"].fill(0.0)
-        buffer["mat32"].fill(0.0)
+        structfill.fillMatrix34(buffer, "WtOMatrix", matrix)
 
+    #Serialize a triangle (matrix definition will be changed)
     def serializeTriangle(self, triangle, groupIndex, shaderOffset, indexOfReflexion):
         buffer = np.array(1, dtype= self.polygon)
-        self.setPrimInfos(buffer, triangle, 5, groupIndex, shaderOffset, indexOfReflexion)
+        self.setPrimInfos(buffer, triangle, 5, groupIndex, shaderOffset, indexOfReflexion, Matrix4((1, 0, 0, 0 , 0, 1, 0, 0 , 0, 0, 1, 0 , 0, 0, 0, 1)))
         normalVertex = triangle.normalList
 
         #Vertex coords
-        buffer["x1"].fill(triangle.pointAt(0)[0])
-        buffer["y1"].fill(triangle.pointAt(0)[1])
-        buffer["z1"].fill(triangle.pointAt(0)[2])
-
-        buffer["x2"].fill(triangle.pointAt(1)[0])
-        buffer["y2"].fill(triangle.pointAt(1)[1])
-        buffer["z2"].fill(triangle.pointAt(1)[2])
-
-        buffer["x3"].fill(triangle.pointAt(2)[0])
-        buffer["y3"].fill(triangle.pointAt(2)[1])
-        buffer["z3"].fill(triangle.pointAt(2)[2])
+        structfill.fillVec3(buffer, "point1", triangle.pointAt(0))
+        structfill.fillVec3(buffer, "point2", triangle.pointAt(1))
+        structfill.fillVec3(buffer, "point3", triangle.pointAt(2))
 
         #Face normal
         triangle.normelPerVertex = False
         triangle.computeNormalList()
-
-        buffer["faceNormalX"].fill(triangle.normalList[0][0])
-        buffer["faceNormalX"].fill(triangle.normalList[0][1])
-        buffer["faceNormalX"].fill(triangle.normalList[0][2])
+        structfill.fillVec3(buffer, "faceNormal", triangle.normalList[0])
 
         #UV coords
-        buffer["uvX1"].fill(0.0)
-        buffer["uvY1"].fill(0.0)
-
-        buffer["uvX2"].fill(0.0)
-        buffer["uvY2"].fill(0.0)
-
-        buffer["uvX3"].fill(0.0)
-        buffer["uvY3"].fill(0.0)
+        structfill.fillVec2(buffer, "uvPoint1", Vector2(0.0, 0.0))
+        structfill.fillVec2(buffer, "uvPoint2", Vector2(0.0, 0.0))
+        structfill.fillVec2(buffer, "uvPoint3", Vector2(0.0, 0.0))
 
         #Vertex Normals
-        buffer["normalX1"].fill(normalVertex[0][0])
-        buffer["normalY1"].fill(normalVertex[0][1])
-        buffer["normalZ1"].fill(normalVertex[0][2])
-
-        buffer["normalX2"].fill(normalVertex[0][0])
-        buffer["normalY2"].fill(normalVertex[0][1])
-        buffer["normalZ2"].fill(normalVertex[0][2])
-
-        buffer["normalX3"].fill(normalVertex[0][0])
-        buffer["normalY3"].fill(normalVertex[0][1])
-        buffer["normalZ3"].fill(normalVertex[0][2])
+        structfill.fillVec3(buffer, "normalPoint1", normalVertex[0])
+        structfill.fillVec3(buffer, "normalPoint2", normalVertex[1])
+        structfill.fillVec3(buffer, "normalPoint3", normalVertex[2])
 
         return buffer
 
@@ -221,12 +187,7 @@ kernelSource =  """
                     const __global Polygon *prim = (const __global Polygon*)(prims + offset);
 
                     types[i] = prim->base.type;
-                 }
-                 
-                __kernel void structSize(int polySize, int primSize) {
-                    polySize = sizeof(Polygon);
-                    primSize = sizeof(Prim);
-                }"""
+                 }"""
 
 taille = len(offsets)
 
@@ -240,12 +201,6 @@ bufTypes = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
 program = cl.Program(context, kernelSource).build(options)
 
 program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
-
-'''polySize = 0
-primSize = 0
-program.structSize(queue, None, None, polySize, primSize)
-
-print(polySize, " + ", primSize)'''
 
 print(bufTypes)
 
