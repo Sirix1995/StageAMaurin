@@ -3,81 +3,111 @@ import pyopencl as cl
 import pyopencl.tools
 import pyopencl.array
 import numpy as np
-from openalea.plantgl.all import *  
+from openalea.plantgl.all import *
+import structfill
 
 class LightSerializer():
     def __init__(self, bins) -> None:
 
         self.firstInfos = [("type", np.int32), ("samples", np.int32)]
 
-        self.matrix = [("mat00", np.float32), ("mat01", np.float32), ("mat02", np.float32),
-                       ("mat10", np.float32), ("mat11", np.float32), ("mat12", np.float32),
-                       ("mat20", np.float32), ("mat21", np.float32), ("mat22", np.float32),
-                       ("mat30", np.float32), ("mat31", np.float32), ("mat32", np.float32)]
+        self.matrix = [("WtOMatrix", np.float32, 12)]
 
-        self.invmatrix = [("imat00", np.float32), ("imat01", np.float32), ("imat02", np.float32),
-                          ("imat10", np.float32), ("imat11", np.float32), ("imat12", np.float32),
-                          ("imat20", np.float32), ("imat21", np.float32), ("imat22", np.float32),
-                          ("imat30", np.float32), ("imat31", np.float32), ("imat32", np.float32)]
+        self.invmatrix = [("OtWMatrix", np.float32, 12)]
         
-        self.power = [("powerX", np.float32), ("powerY", np.float32), ("powerZ", np.float32)]
+        self.power = [("power", np.float32, 3)]
 
-        self.spectralCdf = []
-        for i in range(bins):
-            self.spectralCdf.append(("bin" + i,np.float32))
+        self.spectralCdf = [("spectralCdf", np.float32, bins)]
+        
+        self.spectralDistribution = [("rgb", np.float32, 3), ("spectralPower", np.float32, bins)]
 
         self.light = self.firstInfos + self.matrix + self.invmatrix + self.power + self.spectralCdf
 
-    def setLightBase(self, lightType, samples, power, spectralCdf, bins, buffer):
-        assert type(lightType) == int, 'Light Type must be an int value.'
-        assert type(samples) == int, 'Samples must be an int value.'
-        assert len(power) == 3, 'Power must be a list of three values.'
+        self.spectralLight = self.light + self.spectralDistribution
+
+
+    #Convert a float to a int (between 0 and 255)
+    def f2i(self, f):
+        i = round(f * 255)
+        if i < 0:
+            i = 0
+        if i > 255:
+            i = 255
+        return i
+
+    #Compute the average color (an int)
+    def getAverageColor(self, color):
+        return (self.f2i(color[0]) << 16) + (self.f2i(color[1]) << 8) + self.f2i(color[2]) + (255 << 24)
+
+    #Compute the 3 floats power values of a pointLight with 1 float power value and RGB color.
+    def getPower3f(self, power, color):
+        power = np.float32(power)
+        assert type(color) == openalea.plantgl.math._pglmath.Vector3, "Color must be a PlantGL Vector3." 
+        return color * (3 * power / color[0] + color [1] + color [2])
+
+    #Set the basic infos of a light source
+    def setLightBase(self, lightType, samples, matrix, color, power, spectralCdf, buffer):
+        #Type check
+        lighType = np.int32(lightType)
+        samples = np.int32(samples)
+        assert len(spectralCdf) == len(buffer["spectralCdF"]), 'Lenght of Spectral CDF must equals to the Wavelenghts bins.'
 
         #First infos
         buffer["type"].fill(lightType)
         buffer["samples"].fill(samples)
         
-        #World to object matrix
-        buffer["mat00"].fill(1.0)
-        buffer["mat01"].fill(0.0)
-        buffer["mat02"].fill(0.0)
-        buffer["mat10"].fill(0.0)
-        buffer["mat11"].fill(1.0)
-        buffer["mat12"].fill(0.0)
-        buffer["mat20"].fill(0.0)
-        buffer["mat21"].fill(0.0)
-        buffer["mat22"].fill(1.0)
-        buffer["mat30"].fill(0.0)
-        buffer["mat31"].fill(0.0)
-        buffer["mat32"].fill(0.0)
+
+        #World to Object Matrix
+        structfill.fillMatrix34(buffer, "WtOMatrix", matrix)
 
         #Object to world matrix
-        WtO = Matrix4(1, 0, 0, 0 , 0, 1, 0, 0 , 0, 0, 1, 0 , 0, 0, 0, 1)
-        OtW = WtO.inverse()
-
-        buffer["imat00"].fill(OtW[0])
-        buffer["imat01"].fill(OtW[1])
-        buffer["imat02"].fill(OtW[2])
-        buffer["imat10"].fill(OtW[3])
-        buffer["imat11"].fill(OtW[4])
-        buffer["imat12"].fill(OtW[5])
-        buffer["imat20"].fill(OtW[6])
-        buffer["imat21"].fill(OtW[7])
-        buffer["imat22"].fill(OtW[8])
-        buffer["imat30"].fill(OtW[9])
-        buffer["imat31"].fill(OtW[10])
-        buffer["imat32"].fill(OtW[11])
+        invMatrix = matrix.inverse()
+        structfill.fillMatrix34(buffer, "OtWMatrix", invMatrix)
 
         #Power
-        buffer[("powerX", power[0])]
-        buffer[("powerY", power[1])]
-        buffer[("powerZ", power[2])]
+        power3f = self.getPower3f(power, color)
+        structfill.fillVec3(buffer, "power", power3f)
 
         #SpectralCdF
-        for i in range(bins):
-            buffer["bin" + i].fill(spectralCdf[i])
+        buffer["spectralCdf"] = spectralCdf
 
-    def serializePointLight(self, samples, power, spectralCdf, bins):
-        pointLight = np.array(dtype=self.light)
-        self.setLightBase(0, samples, power, spectralCdf, bins, pointLight)
-        return pointLight
+    #Serialize a point light source
+    def serializePointLight(self, samples, color, power, spectralCdf, bins):
+        
+        pointLight = np.array(1, dtype=self.light)
+
+        #Set base (point light only have a base structure)
+        self.setLightBase(0, samples, Matrix4((1, 0, 0, 0 , 0, 1, 0, 0 , 0, 0, 1, 0 , 0, 0, 0, 1)), color, power, spectralCdf, pointLight)
+
+        lightInBytes = pointLight.tobytes()
+
+        return lightInBytes, len(lightInBytes), max(power, 0)
+
+    #Serialize a spectral light source
+    def serializeSpectralLight(self, samples, color, power, spectralCdF, rgb, distribution):
+       
+        spectralLight = np.array(1, dtype=self.spectralLight)        
+        
+        #Type check
+        assert len(distribution) == len(spectralLight["spectralPower"])
+
+        #Set base
+        self.setLightBase(0, samples, Matrix4((1, 0, 0, 0 , 0, 1, 0, 0 , 0, 0, 1, 0 , 0, 0, 0, 1)), color, power, spectralCdF, spectralLight)
+        
+        #RGB
+        structfill.fillVec3(spectralLight, "rgb", rgb)
+
+        #Spectral Disrtibution
+        spectralLight["spectralPower"] = distribution
+
+        lightInBytes = spectralLight.tobytes()
+
+        #TotalPower
+        avercolor = self.getAverageColor(color)
+        colorPower = (((avercolor >> 0) & 0xFF) + ((avercolor >> 8) & 0xFF) + ((avercolor >> 16) & 0xFF)) / (256.0);
+        totalPower = (power / colorPower) * power
+
+        return lightInBytes, len(spectralLight), max(totalPower, 0)
+
+        
+    
