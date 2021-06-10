@@ -199,6 +199,12 @@ options += " -D CL_KHR_INT64_BASE_ATOMICS"
 # Options répertoire
 options += " -I kernel/"
 
+taille = len(offsets)
+print(len(primitives))
+print(taille)
+resultat = np.empty(taille).astype(np.int32)
+print(resultat)
+
 context = cl.create_some_context()
 queue = cl.CommandQueue(context)
 
@@ -213,15 +219,15 @@ kernelSource =  """
 
                     types[i] = prim->base.type;
                     groupIndex[i] = prim->base.group_idx;
-                 }"""
 
-taille = len(offsets)
+                 }"""
 
 # Input buffers
 bufPrim = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=primitives)
 bufOffsets = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=offsets)
 
 #Output buffers
+
 bufTypes = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
 bufGIndex = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
 
@@ -231,6 +237,7 @@ program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes, bufGIn
 
 resultat = np.empty(taille, np.int32)
 resultat2 = np.empty(taille, np.int32)
+
 cl.enqueue_copy(queue, resultat, bufTypes)
 cl.enqueue_copy(queue, resultat2, bufGIndex)
 
