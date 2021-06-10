@@ -43,7 +43,7 @@ class LightSerializer():
     def getPower3f(self, power, color):
         power = np.float32(power)
         assert type(color) == openalea.plantgl.math._pglmath.Vector3, "Color must be a PlantGL Vector3." 
-        return color * (3 * power / color[0] + color [1] + color [2])
+        return color * (3 * power / (color[0] + color[1] + color[2]))
 
     #Set the basic infos of a light source
     def setLightBase(self, lightType, samples, matrix, color, power, spectralCdf, buffer):
