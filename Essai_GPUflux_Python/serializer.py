@@ -120,6 +120,22 @@ class Serializer():
 
         return bytechain, offsets
 
+    #Serialize a scene of TriangleScene
+    def serializeTriangleScene(self, scene):
+        sceneInBytes, offsets = self.serializeTriangleSet(scene[0].geometry, 0, 0, 0.0)
+        count = 1
+        for shape in scene[1:]:
+            tempSceneBytes, tempOffset = self.serializeTriangleSet(shape.geometry, count, 0, 0.0)
+            print(len(offsets))
+            print(len(tempOffset))
+            print(count)
+            tempOffset = [index + len(sceneInBytes) for index in tempOffset]
+            sceneInBytes+= tempSceneBytes
+            offsets = np.concatenate([offsets, tempOffset], axis=0)
+            print(offsets)
+            count+= 1
+        return sceneInBytes, offsets
+
 #Class test (will be removed)
 
 serial = Serializer()
@@ -139,9 +155,15 @@ boule = Sphere(2)
 tessel = Tesselator()
 boule.apply(tessel)
 triBoule = tessel.triangulation
-print(triBoule)
+scene = Scene()
+scene.add(tetra)
+scene.add(tetra)
+scene.add(tetra)
 
-primitives, offsets = serial.serializeTriangleSet(triBoule, 0, 0, 0.0)
+for shape in scene:
+    print(shape)
+
+primitives, offsets = serial.serializeTriangleScene(scene)
 # print(primitives)
 # print(offsets)
 
@@ -184,12 +206,13 @@ kernelSource =  """
                 #include "geo/prim.h"
                 #include "geo/polygon.h"
                 
-                __kernel void structTest(__global char* prims, __global int* offsets, __global int* types) {
+                __kernel void structTest(__global char* prims, __global int* offsets, __global int* types, __global int* groupIndex) {
                     int i = get_global_id(0);
                     int offset = offsets[i];
                     const __global Polygon *prim = (const __global Polygon*)(prims + offset);
 
                     types[i] = prim->base.type;
+                    groupIndex[i] = prim->base.group_idx;
                  }"""
 
 taille = len(offsets)
@@ -200,14 +223,16 @@ bufOffsets = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_
 
 #Output buffers
 bufTypes = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
+bufGIndex = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, offsets.nbytes)
 
 program = cl.Program(context, kernelSource).build(options)
 
-program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes)
-
-print(bufTypes)
+program.structTest(queue, (taille,), None, bufPrim, bufOffsets, bufTypes, bufGIndex)
 
 resultat = np.empty(taille, np.int32)
+resultat2 = np.empty(taille, np.int32)
 cl.enqueue_copy(queue, resultat, bufTypes)
+cl.enqueue_copy(queue, resultat2, bufGIndex)
 
 print(resultat)
+print(resultat2)
