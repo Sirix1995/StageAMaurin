@@ -161,6 +161,7 @@ context = cl.create_some_context()
 queue = cl.CommandQueue(context)
 
 taille = len(bytechain) / 56
+taille = int(taille)
 
 kernelSource =  """
                 #include "trace/bvh/bvh.h"
