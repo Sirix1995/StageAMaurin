@@ -168,7 +168,7 @@ kernelSource =  """
 
                 __kernel void structTest(__global char* buffer, __global int* value1, __global int* value2) {
                     int i = get_global_id(0);
-                    offset = i * 56
+                    int offset = i * 56
                     const __global BVHNode* node = (const __global BVHNode*)(buffer + offset);
                     if(node->nz[0] == -1.0) {
                         value1[i] = node->idx;
