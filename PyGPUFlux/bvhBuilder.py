@@ -178,9 +178,9 @@ kernelSource =  """
                         value2[i] = node->c1idx;
                     }
 
-                    printf("Node : %d\n", i);
-                    printf("%d\n",value1[i]);
-                    printf("%d\n\n",value2[i]);
+                    printf("Node : %d ", i);
+                    printf("%d ",value1[i]);
+                    printf("%d ",value2[i]);
                 }
                 """
 
