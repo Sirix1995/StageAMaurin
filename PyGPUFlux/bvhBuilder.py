@@ -160,7 +160,7 @@ options += " -I kernel/"
 context = cl.create_some_context()
 queue = cl.CommandQueue(context)
 
-taille = bytechain / 56
+taille = len(bytechain) / 56
 
 kernelSource =  """
                 #include "trace/bvh/bvh.h"
