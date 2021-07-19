@@ -170,7 +170,7 @@ kernelSource =  """
                     int i = get_global_id(0);
                     int offset = i * 56;
                     const __global BVHNode* node = (const __global BVHNode*)(buffer + offset);
-                    if(node->nz[0] == -1.0) {
+                    if(node->nz.s0 == -1.0) {
                         value1[i] = node->idx;
                         value2[i] = node->pcount;
                     } else {
