@@ -7,71 +7,78 @@ from openalea.plantgl.all import *
 import structfill
 import aabbtree
 
+# Convert a PlantGL BoundingBox to an AABBTree BoundingBox
+def plantGLBBtoAABB(bb):
+    # Type check
+    assert type(bb) == BoundingBox, "Param is not a PlantGL BoundingBox"
+
+    return aabbtree.AABB([(bb.getXMin(), bb.getXMax()), (bb.getYMin(), bb.getYMax()), (bb.getZMin(), bb.getZMax())])
+
 class BVHBuilder():
     def __init__(self, sce):
-        #Type check
-        assert type(sce) == openalea.plantgl.scenegraph._pglsg.Scene, "Tree must be constructed with a PlantGL scene."
+        # Type check
+        assert type(
+            sce) == openalea.plantgl.scenegraph._pglsg.Scene, "Tree must be constructed with a PlantGL scene."
 
-        #Structures
-        self.firstInfos = [("n0xy", np.float32, 4), ("nz", np.float32, 4), ("n1xy", np.float32, 4)] #left BBox XY min and Max, both BBOx Z min and max, and right BBox XY min and Max
-        self.branch = self.firstInfos + [("c0idx", np.int32), ("c1idx", np.int32)] #left child and right child index
-        self.leaf = self.firstInfos + [("idx", np.int32), ("pcount", np.int32)] #primitive index, and pcount (?)
+        # Structures
+        # left BBox XY min and Max, both BBOx Z min and max, and right BBox XY min and Max
+        self.firstInfos = [("n0xy", np.float32, 4),
+                            ("nz", np.float32, 4), ("n1xy", np.float32, 4)]
+        # left child and right child index
+        self.branch = self.firstInfos + \
+            [("c0idx", np.int32), ("c1idx", np.int32)]
+        # primitive index, and primitive count
+        self.leaf = self.firstInfos + [("idx", np.int32), ("pcount", np.int32)]
 
-        #Attributes
+        # Attributes
         self.tree = aabbtree.AABBTree()
         self.scene = sce
         self.serializedNodes = 0
 
-    #Convert a PlantGL BoundingBox to an AABBTree BoundingBox
-    def plantGLBBtoAABB(self, bb):
-        #Type check
-        assert type(bb) == openalea.plantgl.scenegraph._pglsg.BoundingBox, "Param is not a PlantGL BoundingBox"
-
-        return aabbtree.AABB([(bb.getXMin(), bb.getXMax()), (bb.getYMin(), bb.getYMax()), (bb.getZMin(), bb.getZMax())])
-
-    #Build the BVH using AABBTree
+    # Build the BVH using AABBTree
     def buildBVHfromScene(self):
-        for i in range(len(self.scene)):
-            bb = BoundingBox(scene[i].geometry)
-            aabb = self.plantGLBBtoAABB(bb)
-            aabb.value = self.scene[i]
-            self.tree.add(aabb)
+        for i, shape in enumerate(self.scene):
+            bb = BoundingBox(shape)
+            aabb = plantGLBBtoAABB(bb)
+            self.tree.add(aabb, i)
 
-    #Serialize the BVH
+    # Serialize the BVH
     def serializeBVH(self):
-        bvhInBytes = self.serializeBVHRec(self.tree)
+        bvhInBytes, tampon, tampon2 = self.serializeBVHRec(self.tree)
         return bvhInBytes
 
-    #Serialize a node
-    #If node is a leaf, value1 refers to the prim index, and value2 refers to pcount.
-    #If node isn't a leaf, value2 refers to left child index, and value2 to right child index.
+    # Serialize a node
+    # If node is a leaf, value1 refers to the prim index, and value2 refers to pcount.
+    # If node isn't a leaf, value1 refers to left child index, and value2 to right child index.
     def serializeNode(self, isLeaf, value1, value2, n0xy, nz, n1xy):
-        buffer = None
-        
+        buffer = np.array(1, dtype=self.leaf if isLeaf else self.branch)
+
         if isLeaf:
-            buffer = np.array(dtype= self.leaf)
             buffer["idx"].fill(value1)
             buffer["pcount"].fill(value2)
         else:
-            buffer = np.array(dtype= self.branch)
             buffer["c0idx"].fill(value1)
             buffer["c1idx"].fill(value2)
 
-        buffer["n0xy"].fill(n0xy)
-        buffer["nz"].fill(nz)
-        buffer["n1xy"].fill(n1xy)
+        buffer["n0xy"] = n0xy
+        buffer["nz"] = nz
+        buffer["n1xy"] = n1xy
 
         return buffer.tobytes()
 
-    #Recursive call to serialize the tree (need to change pcount value).
+    # Recursive call to serialize the tree 
     def serializeBVHRec(self, node):
         bufferInBytes = None
+        pcount = 0
 
         if node.is_leaf:
-            bufferInBytes = self.serializeNode(True, node.value, 0, [-1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0]).tobytes()
+            bufferInBytes = self.serializeNode(True, node.value, 1, [-1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0])
+            pcount = 1
         else:
-            tamponGauche, c0idx = self.serializeBVHRec(node.left)
-            tamponDroit, c1idx = self.serializeBVHRec(node.right)
+            tamponGauche, c0idx, pcountLeft = self.serializeBVHRec(node.left)
+            tamponDroit, c1idx, pcountRight = self.serializeBVHRec(node.right)
+            
+            pcount = pcountLeft + pcountRight
 
             if node.left.is_leaf:
                 c0idx = -c0idx - 1
@@ -79,14 +86,16 @@ class BVHBuilder():
             if node.right.is_leaf:
                 c1idx = -c1idx - 1
 
-            bufferInBytes = self.serializeNode(False, c0idx, c1idx, [node.left.limits[0][0], node.left.limits[0][1], node.left.limits[1][0], node.left.limits[1][1]], [node.left.limits[2][0], node.left.limits[2][1], node.right.limits[2][0], node.right.limits[2][1]], [node.right.limits[0][0], node.right.limits[0][1], node.right.limits[1][0], node.right.limits[1][1]]).tobytes()
+            bufferInBytes = self.serializeNode(False, c0idx, c1idx, [node.left.aabb.limits[0][0], node.left.aabb.limits[0][1], node.left.aabb.limits[1][0], node.left.aabb.limits[1][1]], [node.left.aabb.limits[2][0], node.left.aabb.limits[2][1], node.right.aabb.limits[2][0], node.right.aabb.limits[2][1]], [node.right.aabb.limits[0][0], node.right.aabb.limits[0][1], node.right.aabb.limits[1][0], node.right.aabb.limits[1][1]])
+
+            bufferInBytes = bufferInBytes + tamponGauche + tamponDroit
 
         self.serializedNodes+= 1
 
-        return bufferInBytes, self.serializedNodes
+        return bufferInBytes, self.serializedNodes, pcount
 
 
-#Class test (will be removed)
+# Class test (will be removed)
 points = [(0.0, 0.0, 0.0),
           (0.0, 1.0, 0.0),
           (1.0, 0.0, 0.0),
@@ -109,6 +118,82 @@ scene.add(triBoule)
 builder = BVHBuilder(scene)
 
 builder.buildBVHfromScene()
+
+print(builder.tree)
+
 bytechain = builder.serializeBVH()
 
 print("Résultat : ", bytechain)
+
+# Options GPUFlux
+options = " -D MEASURE_FULL_SPECTRUM"
+options += " -D MEASURE_MIN_LAMBDA=380"
+options += " -D MEASURE_MAX_LAMBDA=720"
+options += " -D MEASURE_SPECTRUM_BINS=340"
+options += " -D SPECTRAL_WAVELENGTH_MIN=360"
+options += " -D SPECTRAL_WAVELENGTH_MAX=830"
+options += " -D SPECTRAL_WAVELENGTH_BINS=1"
+options += " -D BVH"
+options += " -D ENABLE_SENSORS"
+
+# Options machine
+options += " -D CL_KHR_GLOBAL_INT32_BASE_ATOMICS"
+options += " -D CL_KHR_GLOBAL_INT32_EXTENDED_ATOMICS"
+#options += " -D CL_KHR_LOCAL_INT32_BASE_ATOMICS"
+#options += " -D CL_KHR_LOCAL_INT32_EXTENDED_ATOMICS"
+#options += " -D CL_KHR_FP64"
+#options += " -D CL_KHR_BYTE_ADDRESSABLE_STORE"
+#options += " -D CL_KHR_ICD"
+#options += " -D CL_KHR_GL_SHARING"
+#options += " -D CL_NV_COMPILER_OPTIONS"
+#options += " -D CL_NV_DEVICE_ATTRIBUTE_QUERY"
+#options += " -D CL_NV_PRAGMA_UNROLL"
+#options += " -D CL_NV_COPY_OPTS"
+#options += " -D CL_KHR_GL_EVENT"
+#options += " -D CL_NV_CREATE_BUFFER"
+options += " -D CL_KHR_INT64_BASE_ATOMICS"
+#options += " -D CL_KHR_INT64_EXTENDED_ATOMICS"
+
+# Options répertoire
+options += " -I kernel/"
+
+context = cl.create_some_context()
+queue = cl.CommandQueue(context)
+
+taille = bytechain / 56
+
+kernelSource =  """
+                #include "trace/bvh/bvh.h"
+
+                __kernel void structTest(__global char* buffer, __global int* value1, __global int* value2) {
+                    int i = get_global_id(0);
+                    BVHNode* node = (BVHNode*)buffer[i * 56];
+                    if(node->nz[0] == -1.0) {
+                        value1[i] = node->idx;
+                        value2[i] = node->pcount;
+                    } else {
+                        value1[i] = node->c0idx;
+                        value2[i] = node->c1idx;
+                    }
+                }
+                """
+
+#Input buffer
+bufTree = cl.Buffer(context, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR, hostbuf=bytechain)
+
+#Output buffers
+bufValue1 = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, taille)
+bufValue2 = cl.Buffer(context, cl.mem_flags.WRITE_ONLY, taille)
+
+program = cl.Program(context, kernelSource).build(options)
+
+program.structTest(queue, (taille,), None, bufTree, bufValue1, bufValue2)
+
+value1 = np.empty(taille, np.int32)
+value2 = np.empty(taille, np.int32)
+
+cl.enqueue_copy(queue, value1, bufValue1)
+cl.enqueue_copy(queue, value2, bufValue2)
+
+print(value1)
+print(value2)
