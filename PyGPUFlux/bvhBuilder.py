@@ -64,6 +64,9 @@ class BVHBuilder():
         buffer["nz"] = nz
         buffer["n1xy"] = n1xy
 
+        print("Value 1 : ", value1)
+        print("Value 2 : ", value2)
+
         return buffer.tobytes()
 
     # Recursive call to serialize the tree 
@@ -119,11 +122,11 @@ builder = BVHBuilder(scene)
 
 builder.buildBVHfromScene()
 
-print(builder.tree)
+# print(builder.tree)
 
 bytechain = builder.serializeBVH()
 
-print("Résultat : ", bytechain)
+# print("Résultat : ", bytechain)
 
 # Options GPUFlux
 options = " -D MEASURE_FULL_SPECTRUM"
