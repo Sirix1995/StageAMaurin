@@ -17,16 +17,13 @@ def plantGLBBtoAABB(bb):
 class BVHBuilder():
     def __init__(self, sce):
         # Type check
-        assert type(
-            sce) == openalea.plantgl.scenegraph._pglsg.Scene, "Tree must be constructed with a PlantGL scene."
+        assert type(sce) == openalea.plantgl.scenegraph._pglsg.Scene, "Tree must be constructed with a PlantGL scene."
 
         # Structures
         # left BBox XY min and Max, both BBOx Z min and max, and right BBox XY min and Max
-        self.firstInfos = [("n0xy", np.float32, 4),
-                            ("nz", np.float32, 4), ("n1xy", np.float32, 4)]
+        self.firstInfos = [("n0xy", np.float32, 4), ("nz", np.float32, 4), ("n1xy", np.float32, 4)]
         # left child and right child index
-        self.branch = self.firstInfos + \
-            [("c0idx", np.int32), ("c1idx", np.int32)]
+        self.branch = self.firstInfos + [("c0idx", np.int32), ("c1idx", np.int32)]
         # primitive index, and primitive count
         self.leaf = self.firstInfos + [("idx", np.int32), ("pcount", np.int32)]
 
@@ -35,12 +32,18 @@ class BVHBuilder():
         self.scene = sce
         self.serializedNodes = 0
 
-    # Build the BVH using AABBTree
+    # Build the BVH from a PlantGL Scene using AABBTree
     def buildBVHfromScene(self):
         for i, shape in enumerate(self.scene):
             bb = BoundingBox(shape)
             aabb = plantGLBBtoAABB(bb)
             self.tree.add(aabb, i)
+
+    # Set the BVHTree from an external source
+    def setBVH(self, aTree):
+        #Type check
+        assert type(aTree) == aabbtree.AABBTree, "External BVH tree must be made with AABBTree librairy."
+        self.tree = aTree
 
     # Serialize the BVH
     def serializeBVH(self):
