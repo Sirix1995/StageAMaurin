@@ -15,7 +15,7 @@ def plantGLBBtoAABB(bb):
     return aabbtree.AABB([(bb.getXMin(), bb.getXMax()), (bb.getYMin(), bb.getYMax()), (bb.getZMin(), bb.getZMax())])
 
 class BVHBuilder():
-    def __init__(self, sce):
+    def __init__(self, sce=Scene()):
         # Type check
         assert type(sce) == openalea.plantgl.scenegraph._pglsg.Scene, "Tree must be constructed with a PlantGL scene."
 
@@ -42,7 +42,7 @@ class BVHBuilder():
     # Set the BVHTree from an external source
     def setBVH(self, aTree):
         #Type check
-        assert type(aTree) == aabbtree.AABBTree, "External BVH tree must be made with AABBTree librairy."
+        assert type(aTree) == aabbtree.AABBTree, "External BVH tree must be made with AABBTree library."
         self.tree = aTree
 
     # Serialize the BVH
@@ -100,7 +100,7 @@ class BVHBuilder():
 
         return bufferInBytes, self.serializedNodes, pcount
 
-
+'''
 # Class test (will be removed)
 points = [(0.0, 0.0, 0.0),
           (0.0, 1.0, 0.0),
@@ -207,4 +207,4 @@ cl.enqueue_copy(queue, value1, bufValue1)
 cl.enqueue_copy(queue, value2, bufValue2)
 
 print(value1)
-print(value2)
+print(value2)'''
